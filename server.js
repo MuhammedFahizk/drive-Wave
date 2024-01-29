@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const adminRoute = require('./routes/adminRoute');
+const admin = require('./models/admin');
 
 const app = express();
 const PORT = 5000;
@@ -28,6 +29,7 @@ app.use('/adminDashboard', adminRoute);
 app.use('/adminDashboardPage', adminRoute);
 app.use('/adminCarPage', adminRoute);
 app.use('/adminLogout', adminRoute);
+app.use('/addCars', adminRoute);
 
 app.use((req, res) => {
   res.status(404).render('404');
