@@ -14,7 +14,7 @@
     </header>
     <br>
     <br>
-    <form action="adminLogin"  method="post">
+    <form action="/adminDashboard"  method="post">
       {{!-- <div class="form_wrapper">
         <input id="name" type="text" name="name" >
         <label for="input">Username</label>
@@ -22,15 +22,17 @@
       </div> --}}
        
       <div class="form_wrapper">
-        <input id="email" type="password" name="email" >
-        <label for="password">Email</label>
-        <i class="material-icons">lock</i>
+        <input id="email" type="text" name="email" >
+        <label for="input">Email</label>
+        <i class="material-icons">email</i>
+
       </div>
       
       <div class="form_wrapper">
         <input id="password" type="password" name="password" >
         <label for="password">Password</label>
-        <i class="material-icons">email</i>
+        <i class="material-icons">lock</i>
+
       </div>
       <div id="error-message"></div>
      
@@ -41,6 +43,6 @@
       </form>
   </main>
 </body>
-    <script></script>
+    <script src="/public/script/loginPage.js"></script>
 
 </html>
