@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 try {
   const carSchema = new mongoose.Schema({
-    caraName: {
+    carName: {
       type: String,
       require: true,
     },

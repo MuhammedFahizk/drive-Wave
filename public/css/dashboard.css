@@ -275,7 +275,7 @@ body {
 	width: 36px;
 	height: 36px;
 	object-fit: cover;
-	border-radius: 50%;
+	border-radius: 10%;
 }
 #content nav .switch-mode {
 	display: block;
@@ -460,9 +460,9 @@ body {
 	padding-left: 6px;
 }
 #content main .table-data .order table td img {
-	width: 36px;
-	height: 36px;
-	border-radius: 50%;
+	width: 66px;
+	height: 56px;
+	border-radius: 10%;
 	object-fit: cover;
 }
 #content main .table-data .order table tbody tr:hover {

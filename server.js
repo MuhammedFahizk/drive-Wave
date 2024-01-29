@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 app.set('view engine', 'hbs');
 app.set('views', './views');
 app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static('uploads'));
 
 app.use('/', adminRoute);
 app.use('/login', adminRoute);

@@ -247,13 +247,16 @@
                 </div>
 </div>
 			</div>
-
-			<ul class="box-info">
+<ul class="box-info">
 				<li>
-					<i class='bx bxs-calendar-check' ></i>
+					<i class='bx bx-car'></i>
 					<span class="text">
-						<h3>1020</h3>
-						<p>New Order</p>
+						<h3>{{count}}</h3>
+						{{# if category}}
+						<p>Totel {{category}} </p>
+						  {{else }}
+                        <p>Totel Cars</p>
+						{{/if}}
 					</span>
 				</li>
 				<li>
@@ -281,86 +284,83 @@
 						<i class='bx bx-filter' ></i>
 					</div>
 					<table>
-						<thead>
-							<tr>
-								<th>User</th>
-								<th>Date Order</th>
-								<th>Status</th>
+						<thead style="" >
+							<tr style="color: #3C91E6;font-size:x-large;border-bottom"><th></th>
+								<th>Car Name</th>
+								<th>Car Model</th>
+								<th>Transmission</th>
+								<th>Year</th>
+
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status process">Process</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
+						<tbody class="order" style="">
+						
+
+<tbody>
+    {{#each data}}
+        <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewCars"data-carid="{{this._id}}" onclick="handleRowClick(this)">
+			<td>
+                <img  src="{{this.carImage}}">
+			</td>
+            <td>
+            {{this.carName}}
+            </td>
+            <td>{{this.carModal}}</td>
+            <td>{{this.TransmitionType}}</td>
+            <td>{{this.year}}</td>
+        </tr>
+    {{/each}}
+</tbody>
+
+<div class="modal fade" id="viewCars" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered  " style="max-width: 800px; margin-left:370px;">
+   
+
+                    <div class="modal-content" style="color:#3C91E6 ;background-color: #3c91e605;" >
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Content will be dynamically updated here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{{!-- delete car  modal--}}
+{{!-- <div class="modal" id="deletecar" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{this._id}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Delete the car details</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+		<a href="delteCar">
+        <button type="submit" onclick="" class="btn btn-primary">Delete</button>
+
+		</a>
+      </div>
+    </div>
+  </div>
+</div> --}}
+
+<input type="hidden" value="{{category}} " id="category">
+
+
 						</tbody>
 					</table>
 				</div>
-				<div class="todo">
-					<div class="head">
-						<h3>To dos</h3>
-						<i class='bx bx-plus' ></i>
-						<i class='bx bx-filter' ></i>
-					</div>
-					<ul class="todo-list">
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-					</ul>
-				</div>
+				
 			</div>
 		</main>
 		<!-- MAIN -->

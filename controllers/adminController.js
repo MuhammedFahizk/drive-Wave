@@ -36,9 +36,11 @@ async function getAdminDashBoard(req, res) {
 const showAdminDashboard = (req, res) => {
   res.render('admin/index');
 };
-const showAdminCarPage = (req, res) => {
-  res.render('admin/adminCarPage');
-};
+async function showAdminCarPage(req, res) {
+  const car = await AddCar.find();
+  const counts = await AddCar.find().countDocuments();
+  res.render('admin/adminCarPage', { data: car, count: counts });
+}
 const logout = (req, res) => {
   if (req.session.adminId) {
     req.session.destroy((error) => {
@@ -53,7 +55,7 @@ const logout = (req, res) => {
 
 async function addCarAdmin(req, res) {
   const {
-    caraName,
+    carName,
     carCategory,
     year,
     brand,
@@ -61,7 +63,6 @@ async function addCarAdmin(req, res) {
     brandName,
     carModal,
     licensePlateNumber,
-    carImage,
     color,
     fuelType,
     TransmitionType,
@@ -72,7 +73,7 @@ async function addCarAdmin(req, res) {
   } = req.body;
   if (req.file && req.file.path) {
     const newCar = new AddCar({
-      caraName,
+      carName,
       carCategory,
       year,
       brand,
