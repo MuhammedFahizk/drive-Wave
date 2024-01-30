@@ -84,8 +84,38 @@
 		<!-- NAVBAR -->
 		<nav>
 			<i class='bx bx-menu' ></i>
-			<a href="#" class="nav-link">Categories</a>
-			<form action="#">
+
+			<a class="nav-link btn-sm " type="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+   
+
+<form action="/adminCarPage/findCarCategories" method="get">
+    <input type="hidden" name="category" value="SUVs">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">SUVs</button>
+</form>
+<form action="/adminCarPage/findCarCategories" method="get">
+    <input type="hidden" name="category" value="MUVs">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">MUVs</button>
+</form><form action="/adminCarPage/findCarCategories" method="get">
+    <input type="hidden" name="category" value="Sedan">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Sedan</button>
+</form><form action="/adminCarPage/findCarCategories" method="get">
+    <input type="hidden" name="category" value="Sports Car">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Sports Car</button>
+</form><form action="/adminCarPage/findCarCategories" method="get">
+    <input type="hidden" name="category" value="Hatchbacks">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Hatchbacks</button>
+</form><form action="/adminCarPage/findCarCategories" method="get">
+    <input type="hidden" name="category" value="Electric">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Electric</button>
+</form><form action="/adminCarPage" method="get">
+
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">All Cars</button>
+</form>
+
+
+
+  </ul>			<form action="#">
 				<div class="form-input">
 					<input type="search" placeholder="Search...">
 					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
@@ -113,9 +143,21 @@
 							<a href="#">Dashboard</a>
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
+							{{# if category}}
 						<li>
-							<a class="active" href="#">Cars</a>
+							<a href="#">Cars</a>
+
 						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+
+						<li>
+							<a class="active" href="#">{{category}}</a>
+						</li>
+						
+						  {{else }}
+							<a class="active" href="#">Cars</a>
+                        
+						{{/if}}
 					</ul>
 				</div>
 				            <button type="button" class="btn-download" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -386,7 +428,7 @@
 					<span class="text">
 						<h3>{{count}}</h3>
 						{{# if category}}
-						<p>Total {{category}} </p>
+						<p> {{category}} </p>
 						  {{else }}
                         <p>Total Cars</p>
 						{{/if}}
@@ -433,7 +475,7 @@
     {{#each data}}
         <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewCars"data-carId="{{this._id}}" onclick="handleRowClick(this)">
 			<td>
-                <img  src="{{this.carImage}}">
+                <img  src="/{{this.carImage}}">
 			</td>
             <td>
             {{this.carName}}

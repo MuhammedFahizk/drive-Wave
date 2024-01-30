@@ -180,7 +180,26 @@ async function updateCar(req, res) {
         uploadFile(req, res);
       } else {
         await updateCar.save();
-        res.status(200).render('/adminCarPage');
+        res.status(200).redirect('/adminCarPage');
+      }
+    }
+  } catch (error) {
+    console.log('Bad Request:', error);
+    return res.status(500).send(`Server Error:  ${{ error }}`);
+  }
+}
+async function findCarCategories(req, res) {
+  try {
+    const { category } = req.query;
+    if (!category) {
+      console.log('Bad Request:');
+      return res.status(400).send('Server Error:');
+    } else {
+      const cars = await AddCar.find({ carCategory: category });
+      const carsCount = await AddCar.find({ carCategory: category }).countDocuments();
+
+      if (cars) {
+        res.status(200).render('admin/adminCarPage', { data: cars, count: carsCount, category: category });
       }
     }
   } catch (error) {
@@ -201,4 +220,5 @@ module.exports = {
   otpGenerate,
   getCarDetails,
   updateCar,
+  findCarCategories,
 };

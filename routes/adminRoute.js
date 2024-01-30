@@ -17,5 +17,5 @@ router.post('/addCars', login.requireAuth, upload.single('carImage'), adminContr
 router.get('/getCarDetails', login.requireAuth, adminController.getCar);
 router.get('/adminCarPage/deleteCar', login.requireAuth, adminController.deleteCar);
 router.post('/adminCarPage/updateCarDetails', login.requireAuth, upload.single('carImage'), adminController.updateCar);
-// router.get('/getCarDetails', login.requireAuth, adminController.getCarDetails);
+router.get('/adminCarPage/findCarCategories', login.requireAuth, adminController.findCarCategories);
 module.exports = router;
