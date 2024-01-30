@@ -12,4 +12,6 @@ router.get('/adminDashboardPage', login.requireAuth, adminController.showAdminDa
 router.get('/adminCarPage', login.requireAuth, adminController.showAdminCarPage);
 router.get('/adminLogout', adminController.logout);
 router.post('/addCars', login.requireAuth, upload.single('carImage'), adminController.addCarAdmin);
+router.get('/getCarDetails', login.requireAuth, adminController.getCar);
+router.get('/adminCarPage/deleteCar', login.requireAuth, adminController.deleteCar);
 module.exports = router;

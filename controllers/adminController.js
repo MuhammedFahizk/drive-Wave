@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-shadow */
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -94,6 +96,36 @@ async function addCarAdmin(req, res) {
     uploadFile(req, res);
   }
 }
+async function getCar(req, res) {
+  try {
+    const carId = req.query.carId;
+    const carDetails = await AddCar.findById(carId);
+
+    res.json(carDetails);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+async function deleteCar(req, res) {
+  try {
+    const deleteId = req.query.deleteCarId;
+    if (!deleteId) {
+      res.status(400).json('/adminCarPage');
+    } else {
+      const result = await AddCar.findByIdAndDelete(deleteId);
+      if (result) {
+        res.status(200).redirect('/adminCarPage');
+      } else {
+        return res.status(404).json('Car not found');
+      }
+    }
+  } catch (error) {
+    console.log('Bad Request:', error);
+    return res.status(500).send(`Server Error:  ${{ error }}`);
+  }
+}
 module.exports = {
   showLoginPageAdmin,
   getAdminDashBoard,
@@ -101,4 +133,6 @@ module.exports = {
   showAdminCarPage,
   logout,
   addCarAdmin,
+  getCar,
+  deleteCar,
 };

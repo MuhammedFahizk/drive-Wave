@@ -6,6 +6,8 @@
 <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">	<!-- My CSS -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 	<!-- My CSS -->
 	<link rel="stylesheet" href="/public/css/dashboard.css">
 
@@ -253,9 +255,9 @@
 					<span class="text">
 						<h3>{{count}}</h3>
 						{{# if category}}
-						<p>Totel {{category}} </p>
+						<p>Total {{category}} </p>
 						  {{else }}
-                        <p>Totel Cars</p>
+                        <p>Total Cars</p>
 						{{/if}}
 					</span>
 				</li>
@@ -298,7 +300,7 @@
 
 <tbody>
     {{#each data}}
-        <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewCars"data-carid="{{this._id}}" onclick="handleRowClick(this)">
+        <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewCars"data-carId="{{this._id}}" onclick="handleRowClick(this)">
 			<td>
                 <img  src="{{this.carImage}}">
 			</td>
@@ -323,6 +325,7 @@
       </div>
       <div class="modal-body">
         <!-- Content will be dynamically updated here -->
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -333,7 +336,7 @@
 
 
 {{!-- delete car  modal--}}
-{{!-- <div class="modal" id="deletecar" tabindex="-1">
+{{!-- <div class="modal" id="deleteCar" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -345,7 +348,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-		<a href="delteCar">
+		<a href="deleteCar">
         <button type="submit" onclick="" class="btn btn-primary">Delete</button>
 
 		</a>
@@ -370,6 +373,9 @@
     
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script>
+   
+</script>
 
 	<script src="/public/script/script.js"></script>
 </body>

@@ -31,7 +31,8 @@ app.use('/adminDashboardPage', adminRoute);
 app.use('/adminCarPage', adminRoute);
 app.use('/adminLogout', adminRoute);
 app.use('/addCars', adminRoute);
-
+app.use('/getCarDetails', adminRoute);
+app.use('/adminCarPage/deleteCar', adminRoute);
 app.use((req, res) => {
   res.status(404).render('404');
 });
