@@ -1,9 +1,11 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-shadow */
 /* eslint-disable no-console */
 /* eslint-disable prefer-const */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable eol-last */
 const multer = require('multer');
-// const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 // const upload = multer({ dest: 'Uploads/' });
@@ -40,4 +42,15 @@ const uploadFile = (req, res) => {
   }
 };
 
-module.exports = { upload, uploadFile };
+function deleteFile(filePath) {
+  fs.unlink(filePath, (error) => {
+    if (error) {
+      console.log(`file is not removed ${error}`);
+    } else {
+      console.log(`file is removed ${filePath}`);
+      return true;
+    }
+  });
+}
+
+module.exports = { upload, uploadFile, deleteFile };

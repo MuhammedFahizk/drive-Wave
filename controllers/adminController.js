@@ -1,3 +1,7 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-else-return */
+/* eslint-disable object-shorthand */
+/* eslint-disable no-undef */
 /* eslint-disable consistent-return */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-shadow */
@@ -12,7 +16,8 @@ const path = require('path');
 
 const admin = require('../models/admin');
 const AddCar = require('../models/car');
-const { upload, uploadFile } = require('../service/fileUpload-delete');
+const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
+const { sendAdminOtp, generateOtp } = require('../service/otp');
 
 const showLoginPageAdmin = (req, res) => {
   res.render('loginPage');
@@ -28,7 +33,8 @@ async function getAdminDashBoard(req, res) {
       req.session.adminId = adminId;
       res.redirect('/adminDashboardPage');
     } else {
-      res.send('no');
+      const error = 'enter valid password and email';
+      res.render('loginPage', { error: error });
     }
   } catch (error) {
     res.status(500).json({ error: 'server Error', details: error });
@@ -126,6 +132,62 @@ async function deleteCar(req, res) {
     return res.status(500).send(`Server Error:  ${{ error }}`);
   }
 }
+function OtpPage(req, res) {
+  res.status(200).render('loginOtpPage');
+}
+function otpGenerate(req, res) {
+  const { email } = req.body;
+  const otp = generateOtp();
+  //   const emailOtp[ email ] = otp;
+  req.session.email = email;
+  console.log(otp, email);
+
+  sendAdminOtp(email, otp, (error, info) => {
+    if (error) {
+      return res.status(500).send(error);
+    } else {
+      console.log(otp, email);
+
+      res.status(201).render('generateOtp', { email });
+    }
+  });
+}
+async function getCarDetails(req, res) {
+  const editId = req.query.carId;
+  if (editId) {
+    const carDetails = AddCar.findById(editId);
+    res.status(200).json(carDetails);
+  } else {
+    res.status(400).json('error');
+  }
+}
+async function updateCar(req, res) {
+  try {
+    const { editCarId, carImage, ...updateValues } = req.body;
+    if (!editCarId) {
+      res.status(400).json('Could not get car Id');
+    } else {
+      const updateCar = await AddCar.findByIdAndUpdate(
+        editCarId,
+        { $set: updateValues },
+        { new: true },
+      );
+      const car = await AddCar.findById(editCarId).exec();
+      if (req.file) {
+        await deleteFile(car.carImage);
+        updateCar.carImage = req.file.path;
+        await updateCar.save();
+        uploadFile(req, res);
+      } else {
+        await updateCar.save();
+        res.status(200).render('/adminCarPage');
+      }
+    }
+  } catch (error) {
+    console.log('Bad Request:', error);
+    return res.status(500).send(`Server Error:  ${{ error }}`);
+  }
+}
 module.exports = {
   showLoginPageAdmin,
   getAdminDashBoard,
@@ -135,4 +197,8 @@ module.exports = {
   addCarAdmin,
   getCar,
   deleteCar,
+  OtpPage,
+  otpGenerate,
+  getCarDetails,
+  updateCar,
 };

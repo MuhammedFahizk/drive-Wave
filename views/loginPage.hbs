@@ -35,10 +35,15 @@
 
       </div>
       <div id="error-message"></div>
+       {{#if error}}
+    <div class="error-message">
+      {{error}}
+    </div>
+  {{/if}}
      
       <button type="submit" onclick="return validateForm()">Login</button>
     </form>
-    <form action="getOtp" method="post">
+    <form action="/login/getOtp" method="get">
             <button class="mt-2"  type="submit">Get Otp</button>
       </form>
   </main>

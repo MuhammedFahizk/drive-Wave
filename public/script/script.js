@@ -99,11 +99,41 @@ function handleRowClick(row) {
                         <input type="hidden" name="deleteCarId" value="${data._id}">
                         <button type="submit" class="btn btn-danger me-4 mt-4" ">Delete</button>
                     </form>
-                    <button type="button" class="btn btn-primary  mt-4" data-bs-toggle="modal" data-bs-target="#editCar" data-carEId="${data._id}" onclick="handleEditClick(this)">Edit</button>
+                    <button type="button" class="btn btn-primary  mt-4" data-bs-toggle="modal" data-bs-target="#editModal" data-carEId="${data._id}" onclick="handleEditClick(this)">Edit</button>
                 </div>
     </div>
     </div>
   </div>`;
+    })
+    .catch(error => console.error('Error:', error));
+}
+function handleEditClick(button) {
+  const carId = button.getAttribute('data-carEId');
+  fetch(`/getCarDetails?carId=${encodeURIComponent(carId)}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('editCarModalLabel').innerText = `Edit ${data.carName} `;
+      // Update the form fields with the fetched data
+      document.querySelector('#editModal [name="carName"]').value = data.carName;
+      document.querySelector('#editModal [name="carCategory"]').value = data.carCategory;
+      document.querySelector('#editModal [name="year"]').value = data.year;
+      document.querySelector('#editModal [name="dayRent"]').value = data.dayRent;
+      document.querySelector('#editModal [name="brandName"]').value = data.brandName;
+      document.querySelector('#editModal [name="carModal"]').value = data.carModal;
+      document.querySelector('#editModal [name="licensePlateNumber"]').value = data.licensePlateNumber;
+      document.querySelector('#editModal [name="carImage"]').value = ''; // You may not want to populate the file input
+      document.querySelector('#editModal [name="color"]').value = data.color;
+      document.querySelector('#editModal [name="fuelType"]').value = data.fuelType;
+      document.querySelector('#editModal [name="TransmitionType"]').value = data.TransmitionType;
+      document.querySelector('#editModal [name="milage"]').value = data.milage;
+      const datePart = data.insurenceDate.substring(0, 10);
+      document.querySelector('#editModal [name="insurenceDate"]').value = datePart;
+      document.querySelector('#editModal [name="feathers"]').value = data.feathers;
+      document.querySelector('#editModal [name="description"]').value = data.description;
+      document.querySelector('#editModal [name="editCarId"]').value = data._id;
+
+      const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+      editModal.show();
     })
     .catch(error => console.error('Error:', error));
 }

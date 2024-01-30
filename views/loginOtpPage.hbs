@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login form</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    /* body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: url(bg.svg) no-repeat center center/cover;
+    } */
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(to right, #4b6cb7, #182848); /* Adjust colors as needed */
+      background-attachment: fixed; /* Optional: Fixed background */
+    }
+
+    main {
+      width: 300px;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid wheat;
+      background-color: transparent;
+      backdrop-filter: blur(25px);
+      position: relative;
+    }
+
+    main header {
+      position: absolute;
+      top: 0;
+      
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background-color: white;
+      border-radius: 0 0 10px 10px;
+    }
+    
+    form {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      padding: 10px;
+      border: 2px solid white;
+      width: 100%;
+      border-radius: 25px;
+      outline: none;
+      background-color: transparent;
+      color: white;
+    }
+
+    .form_wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    label {
+      position: absolute;
+      left: 10px;
+      font-size: 12px;
+      color: white;
+      transition: .2s;
+    }
+
+    i {
+      position: absolute;
+      right: 10px;
+      color: white;
+      font-size: 15px !important;
+    }
+
+    .remember_box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: white;
+    }
+
+    a {
+      color: white;
+    }
+
+    button {
+      border: none;
+      padding: 10px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    input:valid+label,
+    input:focus+label {
+      background-color: white;
+      color: black;
+      transform: translate(10px, -20px);
+      padding: 2px 5px;
+      font-size: 8px;
+      border-radius: 4px;
+    }
+
+    .new_account {
+      text-align: center;
+      color: lightgray;
+    }
+
+    header::before {
+      position: absolute;
+      content: "";
+      top: 0;
+      left: -30px;
+      width: 30px;
+      height: 30px;
+      background-color: transparent;
+      box-shadow: 15px 0 0 0 white;
+      border-top-right-radius: 50%;
+    }
+
+    header::after {
+      position: absolute;
+      content: "";
+      top: 0;
+      right: -30px;
+      width: 30px;
+      height: 30px;
+      background-color: transparent;
+      box-shadow: -15px 0 0 0 white;
+      border-top-left-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h4>Login</h4>
+    </header>
+    <br>
+    <br>
+    <form action="generateOtp"  method="post">
+      {{!-- <div class="form_wrapper">
+        <input id="name" type="text" name="name" >
+        <label for="input">Username</label>
+        <i class="material-icons">person</i>
+      </div> --}}
+       
+      <div class="form_wrapper">
+    <input id="email" type="text" name="email">
+        <label for="password">Email</label>
+        <i class="material-icons">email</i>
+      </div>
+      
+      {{!-- <div class="form_wrapper">
+        <input id="password" type="password" name="password" >
+        <label for="password">Password</label>
+        <i class="material-icons">email</i>
+      </div> --}}
+      <div style="color: white;" id="error-message"></div>
+     
+      <button type="submit" onclick="return validateForm()">Get Otp</button>
+      
+       <div class="new_account">
+        Login? <a href="/login">login</a>
+      </div>
+    {{!-- </form>
+    <form action="getOtp" method="post">
+            <button class="mt-2" type="submit">Get Otp</button>
+      </form> --}}
+  </main>
+</body>
+    <script>
+    function validateForm() {
+      // Clear previous error messages
+      const error = document.getElementById('error-message');
+      error.innerHTML = '';
+
+      // Get values from the form
+      var email = document.getElementById('email').value;
+      {{!-- var password = document.getElementById('password').value; --}}
+
+      // Regular expression for a valid email format
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      // Check if email is valid
+      if (!emailRegex.test(email)) {
+        error.innerHTML = 'Please enter a valid email ';
+        return false;
+      }
+
+      // Check if the password is at least 8 characters long
+     
+
+      // If everything is valid, the form will be submitted
+      return true;
+    }
+  </script>
+
+</html>
