@@ -27,6 +27,8 @@ app.use('/uploads', express.static('uploads'));
 app.use('/', adminRoute);
 app.use('/login', adminRoute);
 app.use('/login/getOtp', adminRoute);
+app.use('/generateOtp', adminRoute);
+app.use('/login/otp', adminRoute);
 app.use('/adminDashboard', adminRoute);
 app.use('/adminDashboardPage', adminRoute);
 app.use('/adminCarPage', adminRoute);

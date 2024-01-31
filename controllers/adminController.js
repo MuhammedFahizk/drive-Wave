@@ -19,6 +19,8 @@ const AddCar = require('../models/car');
 const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
 const { sendAdminOtp, generateOtp } = require('../service/otp');
 
+const emailOtp = {};
+
 const showLoginPageAdmin = (req, res) => {
   res.render('loginPage');
 };
@@ -31,6 +33,7 @@ async function getAdminDashBoard(req, res) {
     if (Admin && await bcrypt.compare(password, Admin.password)) {
       const adminId = uuidv4();
       req.session.adminId = adminId;
+      req.session.email = email;
       res.redirect('/adminDashboardPage');
     } else {
       const error = 'enter valid password and email';
@@ -40,7 +43,21 @@ async function getAdminDashBoard(req, res) {
     res.status(500).json({ error: 'server Error', details: error });
   }
 }
-
+async function loginOtp(req, res) {
+  const { otp } = req.body;
+  const { email } = req.session;
+  if (emailOtp[email] && emailOtp[email] === otp) {
+    const admin = AddCar.find({ email: email });
+    if (admin) {
+      delete emailOtp[email];
+      const adminId = uuidv4();
+      req.session.adminId = adminId;
+      res.redirect('/adminDashboardPage');
+    } else {
+      res.status(404).redirect('/login');
+    }
+  }
+}
 const showAdminDashboard = (req, res) => {
   res.render('admin/index');
 };
@@ -138,8 +155,9 @@ function OtpPage(req, res) {
 function otpGenerate(req, res) {
   const { email } = req.body;
   const otp = generateOtp();
-  //   const emailOtp[ email ] = otp;
+  emailOtp[email] = otp;
   req.session.email = email;
+  console.log(req.session.email);
   console.log(otp, email);
 
   sendAdminOtp(email, otp, (error, info) => {
@@ -147,7 +165,7 @@ function otpGenerate(req, res) {
       return res.status(500).send(error);
     } else {
       console.log(otp, email);
-
+      req.session.email = email;
       res.status(201).render('generateOtp', { email });
     }
   });
@@ -209,6 +227,7 @@ async function findCarCategories(req, res) {
 }
 module.exports = {
   showLoginPageAdmin,
+  loginOtp,
   getAdminDashBoard,
   showAdminDashboard,
   showAdminCarPage,

@@ -18,7 +18,7 @@ function generateOtp() {
 
 function sendAdminOtp(email, otp, callback) {
   const mailOption = {
-    from: 'fahizk100@gmal.com',
+    from: 'benny.grimes6@ethereal.email',
     to: email,
     subject: 'your OTP for Login',
     text: `your Otp is :${otp}`,

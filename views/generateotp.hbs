@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login form</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/public/css/loginPage.css">
+  
+</head>
+<body>
+  <main>
+    <header>
+      <h4>Login</h4>
+    </header>
+    <br>
+    <br>
+    <form action="/login/otp"  method="post">
+      {{!-- <div class="form_wrapper">
+        <input id="name" type="text" name="name" >
+        <label for="input">Username</label>
+        <i class="material-icons">person</i>
+      </div> --}}
+       
+      <div class="form_wrapper">
+        <input id="otp" type="password" name="otp" >
+        <label for="password">Enter Otp</label>
+        <i class="material-icons">lock</i>
+      </div>
+      
+        {{#if error}}
+    <div class="error-message">
+      {{error}}
+    </div>
+  {{/if}}
+      {{!-- <div class="form_wrapper">
+        <input id="password" type="password" name="password" >
+        <label for="password">Password</label>
+        <i class="material-icons">email</i>
+      </div> --}}
+      <div id="error-message"></div>
+     
+      <button type="submit" onclick="">Login</button>
+      
+       <div class="new_account">
+        Login? <a href="adminLogin">login</a>
+      </div>
+    {{!-- </form>
+    <form action="getOtp" method="post">
+            <button class="mt-2" type="submit">Get Otp</button>
+      </form> --}}
+  </main>
+</body>
+    <script>
+    function validateForm() {
+      // Clear previous error messages
+      const error = document.getElementById('error-message');
+      error.innerHTML = '';
+
+      // Get values from the form
+      var phone = document.getElementById('phone').value;
+      {{!-- var password = document.getElementById('password').value; --}}
+
+      // Regular expression for a valid email format
+const phoneNumberRegex = /^\d{10}$/
+
+      // Check if email is valid
+      if (!phoneNumberRegex.test(phone)) {
+        error.innerHTML = 'Please enter a valid phone number';
+        return false;
+      }
+
+      // Check if the password is at least 8 characters long
+     
+
+      // If everything is valid, the form will be submitted
+      return true;
+    }
+  </script>
+
+</html>
