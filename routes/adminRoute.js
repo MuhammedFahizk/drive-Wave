@@ -19,4 +19,6 @@ router.get('/getCarDetails', login.requireAuth, adminController.getCar);
 router.get('/adminCarPage/deleteCar', login.requireAuth, adminController.deleteCar);
 router.post('/adminCarPage/updateCarDetails', login.requireAuth, upload.single('carImage'), adminController.updateCar);
 router.get('/adminCarPage/findCarCategories', login.requireAuth, adminController.findCarCategories);
+router.get('/adminCarPage/alphabeticallySort', login.requireAuth, adminController.alphabeticallySort);
+router.get('/adminCarPage/searchByCarName', login.requireAuth, adminController.searchByCarName);
 module.exports = router;

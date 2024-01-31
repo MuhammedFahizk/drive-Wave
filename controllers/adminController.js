@@ -225,6 +225,58 @@ async function findCarCategories(req, res) {
     return res.status(500).send(`Server Error:  ${{ error }}`);
   }
 }
+
+async function alphabeticallySort(req, res) {
+  const { Category, search } = req.query;
+  if (Category) {
+    if (!search) {
+      const cars = await AddCar.find({ carCategory: Category }).sort({ carName: 1 });
+      const count = cars.length;
+      res.status(200).render('admin/adminCarPage', { data: cars, count: count, category: Category });
+    } else {
+      const cars = await AddCar.find({ carCategory: Category, carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
+      const count = cars.length;
+      res.status(200).render(
+        'admin/adminCarPage',
+        {
+          data: cars, count: count, category: Category, search: search,
+        },
+      );
+    }
+  } else if (!search) {
+    const cars = await AddCar.find({}).sort({ carName: 1 });
+    const count = cars.length;
+    res.status(200).render('admin/adminCarPage', { data: cars, count: count });
+  } else {
+    const cars = await AddCar.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
+    const count = cars.length;
+    res.status(200).render(
+      'admin/adminCarPage',
+      {
+        data: cars, count: count, search: search,
+      },
+    );
+  }
+}
+async function searchByCarName(req, res) {
+  const search = req.query.search;
+  const encodedCategory = req.query.category;
+  const category = decodeURIComponent(encodedCategory).trim();
+  if (category === '') {
+    const cars = await AddCar.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
+    const count = cars.length;
+    res.status(200).render('admin/adminCarPage', { data: cars, count: count, search: search });
+  } else {
+    const cars = await AddCar.find({ carName: { $regex: new RegExp(search, 'i') }, carCategory: category }).sort({ carName: 1 });
+    const count = cars.length;
+    res.status(200).render(
+      'admin/adminCarPage',
+      {
+        data: cars, count: count, category: category, search: search,
+      },
+    );
+  }
+}
 module.exports = {
   showLoginPageAdmin,
   loginOtp,
@@ -240,4 +292,6 @@ module.exports = {
   getCarDetails,
   updateCar,
   findCarCategories,
+  alphabeticallySort,
+  searchByCarName,
 };

@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable no-console */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
@@ -88,7 +89,7 @@ function handleRowClick(row) {
                     <li class="list-group-item">Model: ${data.carModal}</li>
                     <li class="list-group-item">Transmission Type: ${data.TransmitionType}</li>
                     <li class="list-group-item">Year: ${data.year}</li>
-                    <li class="list-group-item">Category: ${data.charCategory}</li>
+                    <li class="list-group-item">Category: ${data.carCategory}</li>
                     <li class="list-group-item">Day Rent: ${data.dayRent}</li>
                     <li class="list-group-item">Brand Name: ${data.brandName}</li>
                     <li class="list-group-item">License Plate Number: ${data.licensePlateNumber}</li>
@@ -137,3 +138,35 @@ function handleEditClick(button) {
     })
     .catch(error => console.error('Error:', error));
 }
+// document.addEventListener('DOMContentLoaded', () => {
+//   const searchField = document.getElementById('searchField');
+//   searchField.addEventListener('keyup', (event) => {
+//     if (event.key === 'Enter') {
+//       const searchTerm = searchField.value.trim();
+
+//       if (searchTerm !== '') {
+//         const apiUrl = `/adminCarPage/searchCar?query=${encodeURIComponent(searchTerm)}`;
+
+//         axios.get(apiUrl)
+//           .then((response) => {
+//             console.log('API Response:', response.data);
+//           })
+//           .catch((error) => {
+//             console.error('Error:', error.message);
+//           });
+//       } else {
+//         console.log('Please enter a search term.');
+//       }
+//     }
+//   });
+// });
+document.getElementById('searchByCarName').addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    const search = document.getElementById('searchByCarName').value;
+    const category = document.getElementById('category').value;
+
+    // Construct the URL and navigate to it
+
+    window.location.href = `/searchByCarName?category=${encodeURIComponent(category)}&search=${encodeURIComponent(search)}`;
+  }
+});
