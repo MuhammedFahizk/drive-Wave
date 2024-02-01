@@ -108,6 +108,42 @@ function handleRowClick(row) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+function handleRowClickVender(row) {
+  const venderId = row.getAttribute('data-venderId'); // Make sure it matches your HTML attribute name
+  axios.get(`/getVenderDetails?venderId=${encodeURIComponent(venderId)}`)
+    .then(response => {
+      const data = response.data;
+      document.getElementById('exampleModalLabel').innerText = data.venderId;
+      document.querySelector('#viewVender .modal-body').innerHTML = `
+ <div class="row g-0">
+    <div class="col-md-4">
+      <img src="/${data.carImage}" class="img-fluid rounded-start  col-12 mt-4 " style="height:325px;object-fit: cover; width: 100%; " alt="Car Image">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">${data.name}</h5>
+       <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Email: ${data.email}</li>
+                    <li class="list-group-item">Age: ${data.age}</li>
+                    <li class="list-group-item">ShopName: ${data.shopeName}</li>
+                    <li class="list-group-item">Phone: ${data.phone}</li>
+                    <li class="list-group-item">Account Number: ${data.accountNumber}</li>
+                    <li class="list-group-item">Bank Name: ${data.bankName}</li>
+                </ul> 
+  <div class="card-footer d-flex justify-content-center">
+                    <form action="/adminVender/deleteVender" method='get' id="deleteForm">
+                        <input type="hidden" name="deleteVenderId" value="${data._id}">
+                        <button type="submit" class="btn btn-danger me-4 mt-4" ">Delete</button>
+                    </form>
+                </div>
+    </div>
+    </div>
+  </div>`;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 function handleEditClick(button) {
   const carId = button.getAttribute('data-carEId');
   fetch(`/getCarDetails?carId=${encodeURIComponent(carId)}`)

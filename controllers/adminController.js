@@ -14,7 +14,7 @@ const { v4: uuidv4 } = require('uuid');
 const session = require('express-session');
 const path = require('path');
 
-const admin = require('../models/admin');
+const { admin, Vender } = require('../models/admin');
 const AddCar = require('../models/car');
 const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
 const { sendAdminOtp, generateOtp } = require('../service/otp');
@@ -277,6 +277,40 @@ async function searchByCarName(req, res) {
     );
   }
 }
+// vender page
+async function venderPage(req, res) {
+  const venders = await Vender.find({ role: 'vender' });
+  console.log(venders);
+  res.status(200).render('admin/adminVenderPage', { data: venders });
+}
+
+async function venderDetails(req, res) {
+  try {
+    const { venderId } = req.query;
+    console.log(req.query);
+    const venders = await Vender.findById(venderId);
+    res.json(venders);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+async function deleteVender(req, res) {
+  try {
+    const { deleteVenderId } = req.query;
+    if (deleteVenderId) {
+      const result = await Vender.findByIdAndDelete(deleteVenderId);
+      if (result) {
+        res.status(200).redirect('/adminVender');
+      } else {
+        res.status(300).json('not modify');
+      }
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
 module.exports = {
   showLoginPageAdmin,
   loginOtp,
@@ -294,4 +328,7 @@ module.exports = {
   findCarCategories,
   alphabeticallySort,
   searchByCarName,
+  venderPage,
+  venderDetails,
+  deleteVender,
 };

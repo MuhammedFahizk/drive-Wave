@@ -40,6 +40,9 @@ app.use('/adminCarPage/updateCarDetails', adminRoute);
 app.use('/adminCarPage/findCarCategories', adminRoute);
 app.use('/adminCarPage/alphabeticallySort', adminRoute);
 app.use('/adminCarPage/searchByCarName', adminRoute);
+app.use('/adminVender', adminRoute);
+app.use('/getVenderDetails', adminRoute);
+app.use('/adminVender/deleteVender', adminRoute);
 app.use((req, res) => {
   res.status(404).render('404');
 });
