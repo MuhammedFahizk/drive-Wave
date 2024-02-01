@@ -43,10 +43,10 @@ const VenderSchema = new mongoose.Schema({
     require: true,
     type: String,
   },
-  joinDate: {
-    require: true,
-    type: Date,
-  },
+  //   joinDate: {
+  //     require: true,
+  //     type: Date,
+  //   },
   bankName: {
     require: true,
     type: String,
@@ -59,7 +59,7 @@ const VenderSchema = new mongoose.Schema({
     require: true,
     type: String,
   },
-}, { timeseries: true });
+}, { timestamps: true, timeseries: true });
 const Vender = mongoose.model('vender', VenderSchema, 'users');
 const admin = mongoose.model('User', userSchema);
 

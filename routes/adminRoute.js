@@ -25,4 +25,6 @@ router.get('/adminCarPage/searchByCarName', login.requireAuth, adminController.s
 router.get('/adminVender', login.requireAuth, adminController.venderPage);
 router.get('/getVenderDetails', login.requireAuth, adminController.venderDetails);
 router.get('/adminVender/deleteVender', login.requireAuth, adminController.deleteVender);
+router.get('/adminVender/alphabeticallySort', login.requireAuth, adminController.alphabeticallySortVender);
+router.post('/adminVender/searchVender', login.requireAuth, adminController.searchingVender);
 module.exports = router;

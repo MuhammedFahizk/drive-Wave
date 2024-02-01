@@ -280,14 +280,12 @@ async function searchByCarName(req, res) {
 // vender page
 async function venderPage(req, res) {
   const venders = await Vender.find({ role: 'vender' });
-  console.log(venders);
   res.status(200).render('admin/adminVenderPage', { data: venders });
 }
 
 async function venderDetails(req, res) {
   try {
     const { venderId } = req.query;
-    console.log(req.query);
     const venders = await Vender.findById(venderId);
     res.json(venders);
   } catch (error) {
@@ -305,6 +303,32 @@ async function deleteVender(req, res) {
       } else {
         res.status(300).json('not modify');
       }
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+async function alphabeticallySortVender(req, res) {
+  try {
+    const vender = await Vender.find({ role: 'vender' }).sort({ name: 1 });
+    if (vender) {
+      res.status(200).render('admin/adminVenderPage', { data: vender });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+async function searchingVender(req, res) {
+  try {
+    const { search } = req.body;
+    if (search) {
+      const vender = await Vender.find({ role: 'vender', name: { $regex: new RegExp(search, 'i') } });
+      res.status(200).render('admin/adminVenderPage', { data: vender, search: search });
+    } else {
+      res.status(204).json('no search content');
     }
   } catch (error) {
     console.error('Error:', error);
@@ -331,4 +355,6 @@ module.exports = {
   venderPage,
   venderDetails,
   deleteVender,
+  alphabeticallySortVender,
+  searchingVender,
 };
