@@ -33,7 +33,6 @@ async function getAdminDashBoard(req, res) {
     if (Admin && await bcrypt.compare(password, Admin.password)) {
       const adminId = uuidv4();
       req.session.adminId = adminId;
-      req.session.email = email;
       res.redirect('/adminDashboardPage');
     } else {
       const error = 'enter valid password and email';

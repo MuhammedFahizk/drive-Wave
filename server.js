@@ -25,26 +25,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static('uploads'));
 
 app.use('/', adminRoute);
-app.use('/login', adminRoute);
-app.use('/login/getOtp', adminRoute);
-app.use('/generateOtp', adminRoute);
-app.use('/login/otp', adminRoute);
-app.use('/adminDashboard', adminRoute);
-app.use('/adminDashboardPage', adminRoute);
-app.use('/adminCarPage', adminRoute);
-app.use('/adminLogout', adminRoute);
-app.use('/addCars', adminRoute);
-app.use('/getCarDetails', adminRoute);
-app.use('/adminCarPage/deleteCar', adminRoute);
-app.use('/adminCarPage/updateCarDetails', adminRoute);
-app.use('/adminCarPage/findCarCategories', adminRoute);
-app.use('/adminCarPage/alphabeticallySort', adminRoute);
-app.use('/adminCarPage/searchByCarName', adminRoute);
-app.use('/adminVender', adminRoute);
-app.use('/getVenderDetails', adminRoute);
-app.use('/adminVender/deleteVender', adminRoute);
-app.use('/adminVender/alphabeticallySort', adminRoute);
-app.use('/adminVender/searchVender', adminRoute);
+
 app.use((req, res) => {
   res.status(404).render('404');
 });
