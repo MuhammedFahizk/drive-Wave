@@ -33,7 +33,7 @@ async function getAdminDashBoard(req, res) {
     if (Admin && await bcrypt.compare(password, Admin.password)) {
       const adminId = uuidv4();
       req.session.adminId = adminId;
-      res.redirect('/adminDashboardPage');
+      res.redirect('/admin/DashboardPage');
     } else {
       const error = 'enter valid password and email';
       res.render('loginPage', { error: error });
@@ -51,9 +51,9 @@ async function loginOtp(req, res) {
       delete emailOtp[email];
       const adminId = uuidv4();
       req.session.adminId = adminId;
-      res.redirect('/adminDashboardPage');
+      res.redirect('/admin/DashboardPage');
     } else {
-      res.status(404).redirect('/login');
+      res.status(404).redirect('admin/login');
     }
   }
 }
@@ -71,7 +71,7 @@ const logout = (req, res) => {
       if (error) {
         console.log(error);
       } else {
-        res.redirect('/login');
+        res.redirect('/admin/login');
       }
     });
   }
@@ -134,11 +134,11 @@ async function deleteCar(req, res) {
   try {
     const deleteId = req.query.deleteCarId;
     if (!deleteId) {
-      res.status(400).json('/adminCarPage');
+      res.status(400).json('/admin/carPage');
     } else {
       const result = await AddCar.findByIdAndDelete(deleteId);
       if (result) {
-        res.status(200).redirect('/adminCarPage');
+        res.status(200).redirect('/admin/carPage');
       } else {
         return res.status(404).json('Car not found');
       }
@@ -197,7 +197,7 @@ async function updateCar(req, res) {
         uploadFile(req, res);
       } else {
         await updateCar.save();
-        res.status(200).redirect('/adminCarPage');
+        res.status(200).redirect('/admin/carPage');
       }
     }
   } catch (error) {
@@ -298,7 +298,7 @@ async function deleteVender(req, res) {
     if (deleteVenderId) {
       const result = await Vender.findByIdAndDelete(deleteVenderId);
       if (result) {
-        res.status(200).redirect('/adminVender');
+        res.status(200).redirect('/admin/Vender');
       } else {
         res.status(300).json('not modify');
       }

@@ -36,7 +36,7 @@ const upload = multer({
 const uploadFile = (req, res) => {
   if (req.file) {
     console.log('File uploaded successfully!');
-    res.status(201).redirect('/adminCarPage');
+    res.status(201).redirect('/admin/CarPage');
   } else {
     console.log('Error uploading file!');
   }

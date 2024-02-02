@@ -16,7 +16,6 @@
 <body>
 
 
-	<!-- SIDEBAR -->
 	<section id="sidebar">
 		<a href="" class="brand">
 			<i class='bx bxs-smile'></i>
@@ -24,19 +23,19 @@
 		</a>
 		<ul style="padding: 0;" class="side-menu top">
 			<li >
-				<a href="/adminDashboardPage">
+				<a href="/admin/DashboardPage">
 					<i class='bx bxs-dashboard' ></i>
 					<span class="text">Dashboard</span>
 				</a>
 			</li>
-			<li class="active">
-				<a href="/adminCarPage">
+			<li class="active" >
+				<a href="/admin/CarPage">
                     <i class='bx bxs-car' ></i>
 					<span class="text">Cars</span>
 				</a>
 			</li>
 			<li>
-				<a href="/adminVender">
+				<a href="/admin/Vender">
 					<i class='bx bxs-user-circle' ></i>
 					<span class="text">Venders</span>
 				</a>
@@ -68,13 +67,13 @@
 				</a>
 			</li>
 			<li>
-				<a href="/adminLogout" class="logout">
+				<a href="/admin/adminLogout" class="logout">
 					<i class='bx bxs-log-out-circle' ></i>
 					<span class="text">Logout</span>
 				</a>
 			</li>
 		</ul>
-	</section>
+	</section> 
 	<!-- SIDEBAR -->
 
 
@@ -89,26 +88,26 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
    
 
-<form action="adminCarPage/findCarCategories" method="get">
+<form action="/admin/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="SUVs">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">SUVs</button>
 </form>
-<form action="/adminCarPage/findCarCategories" method="get">
+<form action="/admin/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="MUVs">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">MUVs</button>
-</form><form action="/adminCarPage/findCarCategories" method="get">
+</form><form action="/admin/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="Sedan">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Sedan</button>
-</form><form action="/adminCarPage/findCarCategories" method="get">
+</form><form action="/admin/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="Sports Car">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Sports Car</button>
-</form><form action="/adminCarPage/findCarCategories" method="get">
+</form><form action="/admin/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="Hatchbacks">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Hatchbacks</button>
-</form><form action="/adminCarPage/findCarCategories" method="get">
+</form><form action="/admin/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="Electric">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Electric</button>
-</form><form action="/adminCarPage" method="get">
+</form><form action="/admin/CarPage" method="get">
 
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">All Cars</button>
 </form>
@@ -170,7 +169,7 @@
 <!-- Modal -->
                 <div class="modal fade   " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" style="max-width: 800px; margin-left:370px;color:#3C91E6 ;background-color: #949596b3;"> 
-					<form id="carModalForm" action="/addCars" method="post" enctype="multipart/form-data">
+					<form id="carModalForm" action="/admin/addCars" method="post" enctype="multipart/form-data">
                
 
                     <div class="modal-content" style="color:#3C91E6 ;background-color: #3c91e605;" >
@@ -308,7 +307,7 @@
         <h5 class="modal-title" id="editCarModalLabel">Modal title</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/adminCarPage/updateCarDetails" method="post" enctype="multipart/form-data">
+      <form action="/admin/updateCarDetails" method="post" enctype="multipart/form-data">
       <div class="modal-body">
          <div class="input-group flex-nowrap mt-2">
                             <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-car'></i></span>
@@ -479,7 +478,7 @@
     
   </a>
   <ul class="dropdown-menu">
-<li><a class="dropdown-item" href="/adminCarPage/alphabeticallySort?Category={{category}}&search={{search}}">Alphabetically</a></li>
+<li><a class="dropdown-item" href="/admin/alphabeticallySort?Category={{category}}&search={{search}}">Alphabetically</a></li>
     <li><a class="dropdown-item" href="#">Another action</a></li>
     <li><a class="dropdown-item" href="#">Something else here</a></li>
   </ul>
@@ -559,7 +558,7 @@
 
     // Construct the URL and navigate to it
 
-    window.location.href = `/adminCarPage/searchByCarName?category=${encodeURIComponent(category)}&search=${encodeURIComponent(search)}`;
+    window.location.href = `/admin/searchByCarName?category=${encodeURIComponent(category)}&search=${encodeURIComponent(search)}`;
   }
 });
     </script>

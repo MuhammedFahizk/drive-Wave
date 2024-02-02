@@ -24,7 +24,7 @@ app.set('views', './views');
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static('uploads'));
 
-app.use('/', adminRoute);
+app.use('/admin', adminRoute);
 
 app.use((req, res) => {
   res.status(404).render('404');

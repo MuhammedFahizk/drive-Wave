@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 const loginMiddleWare = (req, res, next) => {
   if (req.session.adminId) {
-    res.redirect('/adminDashboardPage');
+    res.redirect('/admin/DashboardPage');
   } else {
     next();
   }

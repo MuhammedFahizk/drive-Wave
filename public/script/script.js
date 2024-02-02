@@ -72,7 +72,7 @@ switchMode.addEventListener('change', () => {
 function handleRowClick(row) {
   const carId = row.getAttribute('data-carId'); // Make sure it matches your HTML attribute name
 
-  axios.get(`/getCarDetails?carId=${encodeURIComponent(carId)}`)
+  axios.get(`/admin/getCarDetails?carId=${encodeURIComponent(carId)}`)
     .then(response => {
       const data = response.data;
       document.getElementById('exampleModalLabel').innerText = data.carId;
@@ -96,7 +96,7 @@ function handleRowClick(row) {
                     <li class="list-group-item">Color: ${data.color}</li>
                 </ul> 
   <div class="card-footer d-flex justify-content-center">
-                    <form action="/adminCarPage/deleteCar" method='get' id="deleteForm">
+                    <form action="/admin/CarPage/deleteCar" method='get' id="deleteForm">
                         <input type="hidden" name="deleteCarId" value="${data._id}">
                         <button type="submit" class="btn btn-danger me-4 mt-4" ">Delete</button>
                     </form>
@@ -111,7 +111,7 @@ function handleRowClick(row) {
 
 function handleRowClickVender(row) {
   const venderId = row.getAttribute('data-venderId'); // Make sure it matches your HTML attribute name
-  axios.get(`/getVenderDetails?venderId=${encodeURIComponent(venderId)}`)
+  axios.get(`/admin/getVenderDetails?venderId=${encodeURIComponent(venderId)}`)
     .then(response => {
       const data = response.data;
       document.getElementById('exampleModalLabel').innerText = data.venderId;
@@ -132,7 +132,7 @@ function handleRowClickVender(row) {
                     <li class="list-group-item">Bank Name: ${data.bankName}</li>
                 </ul> 
   <div class="card-footer d-flex justify-content-center">
-                    <form action="/adminVender/deleteVender" method='get' id="deleteForm">
+                    <form action="/admin/deleteVender" method='get' id="deleteForm">
                         <input type="hidden" name="deleteVenderId" value="${data._id}">
                         <button type="submit" class="btn btn-danger me-4 mt-4" ">Delete</button>
                     </form>
@@ -146,7 +146,7 @@ function handleRowClickVender(row) {
 
 function handleEditClick(button) {
   const carId = button.getAttribute('data-carEId');
-  fetch(`/getCarDetails?carId=${encodeURIComponent(carId)}`)
+  fetch(`/admin/getCarDetails?carId=${encodeURIComponent(carId)}`)
     .then(res => res.json())
     .then(data => {
       document.getElementById('editCarModalLabel').innerText = `Edit ${data.carName} `;
