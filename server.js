@@ -8,6 +8,7 @@ const session = require('express-session');
 
 const adminRoute = require('./routes/adminRoute');
 const admin = require('./models/admin');
+const userRoute = require('./routes/userRout');
 
 const app = express();
 const PORT = 5000;
@@ -21,10 +22,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('view engine', 'hbs');
 app.set('views', './views');
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static('uploads'));
 
 app.use('/admin', adminRoute);
+app.use('/', userRoute);
 
 app.use((req, res) => {
   res.status(404).render('404');
