@@ -14,7 +14,10 @@ const { v4: uuidv4 } = require('uuid');
 const session = require('express-session');
 const path = require('path');
 
-const { admin, Vender } = require('../models/admin');
+const { admin } = require('../models/users');
+
+const { Vender } = require('../models/users');
+
 const AddCar = require('../models/car');
 const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
 const { sendAdminOtp, generateOtp } = require('../service/otp');

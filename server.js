@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/no-extraneous-dependencies */
 const express = require('express');
@@ -5,9 +6,11 @@ const hbs = require('hbs');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const handlebars = require('express-handlebars');
+const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 
 const adminRoute = require('./routes/adminRoute');
-const admin = require('./models/admin');
+const admin = require('./models/users');
 const userRoute = require('./routes/userRout');
 
 const app = express();
@@ -20,6 +23,17 @@ app.use(session({
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.engine(
+  'hbs',
+  handlebars.engine({
+    handlebars: allowInsecurePrototypeAccess(require('handlebars')),
+    extname: 'hbs',
+    defaultLayout: 'main',
+    layoutsDir: path.join(__dirname, '/views/layouts/'),
+    partialsDir: path.join(__dirname, '/views/partials/'),
+  }),
+);
 app.set('view engine', 'hbs');
 app.set('views', './views');
 app.use(express.static(path.join(__dirname, 'public')));

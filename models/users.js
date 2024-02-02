@@ -6,7 +6,7 @@ mongoose.connect('mongodb://localhost:27017/userDB', {
   useUnifiedTopology: true,
 });
 
-const userSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
 
   email: {
     type: String,
@@ -60,7 +60,55 @@ const VenderSchema = new mongoose.Schema({
     type: String,
   },
 }, { timestamps: true, timeseries: true });
-const Vender = mongoose.model('vender', VenderSchema, 'users');
-const admin = mongoose.model('User', userSchema);
+const userSchema = new mongoose.Schema({
+  name: {
+    require: true,
+    type: String,
+  },
+  age: {
+    require: true,
+    type: Number,
+  },
+  email: {
+    require: true,
+    type: String,
+  },
+  phone: {
+    require: true,
+    type: Number,
+  },
+  role: {
+    require: true,
+    type: String,
+  },
+  licenseNumber: {
+    require: true,
+    type: String,
+    unique: true,
+  },
+  password: {
+    require: true,
+    type: String,
+  },
+  address: [{
+    place: {
+      type: String,
+      require: false,
+    },
+    zipCode: {
+      type: Number,
+      require: false,
+    },
+    houseName: {
+      type: String,
+      require: false,
+    },
+  },
+  ],
+}, { timestamps: true, timeseries: true });
 
-module.exports = { admin, Vender };
+const Vender = mongoose.model('vender', VenderSchema, 'users');
+const admin = mongoose.model('User', adminSchema);
+const User = mongoose.model('dealers', userSchema, 'users');
+
+module.exports = { admin, Vender, User };
