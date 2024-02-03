@@ -1,6 +1,12 @@
 body {
 	margin:  0;
 }
+.hint {
+    font-size: 9px;
+    color: #fe0606;
+    margin-top: 5px;
+}
+
 .page-content {
 	width: 100%;
 	margin:  0 auto;

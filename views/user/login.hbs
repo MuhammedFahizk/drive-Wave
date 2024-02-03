@@ -14,7 +14,7 @@
 <body class="form-v10">
 	<div class="page-content">
 		<div class="form-v10-content">
-			<form class="form-detail" action="#" method="post" id="myform">
+			<form class="form-detail" action="/userLogin" method="post" id="myform">
 				<div class="form-left">
 					{{!-- <h2>General Infomation</h2> --}}
 					{{!-- <div class="form-row">
@@ -109,11 +109,19 @@
 						</div>
 					</div> --}}
 					<div class="form-row">
-						<input type="text" name="your_email" id="your_email" class="input-text" required pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}" placeholder="Your Email">
+						<input type="text" name="name" class="name" id="name" placeholder="User Name" required>
 					</div>
                <div class="form-row">
-						<input type="text" name="street" class="street" id="street" placeholder="Password" required>
+						<input type="text" name="password" class="Password" id="Password" placeholder="Password" required>
 					</div>
+                <div class="form-row">
+{{#if error}}
+  {{error }}
+  <a  style="text-decoration:solid;" href="/register"> Go to registration page</a>
+
+{{/if}}
+			</div>
+
 					<div class="form-checkbox">
 						<label class="container"><p>I do accept the <a href="#" class="text">Terms and Conditions</a> of your site.</p>
 						  	<input type="checkbox" name="checkbox">

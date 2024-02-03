@@ -43,10 +43,6 @@ const VenderSchema = new mongoose.Schema({
     require: true,
     type: String,
   },
-  //   joinDate: {
-  //     require: true,
-  //     type: Date,
-  //   },
   bankName: {
     require: true,
     type: String,
@@ -75,7 +71,7 @@ const userSchema = new mongoose.Schema({
   },
   phone: {
     require: true,
-    type: Number,
+    type: String,
   },
   role: {
     require: true,
@@ -95,7 +91,7 @@ const userSchema = new mongoose.Schema({
       type: String,
       require: false,
     },
-    zipCode: {
+    zip: {
       type: Number,
       require: false,
     },
