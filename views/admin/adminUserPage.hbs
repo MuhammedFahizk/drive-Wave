@@ -33,13 +33,13 @@
 					<span class="text">Cars</span>
 				</a>
 			</li>
-			<li class="active">
+			<li >
 				<a href="/admin/Vender">
 					<i class='bx bxs-user-circle' ></i>
 					<span class="text">Venders</span>
 				</a>
 			</li>
-			<li >
+			<li class="active">
 				<a href="/admin/users">
                     <i class='bx bxs-user-account'></i>
 					<span class="text">Users</span>
@@ -89,7 +89,7 @@
 		<nav>
 			<i class='bx bx-menu' ></i>
 			{{!-- <a href="#" class="nav-link">Categories</a> --}}
-			<form action="/admin/searchVender" method="post">
+			<form action="/admin/searchUser" method="post">
 				<div class="form-input">
 					<input type="search" placeholder="Search..." name="search">
 					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
@@ -118,7 +118,7 @@
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
 						<li>
-							<a class="active" href="#">Venders</a>
+							<a class="active" href="/admin/users">Users</a>
 						</li>
 					</ul>
 				</div>
@@ -163,7 +163,7 @@
     
   </a>
   <ul class="dropdown-menu">
-<li><a class="dropdown-item" href="/admin/vender/alphabeticallySort?search={{search}}">Alphabetically</a></li>
+<li><a class="dropdown-item" href="/admin/user/alphabeticallySort?search={{search}}">Alphabetically</a></li>
 
   
   </ul>
@@ -172,10 +172,12 @@
 					<table>
 						<thead style="" >
 							<tr style="color: #3C91E6;font-size:x-large;border-bottom"><th></th>
-								<th>Vender Name</th>
-								<th>Shope Name</th>
+								<th>User Name</th>
 								<th>Email</th>
 								<th>Phone</th>
+								<th>License Number</th>
+
+
 
 							</tr>
 						</thead>
@@ -184,20 +186,21 @@
 
 <tbody>
     {{#each data}}
-        <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewVender"data-venderId="{{this._id}}" onclick="handleRowClickVender(this)">
+        <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewUsers"data-userId="{{this._id}}" onclick="handleRowClickUser(this)">
 			<td>
                 {{!-- <img  src="{{}}"> --}}
 			</td>
             <td>
             {{this.name}}
             </td>
-            <td>{{this.shopeName}}</td>
             <td>{{this.email}}</td>
             <td>{{this.phone}}</td>
+            <td>{{this.licenseNumber}}</td>
+
         </tr>
     {{/each}}
 </tbody>
-<div class="modal fade" id="viewVender" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewUsers" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered  " style="max-width: 800px; margin-left:370px;">
    
 
@@ -208,7 +211,6 @@
       </div>
       <div class="modal-body">
         <!-- Content will be dynamically updated here -->
-        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

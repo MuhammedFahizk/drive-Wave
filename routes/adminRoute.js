@@ -27,4 +27,10 @@ router.get('/getVenderDetails', login.requireAuth, adminController.venderDetails
 router.get('/deleteVender', login.requireAuth, adminController.deleteVender);
 router.get('/vender/alphabeticallySort', login.requireAuth, adminController.alphabeticallySortVender);
 router.post('/searchVender', login.requireAuth, adminController.searchingVender);
+//  admin user page
+router.get('/users', login.requireAuth, adminController.userPage);
+router.get('/getUserDetails', login.requireAuth, adminController.userDetails);
+router.get('/user/alphabeticallySort', login.requireAuth, adminController.alphabeticallySortUser);
+router.post('/searchUser', login.requireAuth, adminController.searchingUser);
+
 module.exports = router;

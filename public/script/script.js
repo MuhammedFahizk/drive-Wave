@@ -144,6 +144,48 @@ function handleRowClickVender(row) {
     .catch(error => console.error('Error:', error));
 }
 
+function handleRowClickUser(row) {
+  const userId = row.getAttribute('data-userId');
+  console.log(userId);
+  axios.get(`/admin/getUserDetails?UserId=${encodeURIComponent(userId)}`)
+    .then(response => {
+      const data = response.data;
+      console.log(response);
+
+      document.getElementById('exampleModalLabel').innerText = data.userId;
+
+      // Build address HTML
+      const addressHTML = data.address.map(addr => `
+        <li class="list-group-item">
+          Address: <br>  House Name :${addr.houseName}<br>Place: ${addr.place}<br>Zip Code: ${addr.zip}
+        </li>
+      `).join('');
+
+      document.querySelector('#viewUsers .modal-body').innerHTML = `
+        <div class="row g-0 p-2">
+        
+          <div class="col-md-12 ">
+            <div class="card-body">
+              <h5 class="card-title">${data.name}</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Email: ${data.email}</li>
+                <li class="list-group-item">Age: ${data.age}</li>
+                <li class="list-group-item">Phone: ${data.phone}</li>
+                <li class="list-group-item">License Number: ${data.licenseNumber}</li>
+                ${addressHTML}
+                <li class="list-group-item">Join Date: ${data.createdAt}</li>
+                <li class="list-group-item">Update Date: ${data.updatedAt}</li>
+              </ul> 
+              <div class="card-footer d-flex justify-content-center">
+                
+              </div>
+            </div>
+          </div>
+        </div>`;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 function handleEditClick(button) {
   const carId = button.getAttribute('data-carEId');
   fetch(`/admin/getCarDetails?carId=${encodeURIComponent(carId)}`)

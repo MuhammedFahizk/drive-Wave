@@ -18,6 +18,8 @@ const { admin } = require('../models/users');
 
 const { Vender } = require('../models/users');
 
+const { User } = require('../models/users');
+
 const AddCar = require('../models/car');
 const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
 const { sendAdminOtp, generateOtp } = require('../service/otp');
@@ -337,6 +339,55 @@ async function searchingVender(req, res) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+// user page ,
+async function userPage(req, res) {
+  try {
+    const user = await User.find({ role: 'user' });
+    res.status(200).render('admin/adminUserPage', { data: user });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+async function userDetails(req, res) {
+  try {
+    const { UserId } = req.query;
+    const user = await User.findById(UserId);
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+async function alphabeticallySortUser(req, res) {
+  try {
+    const user = await User.find({ role: 'user' }).sort({ name: 1 });
+    if (user) {
+      res.status(200).render('admin/adminUserPage', { data: user });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+async function searchingUser(req, res) {
+  try {
+    const { search } = req.body;
+    if (search) {
+      const user = await User.find({ role: 'user', name: { $regex: new RegExp(search, 'i') } });
+      res.status(200).render('admin/adminUserPage', { data: user, search: search });
+    } else {
+      res.status(204).json('no search content');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
   showLoginPageAdmin,
   loginOtp,
@@ -359,4 +410,8 @@ module.exports = {
   deleteVender,
   alphabeticallySortVender,
   searchingVender,
+  userPage,
+  userDetails,
+  alphabeticallySortUser,
+  searchingUser,
 };
