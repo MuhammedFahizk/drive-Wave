@@ -14,4 +14,5 @@ router.get('/profile', middleware.requireAuth, userController.profilePage);
 router.get('/logout', middleware.requireAuth, userController.logoutUser);
 router.post('/editUser', middleware.requireAuth, userController.updateUser);
 router.post('/deleteUser', middleware.requireAuth, userController.deleteUser);
+router.get('/cars', userController.showCars);
 module.exports = router;

@@ -1,0 +1,83 @@
+{{>header}}
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+          <div class="col-md-9 ftco-animate pb-5">
+          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Cars <i class="ion-ios-arrow-forward"></i></span></p>
+            <h1 class="mb-3 bread">Choose Your Car</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+		
+<section class="ftco-section bg-light col-12 row ">
+    <!-- Sidebar Section -->
+    <aside class="col-md-3 ">
+        <!-- Add content for your sidebar here -->
+        <div class="align-items-left car-wrap rounded ftco-animate p-4 ml-2  ">
+<div class="dropdown">
+  <button class="btn btn-secondary  col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Transmission 
+  </button>
+  <div class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">Manual</a>
+    <a class="dropdown-item" href="#">Automatic</a>
+  </div>
+</div>     
+<div class="dropdown mt-2">
+  <button class="btn btn-secondary  col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    FuelType 
+  </button>
+  <div class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">Diesel</a>
+    <a class="dropdown-item" href="#">Petrol</a>
+    <a class="dropdown-item" href="#">Electric</a>
+
+  </div>
+</div>      </div>
+    </aside>
+
+    <div class="container col-md-9">
+        <div class="row">
+            {{#each data}}
+            <div class="col-md-4">
+                <!-- Your existing content -->
+             
+    				<div class="car-wrap rounded ftco-animate">
+    					<img class="img rounded d-flex align-items-end" src='/{{carImage}}'>
+    					<div class="text">
+                            
+    						<h2 class="mb-0"><a href="car-single.html">{{carName}}</a></h2>
+    						<div class="d-flex mb-3">
+	    						<span class="cat">{{carModal}}/{{brandName}}</span>
+	    						<p class="price ml-auto">${{dayRent}} <span>/day</span></p>
+    						</div>
+    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Book now</a> <a href="car-single.html" class="btn btn-secondary py-2 ml-1">Details</a></p>
+    					</div>
+    			
+            </div>
+            
+            </div>
+            {{/each}}
+           
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col text-center">
+                    <div class="block-27">
+                        <ul>
+                            <li><a href="#">&lt;</a></li>
+                            <li class="active"><span>1</span></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li><a href="#">&gt;</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

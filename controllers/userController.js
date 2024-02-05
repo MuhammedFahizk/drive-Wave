@@ -4,6 +4,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 const { User } = require('../models/users');
+const Car = require('../models/car');
+
 const { v4: uuidv4 } = require('uuid');
 
 const getHomePage = (req, res) => {
@@ -166,6 +168,19 @@ async function deleteUser(req, res) {
     res.status(500).json('Internal Server Error');
   }
 }
+async function showCars(req, res) {
+  try {
+  const cars = await Car.find();
+  if (cars) {
+    cars.carImageUrl = encodeURIComponent(cars.carImage);
+    res.render('user/cars', { data: cars });
+  }
+  } catch (error) {
+  console.error('Error deleting user', error);
+  res.status(500).json('Internal Server Error');
+}
+}
+
 module.exports = {
   getHomePage,
   loginPage,
@@ -176,4 +191,5 @@ module.exports = {
   logoutUser,
   updateUser,
   deleteUser,
+  showCars,
 };
