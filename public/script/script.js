@@ -177,7 +177,10 @@ function handleRowClickUser(row) {
                 <li class="list-group-item">Update Date: ${data.updatedAt}</li>
               </ul> 
               <div class="card-footer d-flex justify-content-center">
-                
+              <form action="/admin/deleteUser" method='get' id="deleteForm">
+              <input type="hidden" name="deleteUserId" value="${data._id}">
+              <button type="submit" class="btn btn-danger me-4 mt-4" ">Delete</button>
+          </form>
               </div>
             </div>
           </div>

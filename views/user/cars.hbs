@@ -1,4 +1,3 @@
-{{>header}}
 <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
@@ -10,14 +9,16 @@
         </div>
       </div>
     </section>
-		
-<section class="ftco-section bg-light col-12 row ">
-    <!-- Sidebar Section -->
-    <aside class="col-md-3 ">
-        <!-- Add content for your sidebar here -->
-        <div class="align-items-left car-wrap rounded ftco-animate p-4 ml-2  ">
-<div class="dropdown">
-  <button class="btn btn-secondary  col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+   
+     <section  class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top" >
+    				<div class="row no-gutters"  style="background-color: #fbfbfd0;">
+	  					<div  class="col-md-4 d-flex align-items-center" >
+	  						<form style="background-color: #74e0d5;"   action="#"  class="request-form ftco-animate">
+    <div class="dropdown mt-2">
+  <button style="background-color: #df4375;color:lavender"  class="btn  col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Transmission 
   </button>
   <div class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">
@@ -25,8 +26,8 @@
     <a class="dropdown-item" href="#">Automatic</a>
   </div>
 </div>     
-<div class="dropdown mt-2">
-  <button class="btn btn-secondary  col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			    		<div class="dropdown mt-2">
+  <button  style="background-color: #104176;color:lavender" class="btn   col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     FuelType 
   </button>
   <div class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">
@@ -35,13 +36,81 @@
     <a class="dropdown-item" href="#">Electric</a>
 
   </div>
-</div>      </div>
-    </aside>
+</div>
+<div class="d-flex">
+		          		
+			    					<div    class="form-group mr-2">
+			                <label style="color:black ;"for="" class="label">Min Rate</label>
+			                <input  type="text" class="form-control" id="book_pick_date" placeholder="Rate">
+			              </div>
+			              <div class="form-group ml-2">
+			                <label style="color:black ;" for="" class="label">Max Rate</label>
+			                <input type="text" class="form-control" id="book_off_date" placeholder="Rate">
+			              </div>		
+			    				
+		              </div>
+		              <div class="form-group">
+		                <label style="color:black ;" for="" class="label">Search Car</label>
+		                <input type="text" class="form-control"  placeholder="Car">
+		              </div>
+			            
+                          <div class="dropdown mt-2">
+     <button style="background-color: #df4375;color:lavender" class="btn   col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Categories 
+  </button>
 
-    <div class="container col-md-9">
+	
+   
+  <div class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">
+
+<form action="/findCarCategories" method="get">
+    <input type="hidden" name="category" value="SUVs">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">SUVs</button>
+</form>
+<form action="/findCarCategories" method="get">
+    <input type="hidden" name="category" value="MUVs">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">MUVs</button>
+</form><form action="/findCarCategories" method="get">
+    <input type="hidden" name="category" value="Sedan">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Sedan</button>
+</form><form action="/findCarCategories" method="get">
+    <input type="hidden" name="category" value="Sports Car">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Sports Car</button>
+</form><form action="/findCarCategories" method="get">
+    <input type="hidden" name="category" value="Hatchbacks">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Hatchbacks</button>
+</form><form action="/findCarCategories" method="get">
+    <input type="hidden" name="category" value="Electric">
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Electric</button>
+</form><form action="Cars" method="get">
+
+    <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">All Cars</button>
+</form>
+  </div>
+
+
+  </ul>	  </div>
+			    			</form>
+	  					</div>
+	  					<div  class="col-md-8 d-flex align-items-center">
+	  						<div style="background-color: #fbd8af;" class="services-wrap rounded-right w-100">
+	  							<h3 class="heading-section mb-4">Better Way to Rent Your Perfect Cars</h3>
+	  							
+					        <input type="text"  class="col-11 border-0 "placeholder='Search . . .'>
+	  						</div>
+	  					</div>
+	  				</div>
+				</div>
+  		</div>
+    </section>
+
+<section class="ftco-section bg-light col-12 row ">
+
+
+    <div class="container col-md-10 align-item-center">
         <div class="row">
             {{#each data}}
-            <div class="col-md-4">
+            <div  class="col-md-4">
                 <!-- Your existing content -->
              
     				<div class="car-wrap rounded ftco-animate">

@@ -185,6 +185,9 @@
 						
 
 <tbody>
+    {{#if error}}
+    {{error}}
+    {{/if}}
     {{#each data}}
         <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewUsers"data-userId="{{this._id}}" onclick="handleRowClickUser(this)">
 			<td>

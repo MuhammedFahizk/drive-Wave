@@ -387,6 +387,31 @@ async function searchingUser(req, res) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+async function deleteUser(req, res) {
+  const { deleteUserId } = req.query;
+  const user = await User.findById(deleteUserId);
+
+  if (!user) {
+    // Handle case where user with given ID is not found
+    res.status(404).send('User not found');
+    return;
+  }
+
+  const loginDate = user.createdAt;
+  const toDay = new Date();
+  const timeDifference = toDay - loginDate;
+  const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  if (dayDifference >= 31) {
+    const deleted = await User.findByIdAndDelete(deleteUserId);
+    if (deleted) {
+      res.redirect('/admin/users');
+    }
+  } else {
+    const error = `could not delete ${user.name} delete must after one month`;
+    res.status(304).render('admin/adminUserPage', { data: user, error });
+  }
+  // Sending the dayDifference as the response
+}
 
 module.exports = {
   showLoginPageAdmin,
@@ -414,4 +439,5 @@ module.exports = {
   userDetails,
   alphabeticallySortUser,
   searchingUser,
+  deleteUser,
 };
