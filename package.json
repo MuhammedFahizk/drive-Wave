@@ -12,6 +12,7 @@
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",
     "and": "^0.0.3",
+    "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "bootstrap": "^5.3.2",

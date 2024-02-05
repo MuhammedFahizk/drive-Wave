@@ -81,6 +81,8 @@ async function profilePage(req, res) {
         if (user) {
     res.status(200).render('user/profile', { data: user, name, address });
     }
+    } else {
+      res.status(400).redirect('/');
     }
   } catch (error) {
     res.status(500).json({ error: 'server Error', details: error });
@@ -101,6 +103,69 @@ async function logoutUser(req, res) {
     res.status(500).json({ error: 'server Error' });
   }
 }
+async function updateUser(req, res) {
+  try {
+    const { editId } = req.query;
+    const {
+      name,
+      age,
+      password,
+      email,
+      code,
+      phone,
+      houseName,
+      zip,
+      place,
+      licenseNumber,
+    } = req.body;
+    const updateValues = ({
+      name,
+      age,
+      password,
+      email,
+      licenseNumber,
+      address: {
+        place,
+        zip,
+        houseName,
+      },
+      phone,
+    });
+ if (editId && updateValues) {
+  const update = await User.findByIdAndUpdate(
+    editId,
+    { $set: updateValues },
+    { $new: true },
+  );
+  req.session.name = name;
+  console.log(update);
+ }
+ res.status(200).redirect('/profile');
+} catch {
+  res.status(500).json({ error: 'server Error' });
+}
+}
+async function deleteUser(req, res) {
+  const { deleteId } = req.query;
+  try {
+    if (deleteId) {
+      const deleteUserById = await User.findByIdAndDelete(deleteId);
+      if (deleteUserById) {
+        req.session.userId = '';
+        req.session.name = '';
+        req.session.password = '';
+        res.status(200).redirect('/');
+      } else {
+        res.status(404).json('User not found');
+      }
+    } else {
+      res.status(400).json('Missing deleteId parameter');
+    }
+  } catch (error) {
+    console.error('Error deleting user', error);
+    res.status(500).json('Internal Server Error');
+  }
+}
 module.exports = {
   getHomePage,
   loginPage,
@@ -109,4 +174,6 @@ module.exports = {
   userLogin,
   profilePage,
   logoutUser,
+  updateUser,
+  deleteUser,
 };

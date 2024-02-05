@@ -21,7 +21,7 @@
 			          	<div class="icon mr-0">
 			          		{{!-- <span class="icon-map-o"></span> --}}
                       <span style="font-size:8.2rem;" class="icomoon icon-user ml-4"></span>
-			            <p class="ml-0 pl-2"><span></span> {{data.name}}</p>
+			            <p class="ml-auto"> {{data.name}}</p>
 			          	</div>
                   
 
@@ -35,7 +35,7 @@
 			          </div>
                 </a>
 
-                 <a href="/edit?{{data._id}}">
+                 <a data-toggle="modal" data-target="#exampleModalCenter">
                       <div class="border w-100 col-11 p-1 pl-4 rounded mb-2 d-flex">
 			          	<div class="icon mr-3 ">
 			          		{{!-- <span class="icon-map-o"></span> --}}
@@ -45,14 +45,17 @@
                 </a>
 
 
-                 <a href="/delete?{{data._id}}">
-                      <div class="border w-100 col-11 p-1 pl-4 rounded mb-2 d-flex">
-			          	<div class="icon mr-3 ">
-			          		{{!-- <span class="icon-map-o"></span> --}}
-                    <p class="ml-">Delete</p>
-			          	</div>
-			          </div>
-                </a>
+            <form action="/deleteUser?deleteId={{data._id}}" method="post">
+            <button type="submit" >
+  <div class="border w-100 col-11 p-1 pl-4 rounded mb-2 d-flex">
+    <div class="icon mr-3">
+      {{!-- <span class="icon-map-o"></span> --}}
+      <p class="ml-">Delete</p>
+    </div>
+  </div>
+  </button>
+</form>
+
                 
                 
 		          </div>
@@ -134,5 +137,69 @@
         	</div>
         </div>
       </div>
+      <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" >
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"> Edit {{data.name}} </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/editUser?editId={{data._id}}" method="post">
+            <div class="form-group ">
+               <span>Name</span>
+                <input type="text" class="form-control" name="name" value="{{data.name}}" placeholder="{{data.name}}">
+              </div>
+              <div class="form-group">
+                
+                <span>Age</span><input type="text" class="form-control " name="age" value="{{data.age}}" placeholder="{{data.age}}">
+              </div>
+              <div class="form-group">
+                 <span>Email</span>
+                <input type="text" class="form-control" name="email" value="{{data.email}}" placeholder="{{data.email}}">
+              </div>
+              <div class="form-group">
+                 <span>Phone</span>
+                <input type="text" class="form-control"name="phone" value="{{data.phone}}" placeholder="{{data.phone}}">
+              </div>
+              <div class="form-group">
+                 <span>Place</span>
+                <input type="text" class="form-control" name="place" value="{{address.place}}" placeholder="{{address.place}}">
+              </div>
+              <div class="form-group">
+                 <span>Zip Code</span>
+                <input type="text" class="form-control" name="zip" value="{{address.zip}}" placeholder="{{address.zip}}">
+              </div>
+              <div class="form-group">
+                 <span>House Name</span>
+                <input type="text" class="form-control" name="houseName" value="{{address.houseName}}"  placeholder=" {{address.houseName}}">
+              </div>
+              <div class="form-group">
+                 <span>License Number</span>
+                <input type="text" class="form-control" name="licenseNumber" value="{{data.licenseNumber}}" placeholder="{{data.licenseNumber}}">
+              </div>
+              {{!-- <div class="form-group">
+                <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
+              </div> --}}
+              
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+            </form>
+
+    </div>
+  </div>
+</div>
     </section>
 {{>footer}}
+
