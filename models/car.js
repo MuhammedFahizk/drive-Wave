@@ -70,6 +70,11 @@ try {
       required: false,
 
     },
+    imageId: {
+      type: String,
+      required: false,
+
+    },
 
   }, { timeseries: true });
   const Car = mongoose.model('cars', carSchema);

@@ -80,7 +80,7 @@ function handleRowClick(row) {
       
   <div class="row g-0">
     <div class="col-md-4">
-      <img src="/${data.carImage}" class="img-fluid rounded-start  col-12 mt-4 " style="height:325px;object-fit: cover; width: 100%; " alt="Car Image">
+      <img src="${data.carImage}" class="img-fluid rounded-start  col-12 mt-4 " style="height:325px;object-fit: cover; width: 100%; " alt="Car Image">
     </div>
     <div class="col-md-8">
       <div class="card-body">
@@ -118,7 +118,7 @@ function handleRowClickVender(row) {
       document.querySelector('#viewVender .modal-body').innerHTML = `
  <div class="row g-0">
     <div class="col-md-4">
-      <img src="/${data.carImage}" class="img-fluid rounded-start  col-12 mt-4 " style="height:325px;object-fit: cover; width: 100%; " alt="Car Image">
+      <img src="${data.carImage}" class="img-fluid rounded-start  col-12 mt-4 " style="height:325px;object-fit: cover; width: 100%; " alt="Car Image">
     </div>
     <div class="col-md-8">
       <div class="card-body">

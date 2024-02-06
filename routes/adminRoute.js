@@ -1,7 +1,11 @@
+/* eslint-disable no-return-await */
+/* eslint-disable semi */
 const express = require('express');
+const multer = require('multer')
 const adminController = require('../controllers/adminController');
 const login = require('../middleware/admin');
-const { upload } = require('../service/fileUpload-delete');
+
+const upload = multer({ dest: '/upload/' })
 
 const router = express.Router();
 
@@ -14,10 +18,10 @@ router.post('/Dashboard', adminController.getAdminDashBoard);
 router.get('/DashboardPage', login.requireAuth, adminController.showAdminDashboard);
 router.get('/carPage', login.requireAuth, adminController.showAdminCarPage);
 router.get('/adminLogout', adminController.logout);
-router.post('/addCars', login.requireAuth, upload.single('carImage'), adminController.addCarAdmin);
+router.post('/addCars', login.requireAuth, upload.single('carImage'), login.addImage, adminController.addCarAdmin);
 router.get('/getCarDetails', login.requireAuth, adminController.getCar);
 router.get('/carPage/deleteCar', login.requireAuth, adminController.deleteCar);
-router.post('/updateCarDetails', login.requireAuth, upload.single('carImage'), adminController.updateCar);
+router.post('/updateCarDetails', login.requireAuth, upload.single('carImage'), login.addImage, adminController.updateCar);
 router.get('/carPage/findCarCategories', login.requireAuth, adminController.findCarCategories);
 router.get('/alphabeticallySort', login.requireAuth, adminController.alphabeticallySort);
 router.get('/searchByCarName', login.requireAuth, adminController.searchByCarName);

@@ -1,3 +1,4 @@
+/* eslint-disable arrow-parens */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-else-return */
 /* eslint-disable object-shorthand */
@@ -19,6 +20,7 @@ const { admin } = require('../models/users');
 const { Vender } = require('../models/users');
 
 const { User } = require('../models/users');
+const cloudinary = require('../service/cloudnery');
 
 const AddCar = require('../models/car');
 const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
@@ -118,9 +120,15 @@ async function addCarAdmin(req, res) {
       feathers,
       description,
     });
-    newCar.carImage = req.file.path;
+
+    const newPath = req.newPath.url;
+    newCar.imageId = req.newPath.id;
+    console.log(req.newPath.id);
+    newCar.carImage = newPath;
     await newCar.save();
-    uploadFile(req, res);
+    res.status(201).redirect('/admin/CarPage');
+  } else {
+    res.status(400).json({ message: 'No file uploaded' });
   }
 }
 async function getCar(req, res) {
@@ -141,6 +149,15 @@ async function deleteCar(req, res) {
     if (!deleteId) {
       res.status(400).json('/admin/carPage');
     } else {
+      const car = await AddCar.findById(deleteId);
+      const publicIdToDelete = car.imageId;
+      cloudinary.deleteImage(publicIdToDelete)
+        .then(result => {
+          console.log('Image deleted:', result);
+        })
+        .catch(error => {
+          console.error('Error deleting image:', error);
+        });
       const result = await AddCar.findByIdAndDelete(deleteId);
       if (result) {
         res.status(200).redirect('/admin/carPage');
@@ -185,29 +202,45 @@ async function getCarDetails(req, res) {
 }
 async function updateCar(req, res) {
   try {
-    const { editCarId, carImage, ...updateValues } = req.body;
+    const { editCarId, imageId, ...updateValues } = req.body;
+
     if (!editCarId) {
-      res.status(400).json('Could not get car Id');
-    } else {
-      const updateCar = await AddCar.findByIdAndUpdate(
-        editCarId,
-        { $set: updateValues },
-        { new: true },
-      );
-      const car = await AddCar.findById(editCarId).exec();
-      if (req.file) {
-        await deleteFile(car.carImage);
-        updateCar.carImage = req.file.path;
-        await updateCar.save();
-        uploadFile(req, res);
-      } else {
-        await updateCar.save();
-        res.status(200).redirect('/admin/carPage');
-      }
+      return res.status(400).json('Could not get car Id');
     }
+
+    const updatedCar = await AddCar.findByIdAndUpdate(
+      editCarId,
+      { $set: updateValues },
+      { new: true },
+    );
+
+    if (!updatedCar) {
+      return res.status(404).json('Car not found');
+    }
+
+    if (req.file) {
+      const car = await AddCar.findById(editCarId);
+      const publicIdToDelete = car.imageId;
+      // If a new image is uploaded, delete the old image from Cloudinary
+      if (publicIdToDelete) {
+        cloudinary.deleteImage(publicIdToDelete)
+          .then(result => {
+            console.log('Image deleted:', result);
+          })
+          .catch(error => {
+            console.error('Error deleting image:', error);
+          });
+      }
+      updatedCar.carImage = req.newPath.url;
+      updatedCar.imageId = req.newPath.id;
+    }
+
+    await updatedCar.save();
+
+    return res.status(200).redirect('/admin/carPage');
   } catch (error) {
-    console.log('Bad Request:', error);
-    return res.status(500).send(`Server Error:  ${{ error }}`);
+    console.error('Server Error:', error);
+    return res.status(500).send(`Server Error: ${error}`);
   }
 }
 async function findCarCategories(req, res) {
