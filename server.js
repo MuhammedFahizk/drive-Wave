@@ -32,10 +32,19 @@ app.engine(
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, '/views/layouts/'),
     partialsDir: path.join(__dirname, '/views/partials/'),
+    layouts: {
+      adminMain: 'adminMain', // Layout for admin pages
+    },
   }),
 );
+
 app.set('view engine', 'hbs');
 app.set('views', './views');
+
+app.use((req, res, next) => {
+  res.locals.includeHeaderFooter = req.path.startsWith('/admin');
+  next();
+});
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static('uploads'));
 
