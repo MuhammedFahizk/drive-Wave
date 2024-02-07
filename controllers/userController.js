@@ -195,6 +195,17 @@ async function filterCars(req, res) {
   const allCollections = await Car.aggregate(model);
    res.status(200).json(allCollections);
 }
+
+async function carDetailsUser(req, res) {
+  try {
+    const { id } = req.query;
+    const car = await Car.findById(id);
+    res.status(200).render('user/carDetails', { car });
+  } catch (error) {
+    console.error('Error Details User', error);
+    res.status(500).json('Internal Server Error');
+  }
+}
 module.exports = {
   getHomePage,
   loginPage,
@@ -207,4 +218,5 @@ module.exports = {
   deleteUser,
   showCars,
   filterCars,
+  carDetailsUser,
 };
