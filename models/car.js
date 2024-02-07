@@ -57,6 +57,14 @@ try {
       type: Number,
       required: true,
     },
+    seats: {
+      type: Number,
+      required: true,
+    },
+    luggage: {
+      type: Number,
+      required: true,
+    },
     insurenceDate: {
       type: Date,
       required: true,

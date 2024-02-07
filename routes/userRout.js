@@ -16,5 +16,5 @@ router.post('/editUser', middleware.requireAuth, userController.updateUser);
 router.post('/deleteUser', middleware.requireAuth, userController.deleteUser);
 router.get('/cars', userController.showCars);
 router.post('/filterCars', userController.filterCars);
-router.get('/carDetails',userController.carDetailsUser);
+router.get('/carDetails', userController.carDetailsUser);
 module.exports = router;
