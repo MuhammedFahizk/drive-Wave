@@ -182,7 +182,11 @@ async function showCars(req, res) {
 }
 
 async function filterCars(req, res) {
-  const { transmission, fuel, carCategory } = req.body;
+  const {
+    transmission,
+    fuel,
+  carCategory,
+} = req.body;
   const model = [
     {
       $match: {
@@ -206,6 +210,21 @@ async function carDetailsUser(req, res) {
     res.status(500).json('Internal Server Error');
   }
 }
+
+async function carSearchByName(req, res) {
+  try {
+    const { searchText } = req.body;
+     // console.log(searchText);
+    if (searchText) {
+      const car = await Car.find({ carName: { $regex: searchText } });
+      console.log(car);
+      res.status(200).json(car);
+    }
+} catch (error) {
+  console.error('Error search car', error);
+  res.status(500).json('Internal Server Error');
+}
+}
 module.exports = {
   getHomePage,
   loginPage,
@@ -219,4 +238,5 @@ module.exports = {
   showCars,
   filterCars,
   carDetailsUser,
+  carSearchByName,
 };
