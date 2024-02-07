@@ -26,10 +26,12 @@ async function addImage(req, res, next) {
 
   try {
     const { file } = req;
-    const { path } = file;
-    const newPath = await uploader(path);
-    fs.unlinkSync(path);
-    req.newPath = newPath; // Store newPath in the request object for later use
+    if (file) {
+      const { path } = file;
+      const newPath = await uploader(path);
+      fs.unlinkSync(path);
+      req.newPath = newPath; // Store newPath in the request object for later use
+    }
     next(); // Move to the next middleware or route handler
   } catch (error) {
     console.error(error);

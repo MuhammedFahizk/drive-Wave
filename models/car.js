@@ -78,7 +78,9 @@ try {
 
   }, { timeseries: true });
   const Car = mongoose.model('cars', carSchema);
-  module.exports = Car;
+  module.exports = {
+    Car,
+  };
 } catch {
   console.error('Error during admin login:', error);
   res.status(500).send('Internal Server Error');

@@ -4,7 +4,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 const { User } = require('../models/users');
-const Car = require('../models/car');
+const { Car } = require('../models/car');
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -181,6 +181,19 @@ async function showCars(req, res) {
 }
 }
 
+async function filterCars(req, res) {
+  const { transmission, fuel } = req.body;
+  const model = [
+    {
+      $match: {
+        TransmitionType: { $in: transmission }, // Convert to single value
+        fuelType: { $in: fuel },
+      },
+    },
+  ];
+  const allCollections = await Car.aggregate(model);
+   res.status(200).json(allCollections);
+}
 module.exports = {
   getHomePage,
   loginPage,
@@ -192,4 +205,5 @@ module.exports = {
   updateUser,
   deleteUser,
   showCars,
+  filterCars,
 };

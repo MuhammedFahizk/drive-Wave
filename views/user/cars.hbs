@@ -1,3 +1,6 @@
+
+<body>
+  
 <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
@@ -10,37 +13,38 @@
       </div>
     </section>
    
-     <section  class="ftco-section ftco-no-pt bg-light">
+     {{!-- <section  class="ftco-section ftco-no-pt bg-light">
     	<div class="container">
     		<div class="row no-gutters">
     			<div class="col-md-12	featured-top" >
     				<div class="row no-gutters"  style="background-color: #fbfbfd0;">
 	  					<div  class="col-md-4 d-flex align-items-center" >
-	  						<form style="background-color: #74e0d5;"   action="#"  class="request-form ftco-animate">
+	  						<form style="background-color:#20c997;"   action="#"  class="request-form ftco-animate">
     <div class="dropdown mt-2">
-  <button style="background-color: #df4375;color:lavender"  class="btn  col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <button style="color:lavender"  class="btn btn-primary  col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Transmission 
   </button>
-  <div class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">Manual</a>
-    <a class="dropdown-item" href="#">Automatic</a>
-  </div>
+<div class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#" onclick="getData('Manual');">Manual</a>
+    <a class="dropdown-item" href="#" onclick="getData('Automatic')">Automatic</a>
+</div>
+
 </div>     
 			    		<div class="dropdown mt-2">
-  <button  style="background-color: #104176;color:lavender" class="btn   col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    FuelType 
+  <button  style="background-color: #f8f9fb;color:#00050a" class="btn   col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    EnginType
   </button>
   <div class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">Diesel</a>
-    <a class="dropdown-item" href="#">Petrol</a>
-    <a class="dropdown-item" href="#">Electric</a>
+    <a class="dropdown-item" href="/enginTypeCar?type=Disel">Diesel</a>
+    <a class="dropdown-item" href="/enginTypeCar?type=Petrol">Petrol</a>
+    <a class="dropdown-item" href="/enginTypeCar?type=Electric">Electric</a>
 
   </div>
 </div>
 <div class="d-flex">
 		          		
 			    					<div    class="form-group mr-2">
-			                <label style="color:black ;"for="" class="label">Min Rate</label>
+			                <label  style="color:black ;" for="" class="label">Min Rate</label>
 			                <input  type="text" class="form-control" id="book_pick_date" placeholder="Rate">
 			              </div>
 			              <div class="form-group ml-2">
@@ -55,7 +59,7 @@
 		              </div>
 			            
                           <div class="dropdown mt-2">
-     <button style="background-color: #df4375;color:lavender" class="btn   col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+     <button style="color:lavender" class="btn btn-primary   col-12" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Categories 
   </button>
 
@@ -93,7 +97,7 @@
 			    			</form>
 	  					</div>
 	  					<div  class="col-md-8 d-flex align-items-center">
-	  						<div style="background-color: #fbd8af;" class="services-wrap rounded-right w-100">
+	  						<div style="background-color: #fefdfc80;" class="services-wrap rounded-right w-100">
 	  							<h3 class="heading-section mb-4">Better Way to Rent Your Perfect Cars</h3>
 	  							
 					        <input type="text"  class="col-11 border-0 "placeholder='Search . . .'>
@@ -102,51 +106,194 @@
 	  				</div>
 				</div>
   		</div>
-    </section>
+    </section> --}}
 
 <section class="ftco-section bg-light col-12 row ">
 
+ <aside class="col-md-2">
+        <!-- Sidebar Content -->
+        <div id="transmission" class="align-items-left car-wrap rounded ftco-animate my-0 p-2 ml-2">
+         
+           <div class="text p-1">
 
-    <div class="container col-md-10 align-item-center">
-        <div class="row">
-            {{#each data}}
-            <div  class="col-md-4">
-                <!-- Your existing content -->
-             
-    				<div class="car-wrap rounded ftco-animate">
-    					<img class="img rounded d-flex align-items-end" src='{{carImage}}'>
-    					<div class="text">
-                            
-    						<h2 class="mb-0"><a href="car-single.html">{{carName}}</a></h2>
-    						<div class="d-flex mb-3">
-	    						<span class="cat">{{carModal}}/{{brandName}}</span>
-	    						<p class="price ml-auto">${{dayRent}} <span>/day</span></p>
-    						</div>
-    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Book now</a> <a href="car-single.html" class="btn btn-secondary py-2 ml-1">Details</a></p>
-    					</div>
-    			
-            </div>
+    						<h2 class="mb-0">  Transmission</a></h2>
+              </div>
+           <input type="checkbox" id="mannual" name="Manual" class="m-1" value="Manual">
+            <label for="Manual">Manual</label><br>
             
+            <input type="checkbox" id="automatic" name="Automatic" class="m-1" value="Automatic">
+            <label for="Automatic">Automatic</label><br>
             </div>
-            {{/each}}
+          <div id="engine" class="align-items-left car-wrap rounded ftco-animate my-2 p-2 ml-2">
+        
+        <div class="text p-1">
+
+    						<h2 class="mb-0"><a > Engine Type</a></h2>
+              </div>
+         <input type="checkbox" id="Petrol" name="Petrol" class="m-1" value="Petrol">
+            <label for="Petrol">Petrol</label><br>
+            
+            <input type="checkbox" id="Diesel" name="Diesel" class="m-1 " value="Diesel">
+            <label for="Diesel">Diesel</label><br>
+
+            </div>
+        </div>
+          <div class="align-items-left car-wrap rounded my-2 ftco-animate p-2 ml-2">
+    					<div class="text p-1">
+
+    						<h2 class="mb-0"><a >Category</a></h2>
+              </div>
+              <input type="checkbox" id="MUVs" name="MUVs" class="m-1" value="MUVs">
+            <label for="MUVs">MUVs</label><br>
+            
+            <input type="checkbox" id="SUVs" name="SUVs" class="m-1 " value="SUVs">
+            <label for="SUVs">SUVs</label><br>
+
+            <input type="checkbox" id="Sedan" name="Sedan" class="m-1" value="Sedan">
+            <label for="Sedan">Sedan</label><br>
+
+            <input type="checkbox" id="Sports Car" name="Sports Car" class="m-1" value="Sports Car">
+            <label for="Sports Car">Sports Car</label><br>
+            
+            <input type="checkbox" id="Hatchbacks" name="Hatchbacks" class="m-1" value="Hatchbacks">
+            <label for="Sedan">Hatchbacks</label><br>
+            
+            <input type="checkbox" id="Electric" name="Electric" class="m-1" value="Electric">
+            <label for="Sedan">Electric</label><br>
+        </div>
+    </aside>
+    
+  
+    <div class="container col-md-10 align-item-center">
+                    <div class="rowcars row">
+               
            
             </div>
             
-            <div class="row mt-5">
-                <div class="col text-center">
-                    <div class="block-27">
-                        <ul>
-                            <li><a href="#">&lt;</a></li>
-                            <li class="active"><span>1</span></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a href="#">&gt;</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+            
+
+      
+           
+        
     </div>
 </section>
+
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<script>
+    let transmission = [];
+    let engine = []
+     
+       $('#transmission input').on('change', function () {
+        // Check if the checkbox is checked
+        if ($(this).is(':checked')) {
+             if (transmission.length === 2){
+                transmission = transmission.splice()
+
+            }
+            // If checked, add its value to the transmission array
+            transmission.push($(this).val());
+        } else {
+       
+            // If unchecked, remove its value from the transmission array
+            const index = transmission.indexOf($(this).val());
+            if (index !== -1) {
+                transmission.splice(index, 1);
+
+            }
+        }
+        
+                $('.container .rowcars').empty();
+
+            submit()})
+            
+$('#engine input').on('change', function () {
+        // Check if the checkbox is checked
+        if ($(this).is(':checked')) {
+            if (engine.length === 2){
+                engine = engine.splice()
+
+            }
+            // If checked, add its value to the transmission array
+            engine.push($(this).val());
+        } else {
+            // If unchecked, remove its value from the transmission array
+            const index = engine.indexOf($(this).val());
+            if (index !== -1) {
+                engine.splice(index, 1);
+
+            }
+        }
+        
+                $('.container .rowcars').empty();
+            submit()})
+    
+
+function submit(){
+  if(transmission.length === 0){
+    transmission=['Manual','Automatic']
+  }
+  if(engine.length === 0){
+    engine = ['Petrol','Diesel']
+  }
+    url = '/filterCars'
+    console.log(transmission)
+    console.log(engine)
+
+    axios.post(url,{transmission:transmission, fuel:engine})
+  
+    .then(response => {
+      const cars = response.data;
+
+                    if (cars.length === 0) {
+                        // Handle case where no cars match the criteria
+                    } else {
+                        cars.forEach(car => {
+                            const carHtml = `
+                                <div class="col-md-4">
+                                    <div class="car-wrap rounded ">
+                                        <img class="img rounded d-flex align-items-end" src="${car.carImage}">
+                                        <div class="text">
+                                            <h2 class="mb-0"><a href="car-single.html">${car.carName}</a></h2>
+                                            <div class="d-flex mb-3">
+                                                <span class="cat">${car.carModal}/${car.brandName}</span>
+                                                <p class="price ml-auto">${car.dayRent} <span>/day</span></p>
+                                            </div>
+                                            <p class="d-flex mb-0 d-block">
+                                                <a href="#" class="btn btn-primary py-2 mr-1">Book now</a>
+                                                <a href="car-single.html" class="btn btn-secondary py-2 ml-1">Details</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            $('.container .rowcars').append(carHtml);
+                        });
+                    }
+                })
+    
+    .catch(error => {
+      console.log(error)
+    })
+  }
+
+           
+    
+
+    
+          
+
+   
+   
+ 
+
+    // Add event listeners to checkboxes
+ 
+    
+</script>
+
+       
+

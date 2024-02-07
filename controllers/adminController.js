@@ -22,7 +22,7 @@ const { Vender } = require('../models/users');
 const { User } = require('../models/users');
 const cloudinary = require('../service/cloudnery');
 
-const AddCar = require('../models/car');
+const { Car } = require('../models/car');
 const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
 const { sendAdminOtp, generateOtp } = require('../service/otp');
 
@@ -53,7 +53,7 @@ async function loginOtp(req, res) {
   const { otp } = req.body;
   const { email } = req.session;
   if (emailOtp[email] && emailOtp[email] === otp) {
-    const admin = AddCar.find({ email: email });
+    const admin = Car.find({ email: email });
     if (admin) {
       delete emailOtp[email];
       const adminId = uuidv4();
@@ -68,8 +68,8 @@ const showAdminDashboard = (req, res) => {
   res.render('admin/index');
 };
 async function showAdminCarPage(req, res) {
-  const car = await AddCar.find();
-  const counts = await AddCar.find().countDocuments();
+  const car = await Car.find();
+  const counts = await Car.find().countDocuments();
   res.render('admin/adminCarPage', { data: car, count: counts });
 }
 const logout = (req, res) => {
@@ -103,7 +103,7 @@ async function addCarAdmin(req, res) {
     description,
   } = req.body;
   if (req.file && req.file.path) {
-    const newCar = new AddCar({
+    const newCar = new Car({
       carName,
       carCategory,
       year,
@@ -134,7 +134,7 @@ async function addCarAdmin(req, res) {
 async function getCar(req, res) {
   try {
     const carId = req.query.carId;
-    const carDetails = await AddCar.findById(carId);
+    const carDetails = await Car.findById(carId);
 
     res.json(carDetails);
   } catch (error) {
@@ -149,7 +149,7 @@ async function deleteCar(req, res) {
     if (!deleteId) {
       res.status(400).json('/admin/carPage');
     } else {
-      const car = await AddCar.findById(deleteId);
+      const car = await Car.findById(deleteId);
       const publicIdToDelete = car.imageId;
       cloudinary.deleteImage(publicIdToDelete)
         .then(result => {
@@ -158,7 +158,7 @@ async function deleteCar(req, res) {
         .catch(error => {
           console.error('Error deleting image:', error);
         });
-      const result = await AddCar.findByIdAndDelete(deleteId);
+      const result = await Car.findByIdAndDelete(deleteId);
       if (result) {
         res.status(200).redirect('/admin/carPage');
       } else {
@@ -194,7 +194,7 @@ function otpGenerate(req, res) {
 async function getCarDetails(req, res) {
   const editId = req.query.carId;
   if (editId) {
-    const carDetails = AddCar.findById(editId);
+    const carDetails = Car.findById(editId);
     res.status(200).json(carDetails);
   } else {
     res.status(400).json('error');
@@ -208,7 +208,7 @@ async function updateCar(req, res) {
       return res.status(400).json('Could not get car Id');
     }
 
-    const updatedCar = await AddCar.findByIdAndUpdate(
+    const updatedCar = await Car.findByIdAndUpdate(
       editCarId,
       { $set: updateValues },
       { new: true },
@@ -219,7 +219,7 @@ async function updateCar(req, res) {
     }
 
     if (req.file) {
-      const car = await AddCar.findById(editCarId);
+      const car = await Car.findById(editCarId);
       const publicIdToDelete = car.imageId;
       // If a new image is uploaded, delete the old image from Cloudinary
       if (publicIdToDelete) {
@@ -250,8 +250,8 @@ async function findCarCategories(req, res) {
       console.log('Bad Request:');
       return res.status(400).send('Server Error:');
     } else {
-      const cars = await AddCar.find({ carCategory: category });
-      const carsCount = await AddCar.find({ carCategory: category }).countDocuments();
+      const cars = await Car.find({ carCategory: category });
+      const carsCount = await Car.find({ carCategory: category }).countDocuments();
 
       if (cars) {
         res.status(200).render('admin/adminCarPage', { data: cars, count: carsCount, category: category });
@@ -267,11 +267,11 @@ async function alphabeticallySort(req, res) {
   const { Category, search } = req.query;
   if (Category) {
     if (!search) {
-      const cars = await AddCar.find({ carCategory: Category }).sort({ carName: 1 });
+      const cars = await Car.find({ carCategory: Category }).sort({ carName: 1 });
       const count = cars.length;
       res.status(200).render('admin/adminCarPage', { data: cars, count: count, category: Category });
     } else {
-      const cars = await AddCar.find({ carCategory: Category, carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
+      const cars = await Car.find({ carCategory: Category, carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
       const count = cars.length;
       res.status(200).render(
         'admin/adminCarPage',
@@ -281,11 +281,11 @@ async function alphabeticallySort(req, res) {
       );
     }
   } else if (!search) {
-    const cars = await AddCar.find({}).sort({ carName: 1 });
+    const cars = await Car.find({}).sort({ carName: 1 });
     const count = cars.length;
     res.status(200).render('admin/adminCarPage', { data: cars, count: count });
   } else {
-    const cars = await AddCar.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
+    const cars = await Car.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
     const count = cars.length;
     res.status(200).render(
       'admin/adminCarPage',
@@ -300,11 +300,11 @@ async function searchByCarName(req, res) {
   const encodedCategory = req.query.category;
   const category = decodeURIComponent(encodedCategory).trim();
   if (category === '') {
-    const cars = await AddCar.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
+    const cars = await Car.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
     const count = cars.length;
     res.status(200).render('admin/adminCarPage', { data: cars, count: count, search: search });
   } else {
-    const cars = await AddCar.find({ carName: { $regex: new RegExp(search, 'i') }, carCategory: category }).sort({ carName: 1 });
+    const cars = await Car.find({ carName: { $regex: new RegExp(search, 'i') }, carCategory: category }).sort({ carName: 1 });
     const count = cars.length;
     res.status(200).render(
       'admin/adminCarPage',
