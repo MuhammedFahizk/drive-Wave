@@ -182,12 +182,13 @@ async function showCars(req, res) {
 }
 
 async function filterCars(req, res) {
-  const { transmission, fuel } = req.body;
+  const { transmission, fuel, carCategory } = req.body;
   const model = [
     {
       $match: {
         TransmitionType: { $in: transmission }, // Convert to single value
         fuelType: { $in: fuel },
+        carCategory: { $in: carCategory },
       },
     },
   ];

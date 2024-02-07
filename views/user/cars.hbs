@@ -138,7 +138,7 @@
 
             </div>
         </div>
-          <div class="align-items-left car-wrap rounded my-2 ftco-animate p-2 ml-2">
+          <div id="category" class="align-items-left car-wrap rounded my-2 ftco-animate p-2 ml-2">
     					<div class="text p-1">
 
     						<h2 class="mb-0"><a >Category</a></h2>
@@ -186,6 +186,8 @@
 <script>
     let transmission = [];
     let engine = []
+    let category = []
+
      
        $('#transmission input').on('change', function () {
         // Check if the checkbox is checked
@@ -228,6 +230,29 @@ $('#engine input').on('change', function () {
             }
         }
         
+        
+                $('.container .rowcars').empty();
+            submit()})
+
+            $('#category input').on('change', function () {
+        // Check if the checkbox is checked
+        if ($(this).is(':checked')) {
+            if (category.length === 6){
+                category = category.splice()
+
+            }
+            // If checked, add its value to the transmission array
+            category.push($(this).val());
+        } else {
+            // If unchecked, remove its value from the transmission array
+            const index = category.indexOf($(this).val());
+            if (index !== -1) {
+                category.splice(index, 1);
+
+            }
+        }
+        
+        
                 $('.container .rowcars').empty();
             submit()})
     
@@ -239,11 +264,16 @@ function submit(){
   if(engine.length === 0){
     engine = ['Petrol','Diesel']
   }
+  if(category.length === 0){
+    category = ['MUVs','SUVs','Sedan','Sports Car','Hatchbacks','Electric']
+  }
     url = '/filterCars'
     console.log(transmission)
     console.log(engine)
+    console.log(category)
 
-    axios.post(url,{transmission:transmission, fuel:engine})
+
+    axios.post(url,{transmission:transmission, fuel:engine, carCategory:category})
   
     .then(response => {
       const cars = response.data;
