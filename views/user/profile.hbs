@@ -1,4 +1,3 @@
-{{>header}}
 <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
@@ -27,7 +26,7 @@
 
 			          </div>
              <a href="/logout?{{data._id}}">
-                      <div class="border w-100 col-11 p-1 pl-4 rounded mb-2 d-flex">
+                      <div class="border w-100 col-11 p-1 pl-4 bg-warning rounded mb-2 d-flex">
 			          	<div class="icon mr-3 ">
 			          		{{!-- <span class="icon-map-o"></span> --}}
                     <p class="ml-">Logout</p>
@@ -36,26 +35,25 @@
                 </a>
 
                  <a data-toggle="modal" data-target="#exampleModalCenter">
-                      <div class="border w-100 col-11 p-1 pl-4 rounded mb-2 d-flex">
+                      <div  class="border w-100 col-11 bg-primary  rounded mb-2 d-flex">
 			          	<div class="icon mr-3 ">
 			          		{{!-- <span class="icon-map-o"></span> --}}
-                    <p class="ml-">Edit </p>
+                    <p style="color: aliceblue;" class="ml-4 mb-2">Edit </p>
 			          	</div>
 			          </div>
                 </a>
 
-
-            <form action="/deleteUser?deleteId={{data._id}}" method="post">
-            <button type="submit" >
-  <div class="border w-100 col-11 p-1 pl-4 rounded mb-2 d-flex">
+ <form action="/deleteUser?deleteId={{data._id}}" method="post">
+            <button   class="  border bg-danger w-100 col-11  rounded d-flex" type="submit" >
     <div class="icon mr-3">
       {{!-- <span class="icon-map-o"></span> --}}
-      <p class="ml-">Delete</p>
+      
+           
+      <p class="ml-4 mb-2 " style="color: aliceblue;" >Delete</p>
+      
     </div>
-  </div>
-  </button>
+ </button>
 </form>
-
                 
                 
 		          </div>
@@ -138,9 +136,7 @@
         </div>
       </div>
       <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" >
-  Launch demo modal
-</button>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -201,5 +197,4 @@
   </div>
 </div>
     </section>
-{{>footer}}
 

@@ -69,7 +69,7 @@ try {
       type: Date,
       required: true,
     },
-    feathers: {
+    features: {
       type: Array,
       required: false,
     },

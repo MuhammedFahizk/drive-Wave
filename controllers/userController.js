@@ -1,8 +1,12 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/order */
 /* eslint-disable indent */
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+
 const { User } = require('../models/users');
 const { Car } = require('../models/car');
 
@@ -36,52 +40,82 @@ async function userRegistration(req, res) {
     place,
     licenseNumber,
   } = req.body;
+  const hashPassword = await bcrypt.hash(password, 10);
   const newUser = new User({
     name,
     age,
-    password,
+    password: hashPassword,
     email,
+    phone,
     licenseNumber,
     address: {
       place,
       zip,
       houseName,
     },
-    phone: code + phone,
     role: 'user',
   });
   newUser.role = 'user';
   await newUser.save();
   req.session.name = name;
-  req.session.password = password;
+  req.session.password = hashPassword;
   req.session.userId = uuidv4();
   res.redirect('/');
   } catch (error) {
     res.status(500).json({ error: 'server Error', details: error });
   }
 }
+
 async function userLogin(req, res) {
   const { name, password } = req.body;
   if (name && password) {
-    const user = await User.findOne({ name, password });
-    if (user) {
-        req.session.userId = uuidv4();
-        req.session.name = name;
-        req.session.password = password;
-        res.redirect('/');
-    } else {
-        res.status(404).render('user/login', { error: 'user name or password is invalid  ' });
+    try {
+      const user = await User.findOne({ name });
+
+      if (user) {
+        // Compare hashed password
+        const passwordMatch = bcrypt.compare(password, user.password);
+
+        if (passwordMatch) {
+            const hashPassword = await bcrypt.hash(password, 10);
+
+          req.session.password = hashPassword;
+          req.session.name = user.name;
+          req.session.userId = uuidv4();
+          // Avoid storing password in session
+          // req.session.password = password;
+          res.redirect('/');
+        } else {
+          res.status(404).render('user/login', { error: 'User name or password is invalid' });
+        }
+      } else {
+        res.status(404).render('user/login', { error: 'User name or password is invalid' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server Error' });
     }
+  } else {
+    res.status(400).render('user/login', { error: 'Missing user name or password' });
   }
 }
+
 async function profilePage(req, res) {
   try {
     if (req.session) {
-    const { name, password } = req.session;
-    const user = await User.findOne({ name, password });
-    const address = user.address[0];
+      const { name, password } = req.session;
+      console.log(req.session);
+      const user = await User.findOne({ name });
+
         if (user) {
-    res.status(200).render('user/profile', { data: user, name, address });
+            // Compare hashed password
+            const passwordMatch = bcrypt.compare(password, user.password);
+            if (passwordMatch) {
+                const address = user.address[0];
+                res.status(200).render('user/profile', { data: user, name, address });
+            } else {
+              res.status(404).render('user/login', { error: 'User name or password is invalid' });
+            }
     }
     } else {
       res.status(400).redirect('/');
@@ -113,7 +147,6 @@ async function updateUser(req, res) {
       age,
       password,
       email,
-      code,
       phone,
       houseName,
       zip,
@@ -142,7 +175,7 @@ async function updateUser(req, res) {
   req.session.name = name;
   console.log(update);
  }
- res.status(200).redirect('/profile');
+ res.status(200).redirect('/profile', { name });
 } catch {
   res.status(500).json({ error: 'server Error' });
 }
@@ -170,10 +203,11 @@ async function deleteUser(req, res) {
 }
 async function showCars(req, res) {
   try {
+    const { name, password } = req.session;
   const cars = await Car.find();
   if (cars) {
     cars.carImageUrl = encodeURIComponent(cars.carImage);
-    res.render('user/cars', { data: cars });
+    res.render('user/cars', { data: cars, name });
   }
   } catch (error) {
   console.error('Error deleting user', error);
@@ -201,10 +235,28 @@ async function filterCars(req, res) {
 }
 
 async function carDetailsUser(req, res) {
+  const { name, password } = req.session;
   try {
     const { id } = req.query;
-    const car = await Car.findById(id);
-    res.status(200).render('user/carDetails', { car });
+    const cars = await Car.findById(id);
+    const { fuelType, carCategory } = cars;
+    let carData = await Car.aggregate([
+      {
+        $match:
+          {
+            $or:
+             [
+              { carCategory },
+              { fuelType },
+             ],
+          },
+        },
+        {
+          $limit: 7,
+        },
+      ]);
+    carData = carData.filter((car) => car._id.toString() !== id);
+    res.status(200).render('user/carDetails', { car: cars, data: carData, name });
   } catch (error) {
     console.error('Error Details User', error);
     res.status(500).json('Internal Server Error');
@@ -216,8 +268,7 @@ async function carSearchByName(req, res) {
     const { searchText } = req.body;
      // console.log(searchText);
     if (searchText) {
-      const car = await Car.find({ carName: { $regex: searchText } });
-      console.log(car);
+      const car = await Car.find({ carName: { $regex: new RegExp(searchText, 'i') } });
       res.status(200).json(car);
     }
 } catch (error) {

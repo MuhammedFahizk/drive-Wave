@@ -200,6 +200,8 @@ function handleEditClick(button) {
       document.querySelector('#editModal [name="carCategory"]').value = data.carCategory;
       document.querySelector('#editModal [name="year"]').value = data.year;
       document.querySelector('#editModal [name="dayRent"]').value = data.dayRent;
+      document.querySelector('#editModal [name="seats"]').value = data.seats;
+      document.querySelector('#editModal [name="luggage"]').value = data.luggage;
       document.querySelector('#editModal [name="brandName"]').value = data.brandName;
       document.querySelector('#editModal [name="carModal"]').value = data.carModal;
       document.querySelector('#editModal [name="licensePlateNumber"]').value = data.licensePlateNumber;
@@ -210,7 +212,7 @@ function handleEditClick(button) {
       document.querySelector('#editModal [name="milage"]').value = data.milage;
       const datePart = data.insurenceDate.substring(0, 10);
       document.querySelector('#editModal [name="insurenceDate"]').value = datePart;
-      document.querySelector('#editModal [name="feathers"]').value = data.feathers;
+      document.querySelector('#editModal [name="features"]').value = data.features;
       document.querySelector('#editModal [name="description"]').value = data.description;
       document.querySelector('#editModal [name="editCarId"]').value = data._id;
 

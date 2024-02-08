@@ -101,7 +101,7 @@ async function addCarAdmin(req, res) {
     TransmitionType,
     milage,
     insurenceDate,
-    feathers,
+    features,
     description,
   } = req.body;
   if (req.file && req.file.path) {
@@ -121,7 +121,7 @@ async function addCarAdmin(req, res) {
       luggage,
       seats,
       insurenceDate,
-      feathers,
+      features,
       description,
     });
 

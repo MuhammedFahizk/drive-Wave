@@ -83,7 +83,7 @@
                 <!-- Your existing content -->
              
     				<div class="car-wrap rounded ftco-animate">
-    					<img class="img rounded d-flex align-items-end" src='{{carImage}}'>
+    					<img style="height:325px;object-fit: cover; width: 100%; " alt="Car Image" class="img rounded d-flex align-items-end" src='{{carImage}}'>
     					<div class="text">
                             
     						<h2 class="mb-0"><a href="car-single.html">{{carName}}</a></h2>
@@ -218,7 +218,7 @@ $('#search').on('keydown', function(event) {
                             const carHtml = `
                                 <div class="col-md-4">
                                     <div class="car-wrap rounded ">
-                                        <img class="img rounded d-flex align-items-end" src="${car.carImage}">
+                                        <img style="height:325px;object-fit: cover; width: 100%; "  class="img rounded d-flex align-items-end" src="${car.carImage}">
                                         <div class="text">
                                             <h2 class="mb-0"><a href="car-single.html">${car.carName}</a></h2>
                                             <div class="d-flex mb-3">
@@ -275,7 +275,7 @@ function submit(){
                             const carHtml = `
                                 <div class="col-md-4">
                                     <div class="car-wrap rounded ">
-                                        <img class="img rounded d-flex align-items-end" src="${car.carImage}">
+                                        <img style="height:325px;object-fit: cover; width: 100%; "  class="img rounded d-flex align-items-end" src="${car.carImage}">
                                         <div class="text">
                                             <h2 class="mb-0"><a href="car-single.html">${car.carName}</a></h2>
                                             <div class="d-flex mb-3">
