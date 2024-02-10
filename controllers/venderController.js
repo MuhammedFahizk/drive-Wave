@@ -33,6 +33,30 @@ async function showVenderDashboard(req, res) {
 const showDashboard = (req, res) => {
   res.status(200).render('vender/dashboard');
 };
+
+const signUpPage = (req, res) => {
+  res.status(200).render('vender/signUp');
+};
+
+const signupVender = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const existingVender = await Vender.findOne({ email });
+    if (existingVender) {
+      return res.status(400).json({ error: 'Email address is already in use' });
+    }
+    const newVender = new Vender(req.body);
+    newVender.role = 'vender';
+    newVender.venderAccessEnabled = false;
+    await newVender.save();
+    return res.status(201).render('vender/login', { popup: 'Successfully Submit Your Data Access after Enable Admin' }); // Respond with the saved Vender data
+  } catch (error) {
+    console.error('Error creating Vender:', error);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
+
 async function venderCarPage(req, res) {
   try {
     const { ownerId } = req.session;
@@ -103,7 +127,7 @@ async function updateCar(req, res) {
     const { editCarId, imageId, ...updateValues } = req.body;
 
     if (!editCarId) {
-      return res.status(400).json('Could not get car Id');
+      return res.status(400).json({ error: 'Could not get car Id' });
     }
 
     const updatedCar = await Car.findByIdAndUpdate(
@@ -113,7 +137,7 @@ async function updateCar(req, res) {
     );
 
     if (!updatedCar) {
-      return res.status(404).json('Car not found');
+      return res.status(404).json({ error: 'Car not found' });
     }
 
     if (req.file) {
@@ -121,13 +145,11 @@ async function updateCar(req, res) {
       const publicIdToDelete = car.imageId;
       // If a new image is uploaded, delete the old image from Cloudinary
       if (publicIdToDelete) {
-        cloudinary.deleteImage(publicIdToDelete)
-          .then(result => {
-            console.log('Image deleted:', result);
-          })
-          .catch(error => {
-            console.error('Error deleting image:', error);
-          });
+        try {
+          await cloudinary.deleteImage(publicIdToDelete);
+        } catch (error) {
+          console.error('Error deleting image:', error);
+        }
       }
       updatedCar.carImage = req.newPath.url;
       updatedCar.imageId = req.newPath.id;
@@ -138,9 +160,10 @@ async function updateCar(req, res) {
     return res.status(200).redirect('/vender/carPage');
   } catch (error) {
     console.error('Server Error:', error);
-    return res.status(500).send(`Server Error: ${error}`);
+    return res.status(500).send('Server Error');
   }
 }
+
 async function getCar(req, res) {
   try {
     const { carId } = req.query;
@@ -156,29 +179,26 @@ async function deleteCar(req, res) {
   try {
     const deleteId = req.query.deleteCarId;
     if (!deleteId) {
-      res.status(400).json('/vender/carPage');
-    } else {
-      const car = await Car.findById(deleteId);
-      const publicIdToDelete = car.imageId;
-      cloudinary.deleteImage(publicIdToDelete)
-        .then(result => {
-          console.log('Image deleted:', result);
-        })
-        .catch(error => {
-          console.error('Error deleting image:', error);
-        });
-      const result = await Car.findByIdAndDelete(deleteId);
-      if (result) {
-        res.status(200).redirect('/vender/carPage');
-      } else {
-        return res.status(404).json('Car not found');
-      }
+      return res.status(400).json({ error: 'Missing deleteCarId parameter' });
     }
+
+    const car = await Car.findById(deleteId);
+    if (!car) {
+      return res.status(404).json({ error: 'Car not found' });
+    }
+
+    const publicIdToDelete = car.imageId;
+    await cloudinary.deleteImage(publicIdToDelete);
+
+    await Car.findByIdAndDelete(deleteId);
+
+    return res.status(200).redirect('/vender/carPage');
   } catch (error) {
-    console.log('Bad Request:', error);
-    return res.status(500).send(`Server Error:  ${{ error }}`);
+    console.error('Error deleting car:', error);
+    return res.status(500).send('Server Error');
   }
 }
+
 module.exports = {
   loginPage,
   showVenderDashboard,
@@ -188,4 +208,6 @@ module.exports = {
   updateCar,
   getCar,
   deleteCar,
+  signUpPage,
+  signupVender,
 };

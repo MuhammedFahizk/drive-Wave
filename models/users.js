@@ -31,7 +31,7 @@ const VenderSchema = new mongoose.Schema({
     require: true,
     type: String,
   },
-  shopeName: {
+  shopName: {
     require: true,
     type: String,
   },
@@ -46,6 +46,10 @@ const VenderSchema = new mongoose.Schema({
   bankName: {
     require: true,
     type: String,
+  },
+  venderAccessEnabled: {
+    require: true,
+    type: Boolean,
   },
   accountNumber: {
     require: true,

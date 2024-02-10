@@ -318,6 +318,29 @@ async function searchByCarName(req, res) {
     );
   }
 }
+
+const viewNotificationPage = async (req, res) => {
+  try {
+    const vender = await Vender.aggregate([
+      {
+        $match: {
+          role: 'vender',
+          venderAccessEnabled: false,
+        },
+      },
+    ]);
+    if (!vender) {
+      console.error({ error: 'not found Notification' });
+    } else {
+      const count = vender.length;
+      res.status(200).render('admin/notification', { data: vender, count });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 // vender page
 async function venderPage(req, res) {
   const venders = await Vender.find({ role: 'vender' });
@@ -466,6 +489,7 @@ module.exports = {
   findCarCategories,
   alphabeticallySort,
   searchByCarName,
+  viewNotificationPage,
   venderPage,
   venderDetails,
   deleteVender,

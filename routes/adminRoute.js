@@ -25,6 +25,7 @@ router.post('/updateCarDetails', login.requireAuth, upload.single('carImage'), l
 router.get('/carPage/findCarCategories', login.requireAuth, adminController.findCarCategories);
 router.get('/alphabeticallySort', login.requireAuth, adminController.alphabeticallySort);
 router.get('/searchByCarName', login.requireAuth, adminController.searchByCarName);
+router.get('/notification', login.requireAuth, adminController.viewNotificationPage)
 // adminVender routs
 router.get('/Vender', login.requireAuth, adminController.venderPage);
 router.get('/getVenderDetails', login.requireAuth, adminController.venderDetails);

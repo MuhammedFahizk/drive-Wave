@@ -126,7 +126,7 @@ function handleRowClickVender(row) {
        <ul class="list-group list-group-flush">
                     <li class="list-group-item">Email: ${data.email}</li>
                     <li class="list-group-item">Age: ${data.age}</li>
-                    <li class="list-group-item">ShopName: ${data.shopeName}</li>
+                    <li class="list-group-item">ShopName: ${data.shopName}</li>
                     <li class="list-group-item">Phone: ${data.phone}</li>
                     <li class="list-group-item">Account Number: ${data.accountNumber}</li>
                     <li class="list-group-item">Bank Name: ${data.bankName}</li>
@@ -140,6 +140,46 @@ function handleRowClickVender(row) {
     </div>
     </div>
   </div>`;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function handleRowClickVenderNotification(button) {
+  const venderId = button.getAttribute('data-venderId'); // Make sure it matches your HTML attribute name
+  axios.get(`/admin/getVenderDetails?venderId=${encodeURIComponent(venderId)}`)
+    .then(response => {
+      const data = response.data;
+      document.querySelector('#viewVenderDetails .modal-body').innerHTML = `
+      <div class="col-md-12">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Email:
+              <span class="text-info">${data.email}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Age:
+              <span class="text-info">${data.age}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Shop Name:
+              <span class="text-info">${data.shopName}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Phone:
+              <span class="text-info">${data.phone}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Account Number:
+              <span class="text-info">${data.accountNumber}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Bank Name:
+              <span class="text-info">${data.bankName}</span>
+            </li>
+          </ul>
+        </div>
+      </div>`;
     })
     .catch(error => console.error('Error:', error));
 }
@@ -221,28 +261,7 @@ function handleEditClick(button) {
     })
     .catch(error => console.error('Error:', error));
 }
-// document.addEventListener('DOMContentLoaded', () => {
-//   const searchField = document.getElementById('searchField');
-//   searchField.addEventListener('keyup', (event) => {
-//     if (event.key === 'Enter') {
-//       const searchTerm = searchField.value.trim();
 
-//       if (searchTerm !== '') {
-//         const apiUrl = `/adminCarPage/searchCar?query=${encodeURIComponent(searchTerm)}`;
-
-//         axios.get(apiUrl)
-//           .then((response) => {
-//             console.log('API Response:', response.data);
-//           })
-//           .catch((error) => {
-//             console.error('Error:', error.message);
-//           });
-//       } else {
-//         console.log('Please enter a search term.');
-//       }
-//     }
-//   });
-// });
 document.getElementById('searchByCarName').addEventListener('keypress', (event) => {
   if (event.key === 'Enter') {
     const search = document.getElementById('searchByCarName').value;

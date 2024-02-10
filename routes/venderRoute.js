@@ -7,8 +7,11 @@ const middleware = require('../middleware/vender');
 const upload = multer({ dest: '/upload/' });
 
 const router = express.Router();
+router.get('/', middleware.loginMiddleWare, venderController.loginPage);
 router.get('/login', middleware.loginMiddleWare, venderController.loginPage);
 router.post('/Dashboard', venderController.showVenderDashboard);
+router.get('/signUp', middleware.loginMiddleWare, venderController.signUpPage);
+router.post('/signupVender', middleware.loginMiddleWare, venderController.signupVender);
 router.get('/dashboardPage', venderController.showDashboard);
 router.get('/carPage', middleware.requireAuth, venderController.venderCarPage);
 router.post('/addCars', middleware.requireAuth, middleware.requireAuth, upload.single('carImage'), middleware.addImage, venderController.addCarVender);

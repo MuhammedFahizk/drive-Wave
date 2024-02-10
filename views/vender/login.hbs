@@ -4,7 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login form</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css" crossorigin="">
+
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <link rel="stylesheet" href="/css/loginPage.css">
 </head>
 <body>
@@ -40,14 +44,20 @@
       {{error}}
     </div>
   {{/if}}
+  {{#if popup}}
+            <script>
+              alert("{{popup}}");
+            </script>
+            {{/if}}
      
       <button type="submit" onclick="return validateForm()">Login</button>
     </form>
     <form action="/vender/login/getOtp" method="get">
             <button class="mt-2"  type="submit">Get Otp</button>
       </form>
+    <p class="ml-4 mt-3 ">Creat a new Account <a href="/vender/signUp">sign Up</a></p> 
   </main>
 </body>
-    <script src="/script/loginPage.js"></script>
 
 </html>
+    <script src="/script/loginPage.js"></script>
