@@ -83,6 +83,11 @@ try {
       required: false,
 
     },
+    ownerId: {
+      type: String,
+      required: false,
+
+    },
 
   }, { timeseries: true });
   const Car = mongoose.model('cars', carSchema);

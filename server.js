@@ -12,6 +12,7 @@ const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-ac
 const adminRoute = require('./routes/adminRoute');
 const admin = require('./models/users');
 const userRoute = require('./routes/userRout');
+const venderRoute = require('./routes/venderRoute');
 
 const app = express();
 const PORT = 5000;
@@ -42,7 +43,9 @@ app.set('view engine', 'hbs');
 app.set('views', './views');
 
 app.use((req, res, next) => {
-  res.locals.includeHeaderFooter = req.path.startsWith('/admin');
+  res.locals.includeHeaderFooter = req.path.startsWith('/admin') || req.path.startsWith('/vender');
+  res.locals.excludeHeaderFooter = req.path.startsWith('/login') || req.path.startsWith('/register');
+
   next();
 });
 app.use(express.static(path.join(__dirname, 'public')));
@@ -50,6 +53,7 @@ app.use('/uploads', express.static('uploads'));
 
 app.use('/admin', adminRoute);
 app.use('/', userRoute);
+app.use('/vender', venderRoute);
 
 app.use((req, res) => {
   res.status(404).render('404');

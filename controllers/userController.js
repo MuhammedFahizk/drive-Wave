@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/order */
@@ -6,9 +7,11 @@
 /* eslint-disable no-unused-vars */
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const emailValidator = require('email-validator');
 
 const { User } = require('../models/users');
 const { Car } = require('../models/car');
+const { sendAdminOtp, generateOtp, sendMailToAdmin } = require('../service/nodeMailer');
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -26,51 +29,12 @@ const loginPage = (req, res) => {
 function register(req, res) {
   res.render('user/signUp');
 }
-async function userRegistration(req, res) {
-  try {
-    const {
-    name,
-    age,
-    password,
-    email,
-    code,
-    phone,
-    houseName,
-    zip,
-    place,
-    licenseNumber,
-  } = req.body;
-  const hashPassword = await bcrypt.hash(password, 10);
-  const newUser = new User({
-    name,
-    age,
-    password: hashPassword,
-    email,
-    phone,
-    licenseNumber,
-    address: {
-      place,
-      zip,
-      houseName,
-    },
-    role: 'user',
-  });
-  newUser.role = 'user';
-  await newUser.save();
-  req.session.name = name;
-  req.session.password = hashPassword;
-  req.session.userId = uuidv4();
-  res.redirect('/');
-  } catch (error) {
-    res.status(500).json({ error: 'server Error', details: error });
-  }
-}
 
 async function userLogin(req, res) {
-  const { name, password } = req.body;
-  if (name && password) {
+  const { email, password } = req.body;
+  if (email && password) {
     try {
-      const user = await User.findOne({ name });
+      const user = await User.findOne({ role: 'user', email });
 
       if (user) {
         // Compare hashed password
@@ -104,12 +68,12 @@ async function profilePage(req, res) {
   try {
     if (req.session) {
       const { name, password } = req.session;
-      console.log(req.session);
       const user = await User.findOne({ name });
 
         if (user) {
             // Compare hashed password
-            const passwordMatch = bcrypt.compare(password, user.password);
+            const psw = password.toString();
+            const passwordMatch = bcrypt.compare(psw, user.password);
             if (passwordMatch) {
                 const address = user.address[0];
                 res.status(200).render('user/profile', { data: user, name, address });
@@ -174,8 +138,8 @@ async function updateUser(req, res) {
   );
   req.session.name = name;
   console.log(update);
+  res.status(200).redirect('/profile');
  }
- res.status(200).redirect('/profile', { name });
 } catch {
   res.status(500).json({ error: 'server Error' });
 }
@@ -276,11 +240,125 @@ async function carSearchByName(req, res) {
   res.status(500).json('Internal Server Error');
 }
 }
+const emailOtp = {};
+
+async function generateOtpEmail(req, res) {
+  try {
+    const { email } = req.body;
+    console.log(req.body);
+    const otp = generateOtp();
+    emailOtp[email] = otp;
+     sendAdminOtp(email, otp, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).send(error);
+    }
+      console.log(otp, email);
+      res.status(201).json(email);
+  });
+  } catch (error) {
+  console.error('Error search car', error);
+  res.status(500).json('Internal Server Error');
+}
+}
+async function registrationValidation(req, res) {
+  try {
+    const {
+    name,
+    age,
+    password,
+    email,
+    phone,
+    houseName,
+    zip,
+    place,
+    licenseNumber,
+  } = req.body;
+  const isValid = emailValidator.validate(email);
+if (isValid) {
+  const hashPassword = await bcrypt.hash(password, 10);
+  const newUser = new User({
+    name,
+    age,
+    password: hashPassword,
+    email,
+    phone,
+    licenseNumber,
+    address: {
+      place,
+      zip,
+      houseName,
+    },
+    role: 'user',
+  });
+  await newUser.save();
+  req.session.name = name;
+  req.session.password = hashPassword;
+  req.session.userId = uuidv4();
+  res.redirect('/');
+} else {
+  res.status(400).json({ error: 'Invalid email format' });
+}
+  } catch (error) {
+    res.status(500).json({ error: 'server Error', details: error });
+  }
+}
+
+async function userOtpCheck(req, res) {
+  const { otp, Email } = req.body;
+  if (emailOtp[Email] && emailOtp[Email] === otp) {
+    const user = await User.findOne({ role: 'user', email: Email });
+    if (user) {
+      delete emailOtp[Email];
+       const { password } = user;
+       const psw = password.toString();
+      const hashPassword = bcrypt.hash(psw, 10);
+
+      req.session.password = hashPassword;
+      req.session.name = user.name;
+      req.session.userId = uuidv4();
+      res.status(200).redirect('/');
+    } else {
+      const error = 'not found user';
+      res.status(404).redirect('/login');
+    }
+}
+}
+
+const contactPage = (req, res) => {
+  const { name, password } = req.session;
+  res.status(200).render('user/contact', { name });
+};
+
+async function userMessageToAdmin(req, res) {
+  try {
+  const {
+    name,
+    email,
+    subject,
+    message,
+  } = req.body;
+  if (email) {
+    sendMailToAdmin(email, message, subject, (error, info) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).send(error);
+      }
+        res.status(201).json('Success fully send message');
+    });
+  }
+} catch (error) {
+  res.status(500).json({ error: 'server Error', details: error });
+}
+}
+
+const aboutPage = (req, res) => {
+  res.status(200).render('user/about');
+};
 module.exports = {
   getHomePage,
   loginPage,
   register,
-  userRegistration,
   userLogin,
   profilePage,
   logoutUser,
@@ -290,4 +368,10 @@ module.exports = {
   filterCars,
   carDetailsUser,
   carSearchByName,
+  generateOtpEmail,
+  userOtpCheck,
+  registrationValidation,
+  contactPage,
+  userMessageToAdmin,
+  aboutPage,
 };

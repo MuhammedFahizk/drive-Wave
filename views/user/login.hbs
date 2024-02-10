@@ -16,100 +16,14 @@
 		<div class="form-v10-content">
 			<form class="form-detail" action="/userLogin" method="post" id="myform">
 				<div class="form-left">
-					{{!-- <h2>General Infomation</h2> --}}
-					{{!-- <div class="form-row">
-						<select name="title">
-						    <option class="option" value="title">Title</option>
-						    <option class="option" value="businessman">Businessman</option>
-						    <option class="option" value="reporter">Reporter</option>
-						    <option class="option" value="secretary">Secretary</option>
-						</select>
-						<span class="select-btn">
-						  	<i class="zmdi zmdi-chevron-down"></i>
-						</span>
-					</div> --}}
-					{{!-- <div class="form-group">
-						<div class="form-row form-row-1">
-							<input type="text" name="first_name" id="first_name" class="input-text" placeholder="First Name" required>
-						</div>
-						<div class="form-row form-row-2">
-							<input type="text" name="last_name" id="last_name" class="input-text" placeholder="Last Name" required>
-						</div>
-					</div> --}}
-					{{!-- <div class="form-row">
-						<select name="position">
-						    <option value="position">Position</option>
-						    <option value="director">Director</option>
-						    <option value="manager">Manager</option>
-						    <option value="employee">Employee</option>
-						</select>
-						<span class="select-btn">
-						  	<i class="zmdi zmdi-chevron-down"></i>
-						</span>
-					</div>
-					<div class="form-row">
-						<input type="text" name="company" class="company" id="company" placeholder="Company" required>
-					</div>
-					<div class="form-group">
-						<div class="form-row form-row-3">
-							<input type="text" name="business" class="business" id="business" placeholder="Business Arena" required>
-						</div>
-						<div class="form-row form-row-4">
-							<select name="employees">
-							    <option value="employees">Employees</option>
-							    <option value="trainee">Trainee</option>
-							    <option value="colleague">Colleague</option>
-							    <option value="associate">Associate</option>
-							</select>
-							<span class="select-btn">
-							  	<i class="zmdi zmdi-chevron-down"></i>
-							</span>
-						</div>
-					</div> --}}
+					
 				</div>
 				<div class="form-right">
 					<h2>User Login </h2>
 					
-					{{!-- <div class="form-row">
-						<input type="text" name="additional" class="additional" id="additional" placeholder="Additional Information" required>
-					</div>
-					<div class="form-group">
-						<div class="form-row form-row-1">
-							<input type="text" name="zip" class="zip" id="zip" placeholder="Zip Code" required>
-						</div>
-						<div class="form-row form-row-2">
-							<select name="place">
-							    <option value="place">Place</option>
-							    <option value="Street">Street</option>
-							    <option value="District">District</option>
-							    <option value="City">City</option>
-							</select>
-							<span class="select-btn">
-							  	<i class="zmdi zmdi-chevron-down"></i>
-							</span>
-						</div>
-					</div>
+					
 					<div class="form-row">
-						<select name="country">
-						    <option value="country">Country</option>
-						    <option value="Vietnam">Vietnam</option>
-						    <option value="Malaysia">Malaysia</option>
-						    <option value="India">India</option>
-						</select>
-						<span class="select-btn">
-						  	<i class="zmdi zmdi-chevron-down"></i>
-						</span>
-					</div>
-					<div class="form-group">
-						<div class="form-row form-row-1">
-							<input type="text" name="code" class="code" id="code" placeholder="Code +" required>
-						</div>
-						<div class="form-row form-row-2">
-							<input type="text" name="phone" class="phone" id="phone" placeholder="Phone Number" required>
-						</div>
-					</div> --}}
-					<div class="form-row">
-						<input type="text" name="name" class="name" id="name" placeholder="User Name" required>
+						<input type="text" name="email" class="email" id="Email" placeholder="Email" required>
 					</div>
                <div class="form-row">
 						<input type="text" name="password" class="Password" id="Password" placeholder="Password" required>
@@ -122,22 +36,93 @@
 {{/if}}
 			</div>
 
-					<div class="form-checkbox">
-						<label class="container"><p>I do accept the <a href="#" class="text">Terms and Conditions</a> of your site.</p>
-						  	<input type="checkbox" name="checkbox">
-						  	<span class="checkmark"></span>
-						</label>
-					</div>
+				
 					<div class="form-row-last">
 						<input type="submit" name="register" class="register" value="Login ">
 					</div>
-               <div class="form-row-last">
-						<label class="container"><p>Don't have an account ? <a href="/register" class="text">Register</a> </p>
+               <div class="form-row-last m-0 py-0">
+
+<label class="container py-0 my-0"><p>Loin With otp <a href="#" id="openModal" class="text" data-toggle="modal" data-target="#myModal">Get Otp</a></p></label>
+						</label>
+			   </div>
+               <div class="form-row-last my-0">
+						
+						<label class="container py-0"><p>Don't have an account ? <a href="/register" class="text">Register</a> </p>
 					</div>
 
 				</div>
 			</form>
 		</div>
 	</div>
+	<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    
+      <!-- Modal Header -->
+     
+      
+      <!-- Modal Body -->
+		<div  class="form-row ">
+		<div  class="form-v10-content">
+			<form  class="form-detail"  method="post" id="myform">
+					    <div style="background-color: aliceblue;" class="modal-content">
+
+				<div class="form-left m-4">
+
+      <div class="modal-body">
+
+				<div class="form-row ">
+						<input type="text" name="email" class="email" id="email" placeholder="Email Address" required>
+					</div>
+					<div class="form-row ">
+						<input type="text" name="otp" class="name" id="otp" placeholder="Otp" required>
+					</div>
+					<p id="error"></p>
+				</div>
+			</form>
+      </div>
+		</div>
+      
+  </div>
+	</div>
+</div>
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+	const emaiInput = document.getElementById('email')
+	const otpInput = document.getElementById('otp')
+	const error = document.getElementById('error')
+    let Email = []
+	emaiInput.addEventListener('keydown', function(event) {
+		    if (event.key === 'Enter') {
+		const email = event.target.value;
+		Email = email
+		if (email.trim() !== '') {
+			axios.post('/generateOtp',{email})
+			.then(response => {
+				console.log(response.data);
+				
+			}).catch(function (error) {
+              console.error(error); // Handle error
+            });
+		}
+		}
+	})
+	otpInput.addEventListener('keydown',function(event) {
+		const otp = event.target.value;
+		if(otp.length=== 6) {
+            axios.post('/checkOtpUser',{otp, Email})
+			.then(response => {
+				
+              window.location.href = '/'
+				
+			}).catch(function(error){
+				console.log(error)
+			})
+		}else {
+          error.innerHTML='enter valid otp'
+		}
+		
+	})
+</script>

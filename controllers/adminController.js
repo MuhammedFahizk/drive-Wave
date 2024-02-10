@@ -24,7 +24,7 @@ const cloudinary = require('../service/cloudnery');
 
 const { Car } = require('../models/car');
 const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
-const { sendAdminOtp, generateOtp } = require('../service/otp');
+const { sendAdminOtp, generateOtp } = require('../service/nodeMailer');
 
 const emailOtp = {};
 
@@ -137,7 +137,7 @@ async function addCarAdmin(req, res) {
 }
 async function getCar(req, res) {
   try {
-    const carId = req.query.carId;
+    const { carId } = req.query;
     const carDetails = await Car.findById(carId);
 
     res.json(carDetails);
@@ -431,7 +431,6 @@ async function deleteUser(req, res) {
   if (!user) {
     // Handle case where user with given ID is not found
     res.status(404).send('User not found');
-    return;
   }
 
   const loginDate = user.createdAt;
@@ -445,7 +444,7 @@ async function deleteUser(req, res) {
     }
   } else {
     const error = `could not delete ${user.name} delete must after one month`;
-    res.status(304).render('admin/adminUserPage', { data: user, error });
+    res.status(304).redirect('/admin/users');
   }
   // Sending the dayDifference as the response
 }

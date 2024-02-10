@@ -1,200 +1,142 @@
-<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
-      <div class="overlay"></div>
+ <body style="background-color: rgb(49, 141, 107);">
+    
+  <section class="p-4 " style="" data-stellar-background-ratio="0.5">
+      <div class="overlay">
+        
+      </div>
       <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
-          <div class="col-md-9 ftco-animate pb-5">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Profile <i class="ion-ios-arrow-forward"></i></span></p>
-            <h1 class="mb-3 bread">{{data.name}}</h1>
-          </div>
+         	<div class="container">
+    		<div class="row ">
+          <div class="col-md-4 ">
+                      <div class="car-wrap rounded ftco-animate">
+                        
+                         <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+                    <div class="mt-3 mb-4">
+                      <h4>{{name}}</h4>
+                      <p class="text-secondary mb-3 mt-2">{{data.email}}</p>
+                      {{!-- <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p> --}}
+                      <a href="" data-toggle="modal" data-target="#exampleModalCenter"  class="btn btn-info px-4">Edit</a>
+                      <a href="/logout"  class="btn btn-outline-warning px-4">Logout</a>
+                      <a href="/delete" class="btn btn-outline-danger">Delete</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                      </div>
+                    </div>
+                    <div class="col-md-8  ">
+                      <div class="car-wrap rounded ftco-animate ">
+                        
+                        <div class="text">
+                          <h2 class="mb-0"><a>{{name}}</a></h2>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Email </span>
+</span>
+                            <p class="price ml-md-auto ml-2">{{data.email}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Phone </span>
+</span>
+                            <p class="price ml-md-auto ml-2">{{data.phone}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Age </span>
+                          </span>
+                            <p class="price ml-md-auto ml-2">{{data.age}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">License Number </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{data.licenseNumber}} <span></span></p>
+                          </div>
+                            <p style="color: black;" >Address</p>
+                           <div class="d-flex mb-1">
+                            <span class="cat">Place </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{address.place}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">zip </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{address.zip}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">House Name </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{address.houseName}} <span></span></p>
+                          </div>
+                      
+                        </div>
+                        
+                      </div>
+                    </div>
+                  
+
+                    
+                    
+        </div>
+      </div>
+      
+      
         </div>
       </div>
     </section>
 
-    <section class="ftco-section contact-section">
-      <div class="container">
-        <div class="row d-flex mb-5 col-12 contact-info">
-        	<div class="col-md-2">
-        		<div class="row mb-5">
-		          <div class="col-md-12">
-		          	<div class="border w-100 col-11 p-0 rounded mb-2 d-flex">
-			          	<div class="icon mr-0">
-			          		{{!-- <span class="icon-map-o"></span> --}}
-                      <span style="font-size:8.2rem;" class="icomoon icon-user ml-4"></span>
-			            <p class="ml-auto"> {{data.name}}</p>
-			          	</div>
-                  
-
-			          </div>
-             <a href="/logout?{{data._id}}">
-                      <div class="border w-100 col-11 p-1 pl-4 bg-warning rounded mb-2 d-flex">
-			          	<div class="icon mr-3 ">
-			          		{{!-- <span class="icon-map-o"></span> --}}
-                    <p class="ml-">Logout</p>
-			          	</div>
-			          </div>
-                </a>
-
-                 <a data-toggle="modal" data-target="#exampleModalCenter">
-                      <div  class="border w-100 col-11 bg-primary  rounded mb-2 d-flex">
-			          	<div class="icon mr-3 ">
-			          		{{!-- <span class="icon-map-o"></span> --}}
-                    <p style="color: aliceblue;" class="ml-4 mb-2">Edit </p>
-			          	</div>
-			          </div>
-                </a>
-
- <form action="/deleteUser?deleteId={{data._id}}" method="post">
-            <button   class="  border bg-danger w-100 col-11  rounded d-flex" type="submit" >
-    <div class="icon mr-3">
-      {{!-- <span class="icon-map-o"></span> --}}
-      
-           
-      <p class="ml-4 mb-2 " style="color: aliceblue;" >Delete</p>
-      
-    </div>
- </button>
-</form>
-                
-                
-		          </div>
-		          	{{!-- <div class="border w-100 p-4 rounded mb-2 d-flex">
-			          	<div class="icon mr-3">
-			          		<span class="icon-mobile-phone"></span>
-			          	</div>
-			            <p><span>Phone:</span> <a href="tel://1234567920">+ 1235 2355 98</a></p>
-			          </div>
-		          </div>
-		          --}}
-          </div>
-              
-        </div>
-          <div class="col-md-7 block-9 mb-md-5">
-                      <div class="border w-100 col-12 p-1 pl-4 rounded  ">
-
-              <div class="form-group">
-                <div class="icon mr-3">
-			          		<span class="icon-envelope-o"></span>
-     	</div>
-			            <p style="display: flex;"><span>Email:</span> {{data.email}}</p>
-                  </div>
-          </div>
-
-                                <div class="border w-100 col-12 p-1 pl-4 mt-2 rounded  ">
-
-              <div class="form-group">
-                <div class="icon mr-3">
-			          		<span class="icon-mobile-phone"></span>
-			          	</div>
-			            <p style="display: flex;"><span>Phone:</span> {{data.phone}}</p>
-                  </div>
-          </div>
-                                <div class="border w-100 col-12 p-1 pl-4 mt-2 rounded  ">
-
-           <div class="form-group">
-                <div class="icon mr-3">
-<span class="icomoon icon-user"></span>			          	</div>
-			            <p  style="display: flex;"><span>Age: </span>&nbsp; &nbsp; {{ data.age}}</p>
-                  </div>
-        
-          </div>
-
-            <div class="border w-100 col-12 p-1 pl-4 mt-2 rounded  ">
-
-              <div class="form-group">
-                <div class="icon mr-3">
-			          		<span class="icomoon icon-address-book"></span>
-
-			          	</div>
-			            <p><span>Address:</span> Place :  {{ address.place}}</p>
-			            <p ><span></span> House Name :  {{ address.houseName}}</p>
-
-			            <p><span></span> Zip Code :  {{ address.zip}}</p>
-
-                  </div>
-          </div>
-
-                  
-              {{!-- <div class="form-group">
-                <input type="text" class="form-control" placeholder="Your Email">
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Subject">
-              </div>
-              <div class="form-group">
-                <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
-              </div>
-              <div class="form-group">
-                <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
-              </div> --}}
-            {{!-- </form> --}}
-          
-        </div>
-        <div class="row justify-content-center">
-        	<div class="col-md-12">
-        		<div id="map" class="bg-white"></div>
-        	</div>
-        </div>
-      </div>
-      <!-- Button trigger modal -->
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"> Edit {{data.name}} </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content" style="background-color:#01d28c3c;">
       <div class="modal-body">
         <form action="/editUser?editId={{data._id}}" method="post">
-            <div class="form-group ">
-               <span>Name</span>
-                <input type="text" class="form-control" name="name" value="{{data.name}}" placeholder="{{data.name}}">
-              </div>
-              <div class="form-group">
-                
-                <span>Age</span><input type="text" class="form-control " name="age" value="{{data.age}}" placeholder="{{data.age}}">
-              </div>
-              <div class="form-group">
-                 <span>Email</span>
-                <input type="text" class="form-control" name="email" value="{{data.email}}" placeholder="{{data.email}}">
-              </div>
-              <div class="form-group">
-                 <span>Phone</span>
-                <input type="text" class="form-control"name="phone" value="{{data.phone}}" placeholder="{{data.phone}}">
-              </div>
-              <div class="form-group">
-                 <span>Place</span>
-                <input type="text" class="form-control" name="place" value="{{address.place}}" placeholder="{{address.place}}">
-              </div>
-              <div class="form-group">
-                 <span>Zip Code</span>
-                <input type="text" class="form-control" name="zip" value="{{address.zip}}" placeholder="{{address.zip}}">
-              </div>
-              <div class="form-group">
-                 <span>House Name</span>
-                <input type="text" class="form-control" name="houseName" value="{{address.houseName}}"  placeholder=" {{address.houseName}}">
-              </div>
-              <div class="form-group">
-                 <span>License Number</span>
-                <input type="text" class="form-control" name="licenseNumber" value="{{data.licenseNumber}}" placeholder="{{data.licenseNumber}}">
-              </div>
-              {{!-- <div class="form-group">
-                <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
-              </div> --}}
-              
+          <div class="form-group row justify-content-center">
+            <div class="col-md-12 col-lg-12">
+              <input type="text" class="form-control c" name="name" value="{{data.name}}" placeholder="{{data.name}}">
+            </div>
+          </div>
+          <div class="form-group row justify-content-center">
+            <div class="col-md-6">
+              <input type="text" class="form-control" name="email" value="{{data.email}}" placeholder="{{data.email}}">
+            </div>
+            <div class="col-md-6">
+              <input type="text" class="form-control" name="age" value="{{data.age}}" placeholder="{{data.age}}">
+            </div>
+          </div>
+          <div class="form-group row justify-content-center">
+            <div class="col-md-10 col-lg-12">
+              <input type="text" class="form-control" name="phone" value="{{data.phone}}" placeholder="{{data.phone}}">
+            </div>
+          </div>
+          <div class="form-group row justify-content-center">
+            <div class="col-md-6">
+              <input type="text" class="form-control" name="place" value="{{address.place}}" placeholder="{{address.place}}">
+            </div>
+            <div class="col-md-6">
+              <input type="text" class="form-control" name="zip" value="{{address.zip}}" placeholder="{{address.zip}}">
+            </div>
+          </div>
+          <div class="form-group row justify-content-center">
+            <div class="col-md-6">
+              <input type="text" class="form-control" name="houseName" value="{{address.houseName}}" placeholder="{{address.houseName}}">
+            </div>
+            <div class="col-md-6">
+              <input type="text" class="form-control" name="licenseNumber" value="{{data.licenseNumber}}" placeholder="{{data.licenseNumber}}">
+            </div>
+          </div>
+          <div class="form-group row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
-      </div>
-            </form>
-
     </div>
   </div>
 </div>
-    </section>
 
+ </body>
+
+ </body>
