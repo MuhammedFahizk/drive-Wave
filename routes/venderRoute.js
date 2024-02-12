@@ -18,5 +18,6 @@ router.post('/addCars', middleware.requireAuth, middleware.requireAuth, upload.s
 router.post('/updateCarDetails', middleware.requireAuth, upload.single('carImage'), middleware.addImage, venderController.updateCar);
 router.get('/getCarDetails', middleware.requireAuth, venderController.getCar);
 router.get('/carPage/deleteCar', middleware.requireAuth, venderController.deleteCar);
+router.get('/venderLogout', middleware.requireAuth, venderController.venderLogout);
 
 module.exports = router;

@@ -26,6 +26,9 @@ router.get('/carPage/findCarCategories', login.requireAuth, adminController.find
 router.get('/alphabeticallySort', login.requireAuth, adminController.alphabeticallySort);
 router.get('/searchByCarName', login.requireAuth, adminController.searchByCarName);
 router.get('/notification', login.requireAuth, adminController.viewNotificationPage)
+router.get('/disableVender', login.requireAuth, adminController.disableVender);
+router.get('/enableVender', login.requireAuth, adminController.enableVender);
+
 // adminVender routs
 router.get('/Vender', login.requireAuth, adminController.venderPage);
 router.get('/getVenderDetails', login.requireAuth, adminController.venderDetails);

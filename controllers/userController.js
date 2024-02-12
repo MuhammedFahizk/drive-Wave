@@ -23,9 +23,11 @@ const getHomePage = (req, res) => {
     res.render('user/index');
   }
 };
+
 const loginPage = (req, res) => {
   res.render('user/login');
 };
+
 function register(req, res) {
   res.render('user/signUp');
 }
@@ -355,6 +357,11 @@ async function userMessageToAdmin(req, res) {
 const aboutPage = (req, res) => {
   res.status(200).render('user/about');
 };
+
+const carBookingPage = (req, res) => {
+   res.status(200).render('user/booking');
+};
+
 module.exports = {
   getHomePage,
   loginPage,
@@ -374,4 +381,5 @@ module.exports = {
   contactPage,
   userMessageToAdmin,
   aboutPage,
+  carBookingPage,
 };

@@ -34,4 +34,19 @@ function sendMailToAdmin(email, message,subjects, callback) {
   };
   transporter.sendMail(mailOption,callback);
 }
-module.exports = { generateOtp ,sendAdminOtp, sendMailToAdmin };
+function sendmailVender(email, message, subjects, callback) {
+  const mailOption = {
+    from: 'fahizk100@gmail.com',
+    to: email,
+    subject: subjects,
+    html: `<p style="font-family: Arial; sans-serif; font-size: 16px;">${message}</p>`,
+
+  };
+  transporter.sendMail(mailOption, callback);
+}
+module.exports = {
+  generateOtp,
+  sendAdminOtp,
+  sendMailToAdmin,
+  sendmailVender,
+};

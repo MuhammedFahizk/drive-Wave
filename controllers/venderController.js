@@ -19,9 +19,13 @@ async function showVenderDashboard(req, res) {
     if (email && password) {
       const vender = await Vender.findOne({ role: 'vender', email, password });
       if (vender) {
-        req.session.venderId = uuidv4();
-        req.session.ownerId = vender._id;
-        res.status(200).redirect('/vender/dashboardPage');
+        if (!vender.venderAccessEnabled === true) {
+          res.status(403).render('vender/login', { error: 'EnterAdmin does not have permission to enable the vendor ' });
+        } else {
+          req.session.venderId = uuidv4();
+          req.session.ownerId = vender._id;
+          res.status(200).redirect('/vender/dashboardPage');
+        }
       } else {
         res.status(401).render('vender/login', { error: 'Enter Valid Email And Password' });
       }
@@ -44,7 +48,7 @@ const signupVender = async (req, res) => {
 
     const existingVender = await Vender.findOne({ email });
     if (existingVender) {
-      return res.status(400).json({ error: 'Email address is already in use' });
+      return res.status(409).render('vender/signUp', { error: 'Email address is already in use' });
     }
     const newVender = new Vender(req.body);
     newVender.role = 'vender';
@@ -198,7 +202,17 @@ async function deleteCar(req, res) {
     return res.status(500).send('Server Error');
   }
 }
-
+const venderLogout = (req, res) => {
+  if (req.session.venderId) {
+    req.session.destroy((error) => {
+      if (error) {
+        res.status(500).redirect('/vender/Dashboard');
+      } else {
+        res.status(200).redirect('/vender/login');
+      }
+    });
+  }
+};
 module.exports = {
   loginPage,
   showVenderDashboard,
@@ -210,4 +224,5 @@ module.exports = {
   deleteCar,
   signUpPage,
   signupVender,
+  venderLogout,
 };

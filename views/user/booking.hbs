@@ -1,0 +1,168 @@
+<style>
+    #detailsDiv,#paymentDiv{
+        display: none;
+    } 
+</style>
+<body style="background-color: rgb(35, 145, 108);">
+    
+      <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({{car.carImage}});" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+          <div class="col-md-9 ftco-animate pb-5">
+          	<p class="breadcrumbs"><span class="mr-2"><a href="/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Car details <i class="ion-ios-arrow-forward"></i></span></p>
+            <h1 class="mb-3 bread">{{car.carName}}</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ftco-section ftco-car-details pl-2">
+      <div class="container pl-2 m-0">
+      	<div class="row justify-content-center p-2"> 
+<div class="row col-12 ml-3 ">
+          <div class="col-md-4 ">
+                      <div class="car-wrap rounded ftco-animate ">
+                        
+                         <div class="card">
+                <div class="card-body">
+                   <hr class="text-black">
+
+                  <div class="d-flex   row  ">
+                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
+                    
+                    <h5 class="ml-2">Car Name</h5>
+                    <h5 class="ml-auto mr-3">Totel</h5>
+                   </div>
+                   <hr class="">
+                </div>
+              </div>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-8  ">
+                       <div class=" car-wrap rounded ftco-animate col-md-12 row m-0 mb-3 d-flex justify-content-center ">
+                      <a type="button" id="conform" class="m-2 col-md-2">
+                        Conform
+                    </a >
+                     <a type="button" id="details" class=" m-2 col-md-2 ">
+                        Details
+                    </a>
+                     <a type="button" id="payment" class=" m-2 col-md-2 ">
+                        Payment
+                    </a>
+                       </div>
+                      <div   id="detailsDiv" class="car-wrap rounded ftco-animate ">
+                    
+                        details
+                      </div>
+                      
+                    
+                      <div id="conformDiv" class="car-wrap rounded ftco-animate ">
+      				<div class="img rounded" style=" background-image:url('images/bg_1.jpg');height:300px">
+                    </div>
+      				<div class="text text-center">
+      					<span class="subheading">{{car.carName}}</span>
+      					<h2>{{car.brandName}}</h2>
+      			</div>
+                <div class="row">
+      		<div class="col-md-12 pills">
+						<div class="bd-example bd-example-tabs">
+							<div class="d-flex justify-content-center">
+							  <ul class="nav nav-pills mb-3 " id="pills-tab" role="tablist">
+
+							    <li class="nav-item">
+							      <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description" role="tab" aria-controls="pills-description" aria-expanded="true">Features</a>
+							    </li>
+							    <li class="nav-item">
+							      <a class="nav-link" id="pills-manufacturer-tab" data-toggle="pill" href="#pills-manufacturer" role="tab" aria-controls="pills-manufacturer" aria-expanded="true">Description</a>
+							    </li>
+							    
+							  </ul>
+							</div>
+
+						  <div class="tab-content" id="pills-tabContent">
+						    <div class="tab-pane fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
+						    	{{!-- <div class="row">
+						    		<div class="col-md-4">
+						    			<ul class="features">
+						    				<li class="check"><span class="ion-ios-checkmark"></span>Airconditions</li>
+						    				<li class="check"><span class="ion-ios-checkmark"></span>Child Seat</li>
+						    				<li class="check"><span class="ion-ios-checkmark"></span>GPS</li>
+						    				<li class="check"><span class="ion-ios-checkmark"></span>Luggage</li>
+						    				<li class="check"><span class="ion-ios-checkmark"></span>Music</li>
+						    			</ul>
+						    		</div>
+						    		
+						    	</div> --}}
+
+                                <p> {{car.features}}</p>
+
+						    </div>
+
+						    <div class="tab-pane fade " id="pills-manufacturer" role="tabpanel" aria-labelledby="pills-manufacturer-tab">
+
+                                {{data.discription}}
+                           </div>
+
+						    
+						  </div>
+						</div>
+		      </div>
+				</div>
+                             
+                       
+
+                      </div>
+                      
+                      
+                    
+                      <div  id="paymentDiv"  class="car-wrap rounded ftco-animate ">
+                
+                
+                      </div>
+                      
+                    
+
+                     
+                  
+
+                    
+                    
+        </div>
+        </div>
+      </div>
+    </section>
+</body>
+
+<script>
+    const conformDiv=document.getElementById('conformDiv')
+    const detailsDiv=document.getElementById('detailsDiv')
+    const paymentDiv=document.getElementById('paymentDiv')
+
+    const details = document.getElementById('details')
+    const payment=document.getElementById('payment')
+    const conform=document.getElementById('conform')
+
+
+    
+
+
+    details.addEventListener('click', function(){
+        conformDiv.style.display = 'none';
+        paymentDiv.style.display = 'none';
+        detailsDiv.style.display = 'block';
+
+
+    })
+    payment.addEventListener('click', function(){
+        conformDiv.style.display = 'none';
+        paymentDiv.style.display = 'block';
+        detailsDiv.style.display = 'none';    })
+    conform.addEventListener('click', function(){
+        conformDiv.style.display = 'block';
+        paymentDiv.style.display = 'none';
+        detailsDiv.style.display = 'none';    })
+    
+
+</script>

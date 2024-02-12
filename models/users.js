@@ -55,6 +55,10 @@ const VenderSchema = new mongoose.Schema({
     require: true,
     type: Number,
   },
+  password: {
+    require: true,
+    type: String,
+  },
   image: {
     require: true,
     type: String,

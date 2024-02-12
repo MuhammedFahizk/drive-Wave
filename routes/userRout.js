@@ -23,4 +23,6 @@ router.post('/registrationValidation', userController.registrationValidation);
 router.get('/contact', userController.contactPage);
 router.post('/contactMessage', userController.userMessageToAdmin);
 router.get('/about', userController.aboutPage);
+router.get('/carBooking', userController.carBookingPage);
+
 module.exports = router;

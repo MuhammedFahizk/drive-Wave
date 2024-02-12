@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 /* eslint-disable arrow-parens */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-else-return */
@@ -12,7 +13,6 @@
 // adminRoute.js
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
-const session = require('express-session');
 const path = require('path');
 
 const { admin } = require('../models/users');
@@ -24,9 +24,11 @@ const cloudinary = require('../service/cloudnery');
 
 const { Car } = require('../models/car');
 const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
-const { sendAdminOtp, generateOtp } = require('../service/nodeMailer');
+const { sendAdminOtp, generateOtp, sendmailVender } = require('../service/nodeMailer');
+const { error } = require('console');
 
 const emailOtp = {};
+let NotificationCount = 0;
 
 const showLoginPageAdmin = (req, res) => {
   res.render('loginPage');
@@ -65,12 +67,12 @@ async function loginOtp(req, res) {
   }
 }
 const showAdminDashboard = (req, res) => {
-  res.render('admin/index');
+  res.render('admin/index', { NotificationCount });
 };
 async function showAdminCarPage(req, res) {
   const car = await Car.find();
   const counts = await Car.find().countDocuments();
-  res.render('admin/adminCarPage', { data: car, count: counts });
+  res.render('admin/adminCarPage', { data: car, count: counts, NotificationCount });
 }
 const logout = (req, res) => {
   if (req.session.adminId) {
@@ -258,7 +260,9 @@ async function findCarCategories(req, res) {
       const carsCount = await Car.find({ carCategory: category }).countDocuments();
 
       if (cars) {
-        res.status(200).render('admin/adminCarPage', { data: cars, count: carsCount, category: category });
+        res.status(200).render('admin/adminCarPage', {
+          data: cars, count: carsCount, category: category, NotificationCount,
+        });
       }
     }
   } catch (error) {
@@ -273,28 +277,30 @@ async function alphabeticallySort(req, res) {
     if (!search) {
       const cars = await Car.find({ carCategory: Category }).sort({ carName: 1 });
       const count = cars.length;
-      res.status(200).render('admin/adminCarPage', { data: cars, count: count, category: Category });
+      res.status(200).render('admin/adminCarPage', {
+        data: cars, count: count, category: Category, NotificationCount,
+      });
     } else {
       const cars = await Car.find({ carCategory: Category, carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
       const count = cars.length;
       res.status(200).render(
         'admin/adminCarPage',
         {
-          data: cars, count: count, category: Category, search: search,
+          data: cars, count: count, category: Category, search: search, NotificationCount,
         },
       );
     }
   } else if (!search) {
     const cars = await Car.find({}).sort({ carName: 1 });
     const count = cars.length;
-    res.status(200).render('admin/adminCarPage', { data: cars, count: count });
+    res.status(200).render('admin/adminCarPage', { data: cars, count: count, NotificationCount });
   } else {
     const cars = await Car.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
     const count = cars.length;
     res.status(200).render(
       'admin/adminCarPage',
       {
-        data: cars, count: count, search: search,
+        data: cars, count: count, search: search, NotificationCount,
       },
     );
   }
@@ -313,7 +319,7 @@ async function searchByCarName(req, res) {
     res.status(200).render(
       'admin/adminCarPage',
       {
-        data: cars, count: count, category: category, search: search,
+        data: cars, count: count, category: category, search: search, NotificationCount,
       },
     );
   }
@@ -333,7 +339,72 @@ const viewNotificationPage = async (req, res) => {
       console.error({ error: 'not found Notification' });
     } else {
       const count = vender.length;
-      res.status(200).render('admin/notification', { data: vender, count });
+      NotificationCount = count;
+      res.status(200).render('admin/notification', { data: vender, count, NotificationCount });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const disableVender = async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id) {
+      console.error({ error: 'could not  get id' });
+    } else {
+      const vender = await Vender.findById(id);
+      if (!vender) {
+        console.error({ error: 'could not find vender' });
+      } else {
+        const email = vender.email;
+        const message = `${vender.name}Sorry Admin Not Accept Your Vender Application`;
+        const subject = 'Disable';
+        sendmailVender(email, message, subject, (error, info => {
+          if (error) {
+            console.log(error);
+            return res.status(500).send(error);
+          }
+          res.status(200).json('Disable the Vender');
+        }));
+        const result = await Vender.deleteOne({ _id: id });
+        if (!result) {
+          res.status(404).json({ error: 'vender Deleting Error' });
+        } else {
+          res.status(200).redirect('/admin/notification', { NotificationCount });
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const enableVender = async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id) {
+      return res.status(404).json('Could not find vender id');
+    }
+    const vender = await Vender.findById(id);
+    const venderUpdate = await Vender.updateOne({ _id: id }, { venderAccessEnabled: true });
+    if (!vender) {
+      return res.status(404).json('Could not find vender');
+    } else {
+      const email = vender.email;
+      const message = `${vender.name} Welcome To Drive Wave Admin. You can allow your vender account <a href="http://localhost:5000/vender/login">Login</a>`;
+      const subject = 'Enable';
+      sendmailVender(email, message, subject, (error, info) => {
+        if (error) {
+          console.error(error);
+          return res.status(500).send(error);
+        }
+        res.status(200).json('Disable the Vender');
+      });
+
+      res.status(200).redirect('/admin/notification');
     }
   } catch (error) {
     console.error('Error:', error);
@@ -344,7 +415,7 @@ const viewNotificationPage = async (req, res) => {
 // vender page
 async function venderPage(req, res) {
   const venders = await Vender.find({ role: 'vender' });
-  res.status(200).render('admin/adminVenderPage', { data: venders });
+  res.status(200).render('admin/adminVenderPage', { data: venders, NotificationCount });
 }
 
 async function venderDetails(req, res) {
@@ -378,7 +449,7 @@ async function alphabeticallySortVender(req, res) {
   try {
     const vender = await Vender.find({ role: 'vender' }).sort({ name: 1 });
     if (vender) {
-      res.status(200).render('admin/adminVenderPage', { data: vender });
+      res.status(200).render('admin/adminVenderPage', { data: vender, NotificationCount });
     }
   } catch (error) {
     console.error('Error:', error);
@@ -390,7 +461,7 @@ async function searchingVender(req, res) {
     const { search } = req.body;
     if (search) {
       const vender = await Vender.find({ role: 'vender', name: { $regex: new RegExp(search, 'i') } });
-      res.status(200).render('admin/adminVenderPage', { data: vender, search: search });
+      res.status(200).render('admin/adminVenderPage', { data: vender, search: search, NotificationCount });
     } else {
       res.status(204).json('no search content');
     }
@@ -404,7 +475,7 @@ async function searchingVender(req, res) {
 async function userPage(req, res) {
   try {
     const user = await User.find({ role: 'user' });
-    res.status(200).render('admin/adminUserPage', { data: user });
+    res.status(200).render('admin/adminUserPage', { data: user, NotificationCount });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -438,7 +509,7 @@ async function searchingUser(req, res) {
     const { search } = req.body;
     if (search) {
       const user = await User.find({ role: 'user', name: { $regex: new RegExp(search, 'i') } });
-      res.status(200).render('admin/adminUserPage', { data: user, search: search });
+      res.status(200).render('admin/adminUserPage', { data: user, search: search, NotificationCount });
     } else {
       res.status(204).json('no search content');
     }
@@ -490,11 +561,15 @@ module.exports = {
   alphabeticallySort,
   searchByCarName,
   viewNotificationPage,
+  disableVender,
+  enableVender,
+  // vender
   venderPage,
   venderDetails,
   deleteVender,
   alphabeticallySortVender,
   searchingVender,
+  // user
   userPage,
   userDetails,
   alphabeticallySortUser,
