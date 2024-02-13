@@ -2,27 +2,29 @@
     #detailsDiv,#paymentDiv{
         display: none;
     } 
+   .col-12 input[type="text"],input[type="email"],input[type="date"] {
+    border: 1px solid rgb(10, 10, 10);
+    border-radius: 20px;
+    {{!-- border-left: 2px solid rgb(5, 5, 5); --}}
+    outline: none; /* Removes the default focus outline */
+  .glass-effect {
+    background-color: rgba(255, 255, 255, 0.265); /* Adjust opacity as needed */
+    border-radius: 10px;
+    backdrop-filter: blur(15px);
+    }
+    label{
+      color: black;
+    }
 </style>
 <body style="background-color: rgb(35, 145, 108);">
-    
-      <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url({{car.carImage}});" data-stellar-background-ratio="0.5">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
-          <div class="col-md-9 ftco-animate pb-5">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Car details <i class="ion-ios-arrow-forward"></i></span></p>
-            <h1 class="mb-3 bread">{{car.carName}}</h1>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="ftco-section ftco-car-details pl-2">
-      <div class="container pl-2 m-0">
-      	<div class="row justify-content-center p-2"> 
-<div class="row col-12 ml-3 ">
-          <div class="col-md-4 ">
-                      <div class="car-wrap rounded ftco-animate ">
+
+    <section class="ftco-section ftco-car-details  px-md-0 ">
+      <div class="container p-md-4 p-0 m-0">
+      	<div class="row justify-content-center p-0"> 
+<div class="row col-12    ">
+          <div class="col-md-3 d-none d-md-block  ">
+                      <div class="car-wrap md rounded ftco-animate ">
                         
                          <div class="card">
                 <div class="card-body">
@@ -34,42 +36,174 @@
                     <h5 class="ml-2">Car Name</h5>
                     <h5 class="ml-auto mr-3">Totel</h5>
                    </div>
+                    <div class="d-flex   row  ">
+                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
+                    
+                    <p class="ml-2">{{car.carName}}</p>
+                    <p class="ml-auto mr-3">{{car.dayRent}}<span>/Day </span></p>
+                   </div>
                    <hr class="">
+                    {{#if data}}
+
+				   <div class="d-flex   row  ">
+                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
+                    
+                    <h5 class="ml-2">Days</h5>
+                    {{!-- <h5 class="ml-auto mr-3">Totel</h5> --}}
+                   </div>
+                    <div class="d-flex   row  ">
+                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
+                    <p class="ml-2">{{data.date}}</p>
+                    <p class="ml-auto mr-3">{{data.rate}}<span>/{{data.date}} </span></p>
+					{{else}}
+					<div class="d-flex   row  ">
+                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
+                    
+                    <h5 class="ml-2">Date</h5>
+                    {{!-- <h5 class="ml-auto mr-3">Totel</h5> --}}
+                   </div>
+                    <div class="d-flex   row  ">
+						<form action="/carBooking" method="post">
+    <input type="hidden" name="carId" value="{{car._id}}">
+    <div class="form-group col-12">
+        <label for="pickDate" class="label">Pick-up Date</label>
+        <input style="border-radius: 10px;" id="pickDate" name="pickDateInput" type="date" class="p-1 col-12" placeholder="Date" required>
+    </div>
+    <div class="form-group col-12">
+        <label for="dropDate" class="label">Drop-off Date</label>
+        <input style="border-radius: 10px;" id="dropDate" name="dropDateInput" type="date" class="p-1 col-12" placeholder="Date" required>
+    </div>
+    <div class="form-group col-12">
+        <input style="border-radius: 10px;" type="submit" id="DateButton" class="p-1 col-12" value="Submit">
+    </div>
+</form>
+ <p class="px-4 text-danger">{{message}}</p>
+					{{/if}}
+                   </div>
+                   <hr class="">
+
                 </div>
               </div>
                       </div>
                     </div>
                     
-                    <div class="col-md-8  ">
-                       <div class=" car-wrap rounded ftco-animate col-md-12 row m-0 mb-3 d-flex justify-content-center ">
-                      <a type="button" id="conform" class="m-2 col-md-2">
-                        Conform
+                    <div class="col-md-9 col-12   ">
+                       <div class=" car-wrap rounded py-2 ftco-animate col-12 row m-0 mb-3 d-flex justify-content-center ">
+                      <a type="button" id="confirm" class="m-md-2 col-md-2 col-4">
+                        Confirm
                     </a >
-                     <a type="button" id="details" class=" m-2 col-md-2 ">
+                     <a type="button" id="details" class=" m-md-2 col-md-2 col-4 ">
                         Details
                     </a>
-                     <a type="button" id="payment" class=" m-2 col-md-2 ">
+                     <a type="button" id="payment" class=" m-md-2 col-md-2 col-4 ">
                         Payment
                     </a>
                        </div>
-                      <div   id="detailsDiv" class="car-wrap rounded ftco-animate ">
-                    
-                        details
-                      </div>
+                     
                       
                     
-                      <div id="conformDiv" class="car-wrap rounded ftco-animate ">
-      				<div class="img rounded" style=" background-image:url('images/bg_1.jpg');height:300px">
-                    </div>
+              
+                             
+                    {{!-- conformation section --}}
+                       
+
+                       <div id="conformDiv" class=" car-wrap rounded ftco-animate ">
+                      	<div class="row justify-content-center">
+      		<div class="col-md-12">
+      			<div class="car-details">
+      				<div class="img rounded d-flex justify-content-md-end align-items-center align-items-md-center   " style="background-image: url({{car.carImage}});">
+                
+               
+              </div>
       				<div class="text text-center">
       					<span class="subheading">{{car.carName}}</span>
       					<h2>{{car.brandName}}</h2>
+
+      				</div>
       			</div>
-                <div class="row">
+      		</div>
+      	<div class="row row justify-content-center pl-3">
+      		<div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+              	<div class="d-flex mb-3 align-items-center">
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-dashboard"></span></div>
+	              	<div class="text">
+		                <h3 class="heading mb-0 pl-3">
+		                	Mileage
+		                	<span>{{car.milage}}</span>
+		                </h3>
+	                </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+              	<div class="d-flex mb-3 align-items-center">
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-pistons"></span></div>
+	              	<div class="text">
+		                <h3 class="heading mb-0 pl-3">
+		                	Transmission
+		                	<span>{{car.TransmitionType}}</span>
+		                </h3>
+	                </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+              	<div class="d-flex mb-3 align-items-center">
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-car-seat"></span></div>
+	              	<div class="text">
+		                <h3 class="heading mb-0 pl-3">
+		                	Seats
+		                	<span>{{car.seats}} Adults</span>
+		                </h3>
+	                </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+              	<div class="d-flex mb-3 align-items-center">
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-backpack"></span></div>
+	              	<div class="text">
+		                <h3 class="heading mb-0 pl-3">
+		                	Luggage
+		                	<span>{{car.luggage}} Bags</span>
+		                </h3>
+	                </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md d-flex align-self-stretch ftco-animate">
+            <div class="media block-6 services">
+              <div class="media-body py-md-4">
+              	<div class="d-flex mb-3 align-items-center">
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-diesel"></span></div>
+	              	<div class="text">
+		                <h3 class="heading mb-0 pl-3">
+		                	Fuel
+		                	<span>{{car.fuelType}}</span>
+		                </h3>
+	                </div>
+                </div>
+              </div>
+            </div>      
+          </div>
+      	</div>
+      	<div class="row">
       		<div class="col-md-12 pills">
 						<div class="bd-example bd-example-tabs">
 							<div class="d-flex justify-content-center">
-							  <ul class="nav nav-pills mb-3 " id="pills-tab" role="tablist">
+							  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 
 							    <li class="nav-item">
 							      <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description" role="tab" aria-controls="pills-description" aria-expanded="true">Features</a>
@@ -77,50 +211,216 @@
 							    <li class="nav-item">
 							      <a class="nav-link" id="pills-manufacturer-tab" data-toggle="pill" href="#pills-manufacturer" role="tab" aria-controls="pills-manufacturer" aria-expanded="true">Description</a>
 							    </li>
-							    
+							    <li class="nav-item">
+							      <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab" aria-controls="pills-review" aria-expanded="true">Review</a>
+							    </li>
 							  </ul>
 							</div>
 
 						  <div class="tab-content" id="pills-tabContent">
 						    <div class="tab-pane fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
-						    	{{!-- <div class="row">
-						    		<div class="col-md-4">
-						    			<ul class="features">
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Airconditions</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Child Seat</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>GPS</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Luggage</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Music</li>
-						    			</ul>
-						    		</div>
-						    		
-						    	</div> --}}
+						    	
 
                                 <p> {{car.features}}</p>
 
 						    </div>
 
-						    <div class="tab-pane fade " id="pills-manufacturer" role="tabpanel" aria-labelledby="pills-manufacturer-tab">
-
-                                {{data.discription}}
+						    <div class="tab-pane fade" id="pills-manufacturer" role="tabpanel" aria-labelledby="pills-manufacturer-tab">
+                                    <p> {{car.description}}</p>
+                                
                            </div>
 
-						    
+						    <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
+						      <div class="row">
+							   		<div class="col-md-7">
+							   			<h3 class="head">23 Reviews</h3>
+							   			<div class="review d-flex">
+									   		<div class="user-img" style="background-image: url(images/person_1.jpg)"></div>
+									   		<div class="desc">
+									   			<h4>
+									   				<span class="text-left">Jacob Webb</span>
+									   				<span class="text-right">14 March 2018</span>
+									   			</h4>
+									   			<p class="star">
+									   				<span>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+								   					</span>
+								   					<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
+									   			</p>
+									   			<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
+									   		</div>
+									   	</div>
+									   	<div class="review d-flex">
+									   		<div class="user-img" style="background-image: url(images/person_2.jpg)"></div>
+									   		<div class="desc">
+									   			<h4>
+									   				<span class="text-left">Jacob Webb</span>
+									   				<span class="text-right">14 March 2018</span>
+									   			</h4>
+									   			<p class="star">
+									   				<span>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+								   					</span>
+								   					<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
+									   			</p>
+									   			<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
+									   		</div>
+									   	</div>
+									   	<div class="review d-flex">
+									   		<div class="user-img" style="background-image: url(images/person_3.jpg)"></div>
+									   		<div class="desc">
+									   			<h4>
+									   				<span class="text-left">Jacob Webb</span>
+									   				<span class="text-right">14 March 2018</span>
+									   			</h4>
+									   			<p class="star">
+									   				<span>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+								   					</span>
+								   					<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
+									   			</p>
+									   			<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
+									   		</div>
+									   	</div>
+							   		</div>
+							   		<div class="col-md-5">
+							   			<div class="rating-wrap">
+								   			<h3 class="head">Give a Review</h3>
+								   			<div class="wrap">
+									   			<p class="star">
+									   				<span>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					(98%)
+								   					</span>
+								   					<span>20 Reviews</span>
+									   			</p>
+									   			<p class="star">
+									   				<span>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					(85%)
+								   					</span>
+								   					<span>10 Reviews</span>
+									   			</p>
+									   			<p class="star">
+									   				<span>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					(70%)
+								   					</span>
+								   					<span>5 Reviews</span>
+									   			</p>
+									   			<p class="star">
+									   				<span>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					(10%)
+								   					</span>
+								   					<span>0 Reviews</span>
+									   			</p>
+									   			<p class="star">
+									   				<span>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					<i class="ion-ios-star"></i>
+									   					(0%)
+								   					</span>
+								   					<span>0 Reviews</span>
+									   			</p>
+									   		</div>
+								   		</div>
+							   		</div>
+							   	</div>
+						    </div>
 						  </div>
 						</div>
 		      </div>
 				</div>
-                             
-                       
+                    </div>
+        </div>
 
-                      </div>
+                    {{!-- add details section --}}
+                     <div   id="detailsDiv" class="car-wrap rounded  ftco-animate  py-4">
+                       <h2 class="text-center ftco-animate">Enter Details</h2>
+                       <form>
+                       <div class="col-12 row p-3 ftco-animate pl-5">
+                         <div class="col-md-6">
+                          <input class="col-12 p-2 pl-4" type="text" name="name" placeholder="Name" value="{{user.name}}">
+                         </div>
+                         <div class="col-md-6">
+
+                          <input class="col-12  p-2 pl-4" type="email" name="email" placeholder="Email" value="{{user.email}}">
+
+                         </div>
+                       </div>
                       
+                       <div class="col-12 row p-3 ftco-animate pl-5">
+                          <div class="col-md-5">
+                          <input class="col-12 col-12 p-2 pl-4" type="text" name="age" placeholder="Age" value="{{user.age}}">
+                        
+
+                         </div>
+                         <div class="col-md-7 ftco-animate ">
+                     
+                          <input class="col-12 col-12 p-2 pl-4 ftco-animate" type="text" name="phone" placeholder="Phone" value="{{user.phone}}">
+
+
+                         </div>                         
+                       </div>
+                       
+                       <div class="col-12 row p-3 ftco-animate pl-5">
+                          <div class="col-md-4 ftco-animate ">
+                      
+
+                          <input class="col-12 col-12 p-2 pl-4" type="text" name="houseName" placeholder="House Name" value="{{user.houseName}}">
+                         </div>
+                         <div class="col-md-4 ftco-animate">
+
+                          <input class="col-12 col-12 p-2 pl-4" type="text" name="place" placeholder="Place" value="{{user.place}}">
+
+                         </div> 
+                         <div class="col-md-4 ftco-animate">
+
+                          <input class="col-12 col-12 p-2 pl-4" type="text" name="zip" placeholder="Zip" value="{{user.zip}}">
+
+                         </div>                        
+                       </div>
+                    </form>
+                      </div>
                       
                     
-                      <div  id="paymentDiv"  class="car-wrap rounded ftco-animate ">
-                
+                      <div  id="paymentDiv"  class="car-wrap rounded ftco-animate ftco-animate">
+                payment
                 
                       </div>
+      	</div>
                       
                     
 
@@ -130,19 +430,24 @@
                     
                     
         </div>
-        </div>
       </div>
     </section>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
+  
     const conformDiv=document.getElementById('conformDiv')
     const detailsDiv=document.getElementById('detailsDiv')
     const paymentDiv=document.getElementById('paymentDiv')
 
     const details = document.getElementById('details')
     const payment=document.getElementById('payment')
-    const conform=document.getElementById('conform')
+    const confirm=document.getElementById('confirm')
+
+
+
+
 
 
     
@@ -158,8 +463,9 @@
     payment.addEventListener('click', function(){
         conformDiv.style.display = 'none';
         paymentDiv.style.display = 'block';
-        detailsDiv.style.display = 'none';    })
-    conform.addEventListener('click', function(){
+        detailsDiv.style.display = 'none';    
+        })
+    confirm.addEventListener('click', function(){
         conformDiv.style.display = 'block';
         paymentDiv.style.display = 'none';
         detailsDiv.style.display = 'none';    })

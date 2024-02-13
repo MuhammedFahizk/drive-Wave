@@ -3,31 +3,31 @@ const { v4: uuidv4 } = require('uuid');
 
 // const { admin } = require('../models/users');
 
-const { Vender } = require('../models/users');
+const { Vendor } = require('../models/users');
 
 // const { User } = require('../models/users');
 const { Car } = require('../models/car');
 const cloudinary = require('../service/cloudnery');
 
 const loginPage = (req, res) => {
-  res.status(200).render('vender/login');
+  res.status(200).render('vendor/login');
 };
 
-async function showVenderDashboard(req, res) {
+async function showVendorDashboard(req, res) {
   try {
     const { email, password } = req.body;
     if (email && password) {
-      const vender = await Vender.findOne({ role: 'vender', email, password });
-      if (vender) {
-        if (!vender.venderAccessEnabled === true) {
-          res.status(403).render('vender/login', { error: 'EnterAdmin does not have permission to enable the vendor ' });
+      const vendor = await Vendor.findOne({ role: 'vendor', email, password });
+      if (vendor) {
+        if (!vendor.vendorAccessEnabled === true) {
+          res.status(403).render('vendor/login', { error: 'EnterAdmin does not have permission to enable the vendor ' });
         } else {
-          req.session.venderId = uuidv4();
-          req.session.ownerId = vender._id;
-          res.status(200).redirect('/vender/dashboardPage');
+          req.session.vendorId = uuidv4();
+          req.session.ownerId = vendor._id;
+          res.status(200).redirect('/vendor/dashboardPage');
         }
       } else {
-        res.status(401).render('vender/login', { error: 'Enter Valid Email And Password' });
+        res.status(401).render('vendor/login', { error: 'Enter Valid Email And Password' });
       }
     }
   } catch (error) {
@@ -35,47 +35,47 @@ async function showVenderDashboard(req, res) {
   }
 }
 const showDashboard = (req, res) => {
-  res.status(200).render('vender/dashboard');
+  res.status(200).render('vendor/dashboard');
 };
 
 const signUpPage = (req, res) => {
-  res.status(200).render('vender/signUp');
+  res.status(200).render('vendor/signUp');
 };
 
-const signupVender = async (req, res) => {
+const signupVendor = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const existingVender = await Vender.findOne({ email });
-    if (existingVender) {
-      return res.status(409).render('vender/signUp', { error: 'Email address is already in use' });
+    const existingVendor = await Vendor.findOne({ email });
+    if (existingVendor) {
+      return res.status(409).render('vendor/signUp', { error: 'Email address is already in use' });
     }
-    const newVender = new Vender(req.body);
-    newVender.role = 'vender';
-    newVender.venderAccessEnabled = false;
-    await newVender.save();
-    return res.status(201).render('vender/login', { popup: 'Successfully Submit Your Data Access after Enable Admin' }); // Respond with the saved Vender data
+    const newVendor = new Vendor(req.body);
+    newVendor.role = 'vendor';
+    newVendor.vendorAccessEnabled = false;
+    await newVendor.save();
+    return res.status(201).render('vendor/login', { popup: 'Successfully Submit Your Data Access after Enable Admin' }); // Respond with the saved Vendor data
   } catch (error) {
-    console.error('Error creating Vender:', error);
+    console.error('Error creating Vendor:', error);
     return res.status(500).json({ error: 'Server error' });
   }
 };
 
-async function venderCarPage(req, res) {
+async function vendorCarPage(req, res) {
   try {
     const { ownerId } = req.session;
     if (ownerId) {
       const cars = await Car.find({ ownerId });
       const count = await Car.countDocuments({ ownerId });
-      res.status(200).render('vender/carPage', { data: cars, count });
+      res.status(200).render('vendor/carPage', { data: cars, count });
     } else {
-      res.status(500).json({ error: 'not find venderID' });
+      res.status(500).json({ error: 'not find vendorID' });
     }
   } catch (error) {
     res.status(500).json({ error: 'server Error', details: error });
   }
 }
-async function addCarVender(req, res) {
+async function addCarVendor(req, res) {
   const {
     carName,
     carCategory,
@@ -88,6 +88,7 @@ async function addCarVender(req, res) {
     carModal,
     licensePlateNumber,
     color,
+    location,
     fuelType,
     TransmitionType,
     milage,
@@ -106,6 +107,7 @@ async function addCarVender(req, res) {
       carModal,
       licensePlateNumber,
       color,
+      location,
       fuelType,
       TransmitionType,
       milage,
@@ -121,7 +123,7 @@ async function addCarVender(req, res) {
     newCar.ownerId = req.session.ownerId;
     newCar.carImage = newPath;
     await newCar.save();
-    res.status(201).redirect('/vender/CarPage');
+    res.status(201).redirect('/vendor/CarPage');
   } else {
     res.status(400).json({ message: 'No file uploaded' });
   }
@@ -161,7 +163,7 @@ async function updateCar(req, res) {
 
     await updatedCar.save();
 
-    return res.status(200).redirect('/vender/carPage');
+    return res.status(200).redirect('/vendor/carPage');
   } catch (error) {
     console.error('Server Error:', error);
     return res.status(500).send('Server Error');
@@ -196,33 +198,33 @@ async function deleteCar(req, res) {
 
     await Car.findByIdAndDelete(deleteId);
 
-    return res.status(200).redirect('/vender/carPage');
+    return res.status(200).redirect('/vendor/carPage');
   } catch (error) {
     console.error('Error deleting car:', error);
     return res.status(500).send('Server Error');
   }
 }
-const venderLogout = (req, res) => {
-  if (req.session.venderId) {
+const vendorLogout = (req, res) => {
+  if (req.session.vendorId) {
     req.session.destroy((error) => {
       if (error) {
-        res.status(500).redirect('/vender/Dashboard');
+        res.status(500).redirect('/vendor/Dashboard');
       } else {
-        res.status(200).redirect('/vender/login');
+        res.status(200).redirect('/vendor/login');
       }
     });
   }
 };
 module.exports = {
   loginPage,
-  showVenderDashboard,
+  showVendorDashboard,
   showDashboard,
-  venderCarPage,
-  addCarVender,
+  vendorCarPage,
+  addCarVendor,
   updateCar,
   getCar,
   deleteCar,
   signUpPage,
-  signupVender,
-  venderLogout,
+  signupVendor,
+  vendorLogout,
 };

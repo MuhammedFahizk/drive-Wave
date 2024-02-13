@@ -17,14 +17,14 @@ const path = require('path');
 
 const { admin } = require('../models/users');
 
-const { Vender } = require('../models/users');
+const { Vendor } = require('../models/users');
 
 const { User } = require('../models/users');
 const cloudinary = require('../service/cloudnery');
 
 const { Car } = require('../models/car');
 const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
-const { sendAdminOtp, generateOtp, sendmailVender } = require('../service/nodeMailer');
+const { sendAdminOtp, generateOtp, sendmailVendor } = require('../service/nodeMailer');
 const { error } = require('console');
 
 const emailOtp = {};
@@ -99,6 +99,7 @@ async function addCarAdmin(req, res) {
     carModal,
     licensePlateNumber,
     color,
+    location,
     fuelType,
     TransmitionType,
     milage,
@@ -117,6 +118,7 @@ async function addCarAdmin(req, res) {
       carModal,
       licensePlateNumber,
       color,
+      location,
       fuelType,
       TransmitionType,
       milage,
@@ -327,20 +329,20 @@ async function searchByCarName(req, res) {
 
 const viewNotificationPage = async (req, res) => {
   try {
-    const vender = await Vender.aggregate([
+    const vendor = await Vendor.aggregate([
       {
         $match: {
-          role: 'vender',
-          venderAccessEnabled: false,
+          role: 'vendor',
+          vendorAccessEnabled: false,
         },
       },
     ]);
-    if (!vender) {
+    if (!vendor) {
       console.error({ error: 'not found Notification' });
     } else {
-      const count = vender.length;
+      const count = vendor.length;
       NotificationCount = count;
-      res.status(200).render('admin/notification', { data: vender, count, NotificationCount });
+      res.status(200).render('admin/notification', { data: vendor, count, NotificationCount });
     }
   } catch (error) {
     console.error('Error:', error);
@@ -348,29 +350,29 @@ const viewNotificationPage = async (req, res) => {
   }
 };
 
-const disableVender = async (req, res) => {
+const disableVendor = async (req, res) => {
   try {
     const { id } = req.query;
     if (!id) {
       console.error({ error: 'could not  get id' });
     } else {
-      const vender = await Vender.findById(id);
-      if (!vender) {
-        console.error({ error: 'could not find vender' });
+      const vendor = await Vendor.findById(id);
+      if (!vendor) {
+        console.error({ error: 'could not find vendor' });
       } else {
-        const email = vender.email;
-        const message = `${vender.name}Sorry Admin Not Accept Your Vender Application`;
+        const email = vendor.email;
+        const message = `${vendor.name}Sorry Admin Not Accept Your Vendor Application`;
         const subject = 'Disable';
-        sendmailVender(email, message, subject, (error, info => {
+        sendmailVendor(email, message, subject, (error, info => {
           if (error) {
             console.log(error);
             return res.status(500).send(error);
           }
-          res.status(200).json('Disable the Vender');
+          res.status(200).json('Disable the Vendor');
         }));
-        const result = await Vender.deleteOne({ _id: id });
+        const result = await Vendor.deleteOne({ _id: id });
         if (!result) {
-          res.status(404).json({ error: 'vender Deleting Error' });
+          res.status(404).json({ error: 'vendor Deleting Error' });
         } else {
           res.status(200).redirect('/admin/notification', { NotificationCount });
         }
@@ -382,26 +384,26 @@ const disableVender = async (req, res) => {
   }
 };
 
-const enableVender = async (req, res) => {
+const enableVendor = async (req, res) => {
   try {
     const { id } = req.query;
     if (!id) {
-      return res.status(404).json('Could not find vender id');
+      return res.status(404).json('Could not find vendor id');
     }
-    const vender = await Vender.findById(id);
-    const venderUpdate = await Vender.updateOne({ _id: id }, { venderAccessEnabled: true });
-    if (!vender) {
-      return res.status(404).json('Could not find vender');
+    const vendor = await Vendor.findById(id);
+    const vendorUpdate = await Vendor.updateOne({ _id: id }, { vendorAccessEnabled: true });
+    if (!vendor) {
+      return res.status(404).json('Could not find vendor');
     } else {
-      const email = vender.email;
-      const message = `${vender.name} Welcome To Drive Wave Admin. You can allow your vender account <a href="http://localhost:5000/vender/login">Login</a>`;
+      const email = vendor.email;
+      const message = `${vendor.name} Welcome To Drive Wave Admin. You can allow your vendor account <a href="http://localhost:5000/vendor/login">Login</a>`;
       const subject = 'Enable';
-      sendmailVender(email, message, subject, (error, info) => {
+      sendmailVendor(email, message, subject, (error, info) => {
         if (error) {
           console.error(error);
           return res.status(500).send(error);
         }
-        res.status(200).json('Disable the Vender');
+        res.status(200).json('Disable the Vendor');
       });
 
       res.status(200).redirect('/admin/notification');
@@ -412,29 +414,29 @@ const enableVender = async (req, res) => {
   }
 };
 
-// vender page
-async function venderPage(req, res) {
-  const venders = await Vender.find({ role: 'vender' });
-  res.status(200).render('admin/adminVenderPage', { data: venders, NotificationCount });
+// vendor page
+async function vendorPage(req, res) {
+  const vendors = await Vendor.find({ role: 'vendor' });
+  res.status(200).render('admin/adminVendorPage', { data: vendors, NotificationCount });
 }
 
-async function venderDetails(req, res) {
+async function vendorDetails(req, res) {
   try {
-    const { venderId } = req.query;
-    const venders = await Vender.findById(venderId);
-    res.json(venders);
+    const { vendorId } = req.query;
+    const vendors = await Vendor.findById(vendorId);
+    res.json(vendors);
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
-async function deleteVender(req, res) {
+async function deleteVendor(req, res) {
   try {
-    const { deleteVenderId } = req.query;
-    if (deleteVenderId) {
-      const result = await Vender.findByIdAndDelete(deleteVenderId);
+    const { deleteVendorId } = req.query;
+    if (deleteVendorId) {
+      const result = await Vendor.findByIdAndDelete(deleteVendorId);
       if (result) {
-        res.status(200).redirect('/admin/Vender');
+        res.status(200).redirect('/admin/Vendor');
       } else {
         res.status(300).json('not modify');
       }
@@ -445,23 +447,23 @@ async function deleteVender(req, res) {
   }
 }
 
-async function alphabeticallySortVender(req, res) {
+async function alphabeticallySortVendor(req, res) {
   try {
-    const vender = await Vender.find({ role: 'vender' }).sort({ name: 1 });
-    if (vender) {
-      res.status(200).render('admin/adminVenderPage', { data: vender, NotificationCount });
+    const vendor = await Vendor.find({ role: 'vendor' }).sort({ name: 1 });
+    if (vendor) {
+      res.status(200).render('admin/adminVendorPage', { data: vendor, NotificationCount });
     }
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
-async function searchingVender(req, res) {
+async function searchingVendor(req, res) {
   try {
     const { search } = req.body;
     if (search) {
-      const vender = await Vender.find({ role: 'vender', name: { $regex: new RegExp(search, 'i') } });
-      res.status(200).render('admin/adminVenderPage', { data: vender, search: search, NotificationCount });
+      const vendor = await Vendor.find({ role: 'vendor', name: { $regex: new RegExp(search, 'i') } });
+      res.status(200).render('admin/adminVendorPage', { data: vendor, search: search, NotificationCount });
     } else {
       res.status(204).json('no search content');
     }
@@ -561,14 +563,14 @@ module.exports = {
   alphabeticallySort,
   searchByCarName,
   viewNotificationPage,
-  disableVender,
-  enableVender,
-  // vender
-  venderPage,
-  venderDetails,
-  deleteVender,
-  alphabeticallySortVender,
-  searchingVender,
+  disableVendor,
+  enableVendor,
+  // vendor
+  vendorPage,
+  vendorDetails,
+  deleteVendor,
+  alphabeticallySortVendor,
+  searchingVendor,
   // user
   userPage,
   userDetails,

@@ -1,4 +1,19 @@
-
+<style>
+      
+       .col-12 input[type="text"],input[type="email"],input[type="date"] {
+    border: 1px solid rgb(10, 10, 10);
+    border-radius: 20px;
+    {{!-- border-left: 2px solid rgb(5, 5, 5); --}}
+    outline: none; /* Removes the default focus outline */
+  }.glass-effect {
+    background-color: rgb(38, 156, 119); /* Adjust opacity as needed */
+    border-radius: 10px;
+    
+    }
+    label{
+      color: black;
+    }
+</style>
 <body>
   
 <section class="hero-wrap hero-wrap-2 js-fullheight m-0" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
@@ -6,13 +21,53 @@
       <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
           <div class="col-md-9 ftco-animate pb-5">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Cars <i class="ion-ios-arrow-forward"></i></span></p>
-            <h1 class="mb-3 bread">Choose Your Car</h1>
           </div>
         </div>
       </div>
     </section>
-   
+    <section class="ftco-section ftco-no-pt bg-light">
+    	<div class="container">
+    		<div class="row no-gutters">
+    			<div class="col-md-12	featured-top">
+    				<div class="row no-gutters">
+	  					<div class=" col-md-4 d-flex align-items-center">
+	  						<form action="#" class=" request-form ftco-animate glass-effect ">
+		          		<h2>Make your trip</h2>
+			    				<div class="form-group  px-3 py-0  col-12 ">
+			    					<label for="" class="label px-0">Pick-up location</label>
+			    					<input style="border-radius: 10px;" id="location"  type="text" class=" col-12 p-1" placeholder="City, Airport, Station, etc">
+			    				</div>
+			    				{{!-- <div class="form-group  px-3 py-0  col-12">
+			    					<label for="" class="label px-0">Drop-off location</label>
+			    					<input style="border-radius: 10px;" id=""  type="text" class="p-1 col-12" placeholder="City, Airport, Station, etc">
+			    				</div> --}}
+			    				<div class="d-flex  px-3  row">
+			    					<div class="form-group  col-6">
+			                <label for="" class="label   ">Pick-up date</label>
+			                <input style="border-radius: 10px;" id="pickDate"  type="date" class="p-1 col-12" id="book_pick_date" placeholder="Date">
+			              </div>
+			              <div class="form-group   col-6">
+			                <label for="" class="label ">Drop-off date</label>
+			                <input style="border-radius: 10px;"  type="date" id="dropDate" class="p-1 col-12" id="book_off_date" placeholder="Date">
+			              </div>
+                          <div class="form-group col-12 px-3 py-0">
+		                <label for="" class="label px-0">Pick-up time</label>
+		                
+                    <input style="border-radius: 10px;" id="pickTime" type="text" class=" p-1 col-12  " id="time_pick" placeholder="Time">
+                      <input type="hidden" id="id" value="{{car._id}}" >
+					
+					 <button id="submitButton" type="button">Submit</button>
+			    			</form>
+	  					</div>
+                        
+	  				
+	  				</div>
+                    
+				</div>
+                
+  		</div>
+        
+    </section>
     
 
 <section class="ftco-section bg-light col-12 row m-0 ">
@@ -91,7 +146,7 @@
 	    						<span class="cat">{{carModal}}/{{brandName}}</span>
 	    						<p class="price ml-auto">${{dayRent}} <span>/day</span></p>
     						</div>
-    						<p class="d-flex mb-0 d-block"><a href="/carBooking?carId={{_id}}" class="btn btn-primary py-2 mr-1">Book now</a> <a href="/carDetails?id={{_id}}" class="btn btn-secondary py-2 ml-1">Details</a></p>
+    						<p class="d-flex mb-0 d-block"><a href="/carBooking?carId={{_id}}"  class="btn btn-primary py-2 mr-1">Book now</a> <a href="/carDetails?id={{_id}}" class="btn btn-secondary py-2 ml-1">Details</a></p>
     					</div>
     			
             </div>
@@ -120,7 +175,38 @@
     let engine = []
     let category = []
     let searchText = ''
-     
+
+    let locationData = ''
+     let pickTimeData= ''
+     let pickDateData = ''
+     let dropDateData = ''
+     let carId = ''
+
+
+     const submitBtn = document.getElementById('submitButton');
+submitBtn.addEventListener('click', function() {
+     locationData = document.getElementById('location').value;
+     pickTimeData = document.getElementById('pickTime').value;
+     pickDateData = document.getElementById('pickDate').value;
+     dropDateData = document.getElementById('dropDate').value;
+     carId = document.getElementById('id').value;
+                $('.container .rowcars').empty();
+      
+      submit()
+
+
+
+});
+function submit(location, pickDate, dropDate) {
+    axios.post('/addLocationAndDate?id=`${carId}`', { location, pickDate, dropDate, carId})
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
        $('#transmission input').on('change', function () {
         // Check if the checkbox is checked
         if ($(this).is(':checked')) {
@@ -226,7 +312,7 @@ $('#search').on('keydown', function(event) {
                                                 <p class="price ml-auto">${car.dayRent} <span>/day</span></p>
                                             </div>
                                             <p class="d-flex mb-0 d-block">
-                                                <a href="#" class="btn btn-primary py-2 mr-1">Book now</a>
+                                                <a href="/carBooking?carId=${car._id}" class="btn btn-primary py-2 mr-1">Book now</a>
                                                 <a href="/carDetails?id=${car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
                                             </p>
                                         </div>
@@ -263,7 +349,7 @@ function submit(){
     console.log(category)
 
 
-    axios.post(url,{transmission:transmission, fuel:engine, carCategory:category})
+    axios.post(url,{ transmission:transmission, fuel:engine, carCategory:category ,pickDateData, dropDateData })
   
     .then(response => {
       const cars = response.data;
@@ -283,8 +369,8 @@ function submit(){
                                                 <p class="price ml-auto">${car.dayRent} <span>/day</span></p>
                                             </div>
                                             <p class="d-flex mb-0 d-block">
-                                                <a href="#" class="btn btn-primary py-2 mr-1">Book now</a>
-                                                <a href="/carDetails?id=${car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
+                                                <a href="/carBooking?carId=${car._id}&&pickDate=${pickDateData}&&dropDate=${dropDateData}&&" class="btn btn-primary py-2 mr-1">Book now</a>
+                                                <a href="/carDetails?id=${car._id}&&pickDate=${pickDateData}&&dropDate=${dropDateData}" class="btn btn-secondary py-2 ml-1">Details</a>
                                             </p>
                                         </div>
                                     </div>

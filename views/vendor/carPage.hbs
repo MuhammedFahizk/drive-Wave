@@ -23,43 +23,43 @@
 		</a>
 		<ul style="padding: 0;" class="side-menu top">
 			<li >
-				<a href="/vender/DashboardPage">
+				<a href="/vendor/DashboardPage">
 					<i class='bx bxs-dashboard' ></i>
 					<span class="text">Dashboard</span>
 				</a>
 			</li>
 			<li class="active" >
-				<a href="/vender/CarPage">
+				<a href="/vendor/CarPage">
                     <i class='bx bxs-car' ></i>
 					<span class="text">Cars</span>
 				</a>
 			</li>
 			<li>
-				<a href="/vender/Vender">
+				<a href="/vendor/Vendor">
 					<i class='bx bxs-user-circle' ></i>
-					<span class="text">Venders</span>
+					<span class="text">Vendors</span>
 				</a>
 			</li>
      <li >
-				<a href="/vender/users">
+				<a href="/vendor/users">
                     <i class='bx bxs-user-account'></i>
 					<span class="text">Users</span>
 				</a>
 			</li>
 			<li>
-				<a href="/venderBooking">
+				<a href="/vendorBooking">
                     <i class='bx bxs-book-bookmark'></i>
 					<span class="text">Booking</span>
 				</a>
 			</li>
 			<li>
-				<a href="/venderPayment">
+				<a href="/vendorPayment">
 					<i class='bx bxs-group' ></i>
 					<span class="text">Payment</span>
 				</a>
 			</li>
             <li>
-				<a href="/venderNotification">
+				<a href="/vendorNotification">
 				<i class='bx bxs-bell' ></i>
 					<span class="text">Notification</span>
 				</a>
@@ -73,7 +73,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="/vender/venderLogout" class="logout">
+				<a href="/vendor/vendorLogout" class="logout">
 					<i class='bx bxs-log-out-circle' ></i>
 					<span class="text">Logout</span>
 				</a>
@@ -94,26 +94,26 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
    
 
-<form action="/vender/CarPage/findCarCategories" method="get">
+<form action="/vendor/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="SUVs">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">SUVs</button>
 </form>
-<form action="/vender/CarPage/findCarCategories" method="get">
+<form action="/vendor/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="MUVs">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">MUVs</button>
-</form><form action="/vender/CarPage/findCarCategories" method="get">
+</form><form action="/vendor/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="Sedan">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Sedan</button>
-</form><form action="/vender/CarPage/findCarCategories" method="get">
+</form><form action="/vendor/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="Sports Car">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Sports Car</button>
-</form><form action="/vender/CarPage/findCarCategories" method="get">
+</form><form action="/vendor/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="Hatchbacks">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Hatchbacks</button>
-</form><form action="/vender/CarPage/findCarCategories" method="get">
+</form><form action="/vendor/CarPage/findCarCategories" method="get">
     <input type="hidden" name="category" value="Electric">
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">Electric</button>
-</form><form action="/vender/CarPage" method="get">
+</form><form action="/vendor/CarPage" method="get">
 
     <button type="submit" style="border: 0;background-color:#fbfbfd00;width:100% ;padding:3px">All Cars</button>
 </form>
@@ -175,7 +175,7 @@
 <!-- Modal -->
                 <div class="modal fade   " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" style="max-width: 800px; margin-left:370px;color:#3C91E6 ;background-color: #949596b3;"> 
-					<form id="carModalForm" action="/vender/addCars" method="post" enctype="multipart/form-data">
+					<form id="carModalForm" action="/vendor/addCars" method="post" enctype="multipart/form-data">
                
 
                     <div class="modal-content" style="color:#3C91E6 ;background-color: #3c91e605;" >
@@ -244,6 +244,10 @@
                                <div class="input-group flex-nowrap mt-3">
                             <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-paint-roll'></i></span>
                             <input type="text" class="form-control" id="color" name="color" placeholder="Color" aria-label="Username" aria-describedby="addon-wrapping" required>
+                               </div>
+                                <div class="input-group flex-nowrap mt-3">
+                            <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-location-plus' ></i></i></span>
+                            <input type="text" class="form-control" id="location" name="location" placeholder="location" aria-label="Username" aria-describedby="addon-wrapping" required>
                                </div>
 							   <div class="input-group flex-nowrap mt-3">
                            
@@ -323,7 +327,7 @@
         <h5 class="modal-title" id="editCarModalLabel">Modal title</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="/vender/updateCarDetails" method="post" enctype="multipart/form-data">
+      <form action="/vendor/updateCarDetails" method="post" enctype="multipart/form-data">
       <div class="modal-body">
          <div class="input-group flex-nowrap mt-2">
                             <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-car'></i></span>
@@ -383,6 +387,10 @@
                                <div class="input-group flex-nowrap mt-3">
                             <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-paint-roll'></i></span>
                             <input type="text" class="form-control" id="color" name="color" placeholder="Color" aria-label="Username" aria-describedby="addon-wrapping" required>
+                               </div>
+                                <div class="input-group flex-nowrap mt-3">
+                            <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-edit-location'></i></span>
+                            <input type="text" class="form-control" id="location" name="location" placeholder="location" aria-label="Username" aria-describedby="addon-wrapping" required>
                                </div>
 							   <div class="input-group flex-nowrap mt-3">
                            
@@ -502,7 +510,7 @@
     
   </a>
   <ul class="dropdown-menu">
-<li><a class="dropdown-item" href="/vender/alphabeticallySort?Category={{category}}&search={{search}}">Alphabetically</a></li>
+<li><a class="dropdown-item" href="/vendor/alphabeticallySort?Category={{category}}&search={{search}}">Alphabetically</a></li>
     <li><a class="dropdown-item" href="#">Another action</a></li>
     <li><a class="dropdown-item" href="#">Something else here</a></li>
   </ul>
@@ -524,7 +532,7 @@
 
 <tbody>
     {{#each data}}
-        <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewCarsVender"data-carId="{{this._id}}" onclick="handleRowClickVenderCar(this)">
+        <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewCarsVendor"data-carId="{{this._id}}" onclick="handleRowClickVendorCar(this)">
 			<td>
                 <img  src="{{this.carImage}}">
 			</td>
@@ -538,7 +546,7 @@
     {{/each}}
 </tbody>
 
-<div class="modal fade" id="viewCarsVender" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewCarsVendor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered  " style="max-width: 800px; margin-left:370px;">
    
 
@@ -582,7 +590,7 @@
 
     // Construct the URL and navigate to it
 
-    window.location.href = `/vender/searchByCarName?category=${encodeURIComponent(category)}&search=${encodeURIComponent(search)}`;
+    window.location.href = `/vendor/searchByCarName?category=${encodeURIComponent(category)}&search=${encodeURIComponent(search)}`;
   }
 });
     </script>

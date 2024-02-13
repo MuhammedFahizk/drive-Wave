@@ -34,7 +34,7 @@ function sendMailToAdmin(email, message,subjects, callback) {
   };
   transporter.sendMail(mailOption,callback);
 }
-function sendmailVender(email, message, subjects, callback) {
+function sendmailVendor(email, message, subjects, callback) {
   const mailOption = {
     from: 'fahizk100@gmail.com',
     to: email,
@@ -48,5 +48,5 @@ module.exports = {
   generateOtp,
   sendAdminOtp,
   sendMailToAdmin,
-  sendmailVender,
+  sendmailVendor,
 };

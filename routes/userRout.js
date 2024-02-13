@@ -24,5 +24,7 @@ router.get('/contact', userController.contactPage);
 router.post('/contactMessage', userController.userMessageToAdmin);
 router.get('/about', userController.aboutPage);
 router.get('/carBooking', userController.carBookingPage);
+router.post('/carBooking', userController.carBookingPagePost);
+router.post('/addLocationAndDate', userController.addLocationAndDate);
 
 module.exports = router;

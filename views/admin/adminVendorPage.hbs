@@ -34,9 +34,9 @@
 				</a>
 			</li>
 			<li class="active">
-				<a href="/admin/Vender">
+				<a href="/admin/Vendor">
 					<i class='bx bxs-user-circle' ></i>
-					<span class="text">Venders</span>
+					<span class="text">Vendors</span>
 				</a>
 			</li>
 			<li >
@@ -89,7 +89,7 @@
 		<nav>
 			<i class='bx bx-menu' ></i>
 			{{!-- <a href="#" class="nav-link">Categories</a> --}}
-			<form action="/admin/searchVender" method="post">
+			<form action="/admin/searchVendor" method="post">
 				<div class="form-input">
 					<input type="search" placeholder="Search..." name="search">
 					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
@@ -118,7 +118,7 @@
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
 						<li>
-							<a class="active" href="#">Venders</a>
+							<a class="active" href="#">Vendors</a>
 						</li>
 					</ul>
 				</div>
@@ -163,7 +163,7 @@
     
   </a>
   <ul class="dropdown-menu">
-<li><a class="dropdown-item" href="/admin/vender/alphabeticallySort?search={{search}}">Alphabetically</a></li>
+<li><a class="dropdown-item" href="/admin/vendor/alphabeticallySort?search={{search}}">Alphabetically</a></li>
 
   
   </ul>
@@ -172,7 +172,7 @@
 					<table>
 						<thead style="" >
 							<tr style="color: #3C91E6;font-size:x-large;border-bottom"><th></th>
-								<th>Vender Name</th>
+								<th>Vendor Name</th>
 								<th>Shope Name</th>
 								<th>Email</th>
 								<th>Phone</th>
@@ -184,7 +184,7 @@
 
 <tbody>
     {{#each data}}
-        <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewVender"data-venderId="{{this._id}}" onclick="handleRowClickVender(this)">
+        <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal" data-bs-target="#viewVendor"data-vendorId="{{this._id}}" onclick="handleRowClickVendor(this)">
 			<td>
                 {{!-- <img  src="{{}}"> --}}
 			</td>
@@ -197,7 +197,7 @@
         </tr>
     {{/each}}
 </tbody>
-<div class="modal fade" id="viewVender" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewVendor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered  " style="max-width: 800px; margin-left:370px;">
    
 

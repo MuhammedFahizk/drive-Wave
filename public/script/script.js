@@ -91,6 +91,7 @@ function handleRowClick(row) {
                     <li class="list-group-item">Year: ${data.year}</li>
                     <li class="list-group-item">Category: ${data.carCategory}</li>
                     <li class="list-group-item">Day Rent: ${data.dayRent}</li>
+                    <li class="list-group-item">Location: ${data.location}</li>
                     <li class="list-group-item">Brand Name: ${data.brandName}</li>
                     <li class="list-group-item">License Plate Number: ${data.licensePlateNumber}</li>
                     <li class="list-group-item">Color: ${data.color}</li>
@@ -109,13 +110,13 @@ function handleRowClick(row) {
     .catch(error => console.error('Error:', error));
 }
 
-function handleRowClickVender(row) {
-  const venderId = row.getAttribute('data-venderId'); // Make sure it matches your HTML attribute name
-  axios.get(`/admin/getVenderDetails?venderId=${encodeURIComponent(venderId)}`)
+function handleRowClickVendor(row) {
+  const vendorId = row.getAttribute('data-vendorId'); // Make sure it matches your HTML attribute name
+  axios.get(`/admin/getVendorDetails?vendorId=${encodeURIComponent(vendorId)}`)
     .then(response => {
       const data = response.data;
-      document.getElementById('exampleModalLabel').innerText = data.venderId;
-      document.querySelector('#viewVender .modal-body').innerHTML = `
+      document.getElementById('exampleModalLabel').innerText = data.vendorId;
+      document.querySelector('#viewVendor .modal-body').innerHTML = `
  <div class="row g-0">
     <div class="col-md-4">
       <img src="${data.carImage}" class="img-fluid rounded-start  col-12 mt-4 " style="height:325px;object-fit: cover; width: 100%; " alt="Car Image">
@@ -132,8 +133,8 @@ function handleRowClickVender(row) {
                     <li class="list-group-item">Bank Name: ${data.bankName}</li>
                 </ul> 
   <div class="card-footer d-flex justify-content-center">
-                    <form action="/admin/deleteVender" method='get' id="deleteForm">
-                        <input type="hidden" name="deleteVenderId" value="${data._id}">
+                    <form action="/admin/deleteVendor" method='get' id="deleteForm">
+                        <input type="hidden" name="deleteVendorId" value="${data._id}">
                         <button type="submit" class="btn btn-danger me-4 mt-4" ">Delete</button>
                     </form>
                 </div>
@@ -144,12 +145,12 @@ function handleRowClickVender(row) {
     .catch(error => console.error('Error:', error));
 }
 
-function handleRowClickVenderNotification(button) {
-  const venderId = button.getAttribute('data-venderId'); // Make sure it matches your HTML attribute name
-  axios.get(`/admin/getVenderDetails?venderId=${encodeURIComponent(venderId)}`)
+function handleRowClickVendorNotification(button) {
+  const vendorId = button.getAttribute('data-vendorId'); // Make sure it matches your HTML attribute name
+  axios.get(`/admin/getVendorDetails?vendorId=${encodeURIComponent(vendorId)}`)
     .then(response => {
       const data = response.data;
-      document.querySelector('#viewVenderDetails .modal-body').innerHTML = `
+      document.querySelector('#viewVendorDetails .modal-body').innerHTML = `
       <div class="col-md-12">
         <div class="card-body">
           <ul class="list-group list-group-flush">
@@ -247,6 +248,7 @@ function handleEditClick(button) {
       document.querySelector('#editModal [name="licensePlateNumber"]').value = data.licensePlateNumber;
       document.querySelector('#editModal [name="carImage"]').value = ''; // You may not want to populate the file input
       document.querySelector('#editModal [name="color"]').value = data.color;
+      document.querySelector('#editModal [name="location"]').value = data.location;
       document.querySelector('#editModal [name="fuelType"]').value = data.fuelType;
       document.querySelector('#editModal [name="TransmitionType"]').value = data.TransmitionType;
       document.querySelector('#editModal [name="milage"]').value = data.milage;
@@ -272,14 +274,14 @@ document.getElementById('searchByCarName').addEventListener('keypress', (event) 
     window.location.href = `/searchByCarName?category=${encodeURIComponent(category)}&search=${encodeURIComponent(search)}`;
   }
 });
-function handleRowClickVenderCar(row) {
+function handleRowClickVendorCar(row) {
   const carId = row.getAttribute('data-carId'); // Make sure it matches your HTML attribute name
 
-  axios.get(`/Vender/getCarDetails?carId=${encodeURIComponent(carId)}`)
+  axios.get(`/Vendor/getCarDetails?carId=${encodeURIComponent(carId)}`)
     .then(response => {
       const data = response.data;
       document.getElementById('exampleModalLabel').innerText = data.carId;
-      document.querySelector('#viewCarsVender .modal-body').innerHTML = `
+      document.querySelector('#viewCarsVendor .modal-body').innerHTML = `
       
   <div class="row g-0">
     <div class="col-md-4">
@@ -294,16 +296,17 @@ function handleRowClickVenderCar(row) {
                     <li class="list-group-item">Year: ${data.year}</li>
                     <li class="list-group-item">Category: ${data.carCategory}</li>
                     <li class="list-group-item">Day Rent: ${data.dayRent}</li>
+                    <li class="list-group-item">Location: ${data.location}</li>
                     <li class="list-group-item">Brand Name: ${data.brandName}</li>
                     <li class="list-group-item">License Plate Number: ${data.licensePlateNumber}</li>
                     <li class="list-group-item">Color: ${data.color}</li>
                 </ul> 
   <div class="card-footer d-flex justify-content-center">
-                    <form action="/vender/CarPage/deleteCar" method='get' id="deleteForm">
+                    <form action="/vendor/CarPage/deleteCar" method='get' id="deleteForm">
                         <input type="hidden" name="deleteCarId" value="${data._id}">
                         <button type="submit" class="btn btn-danger me-4 mt-4" ">Delete</button>
                     </form>
-                    <button type="button" class="btn btn-primary  mt-4" data-bs-toggle="modal" data-bs-target="#editModal" data-carEId="${data._id}" onclick="handleEditClickVender(this)">Edit</button>
+                    <button type="button" class="btn btn-primary  mt-4" data-bs-toggle="modal" data-bs-target="#editModal" data-carEId="${data._id}" onclick="handleEditClickVendor(this)">Edit</button>
                 </div>
     </div>
     </div>
@@ -311,9 +314,9 @@ function handleRowClickVenderCar(row) {
     })
     .catch(error => console.error('Error:', error));
 }
-function handleEditClickVender(button) {
+function handleEditClickVendor(button) {
   const carId = button.getAttribute('data-carEId');
-  fetch(`/vender/getCarDetails?carId=${encodeURIComponent(carId)}`)
+  fetch(`/vendor/getCarDetails?carId=${encodeURIComponent(carId)}`)
     .then(res => res.json())
     .then(data => {
       document.getElementById('editCarModalLabel').innerText = `Edit ${data.carName} `;
@@ -328,6 +331,7 @@ function handleEditClickVender(button) {
       document.querySelector('#editModal [name="carModal"]').value = data.carModal;
       document.querySelector('#editModal [name="licensePlateNumber"]').value = data.licensePlateNumber;
       document.querySelector('#editModal [name="carImage"]').value = ''; // You may not want to populate the file input
+      document.querySelector('#editModal [name="location"]').value = data.location;
       document.querySelector('#editModal [name="color"]').value = data.color;
       document.querySelector('#editModal [name="fuelType"]').value = data.fuelType;
       document.querySelector('#editModal [name="TransmitionType"]').value = data.TransmitionType;

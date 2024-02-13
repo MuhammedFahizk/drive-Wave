@@ -7,17 +7,17 @@ const cloudinary = require('../service/cloudnery');
 const fs = require('fs');
 
 const loginMiddleWare = (req, res, next) => {
-  if (req.session.venderId) {
-    res.redirect('/vender/dashboardPage');
+  if (req.session.vendorId) {
+    res.redirect('/vendor/dashboardPage');
   } else {
     next();
   }
 };
 const requireAuth = (req, res, next) => {
-  if (req.session.venderId) {
+  if (req.session.vendorId) {
     next();
   } else {
-    res.redirect('/vender/login');
+    res.redirect('/vendor/login');
   }
 };
 

@@ -18,7 +18,7 @@ const adminSchema = new mongoose.Schema({
     require: true,
   },
 });
-const VenderSchema = new mongoose.Schema({
+const VendorSchema = new mongoose.Schema({
   name: {
     require: true,
     type: String,
@@ -47,7 +47,7 @@ const VenderSchema = new mongoose.Schema({
     require: true,
     type: String,
   },
-  venderAccessEnabled: {
+  vendorAccessEnabled: {
     require: true,
     type: Boolean,
   },
@@ -111,8 +111,8 @@ const userSchema = new mongoose.Schema({
   ],
 }, { timestamps: true, timeseries: true });
 
-const Vender = mongoose.model('vender', VenderSchema, 'users');
+const Vendor = mongoose.model('vendor', VendorSchema, 'users');
 const admin = mongoose.model('User', adminSchema);
 const User = mongoose.model('dealers', userSchema, 'users');
 
-module.exports = { admin, Vender, User };
+module.exports = { admin, Vendor, User };

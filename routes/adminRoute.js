@@ -26,15 +26,15 @@ router.get('/carPage/findCarCategories', login.requireAuth, adminController.find
 router.get('/alphabeticallySort', login.requireAuth, adminController.alphabeticallySort);
 router.get('/searchByCarName', login.requireAuth, adminController.searchByCarName);
 router.get('/notification', login.requireAuth, adminController.viewNotificationPage)
-router.get('/disableVender', login.requireAuth, adminController.disableVender);
-router.get('/enableVender', login.requireAuth, adminController.enableVender);
+router.get('/disableVendor', login.requireAuth, adminController.disableVendor);
+router.get('/enableVendor', login.requireAuth, adminController.enableVendor);
 
-// adminVender routs
-router.get('/Vender', login.requireAuth, adminController.venderPage);
-router.get('/getVenderDetails', login.requireAuth, adminController.venderDetails);
-router.get('/deleteVender', login.requireAuth, adminController.deleteVender);
-router.get('/vender/alphabeticallySort', login.requireAuth, adminController.alphabeticallySortVender);
-router.post('/searchVender', login.requireAuth, adminController.searchingVender);
+// adminVendor routs
+router.get('/Vendor', login.requireAuth, adminController.vendorPage);
+router.get('/getVendorDetails', login.requireAuth, adminController.vendorDetails);
+router.get('/deleteVendor', login.requireAuth, adminController.deleteVendor);
+router.get('/vendor/alphabeticallySort', login.requireAuth, adminController.alphabeticallySortVendor);
+router.post('/searchVendor', login.requireAuth, adminController.searchingVendor);
 //  admin user page
 router.get('/users', login.requireAuth, adminController.userPage);
 router.get('/getUserDetails', login.requireAuth, adminController.userDetails);

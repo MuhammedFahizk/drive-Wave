@@ -1,5 +1,4 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-undef */
 const mongoose = require('mongoose');
 
 try {
@@ -53,6 +52,10 @@ try {
       type: String,
       required: true,
     },
+    location: {
+      type: String,
+      required: true,
+    },
     milage: {
       type: Number,
       required: true,
@@ -95,6 +98,5 @@ try {
     Car,
   };
 } catch {
-  console.error('Error during admin login:', error);
-  res.status(500).send('Internal Server Error');
+  console.error('Error during users collection:');
 }

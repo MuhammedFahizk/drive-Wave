@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/order */
@@ -12,6 +11,7 @@ const emailValidator = require('email-validator');
 const { User } = require('../models/users');
 const { Car } = require('../models/car');
 const { sendAdminOtp, generateOtp, sendMailToAdmin } = require('../service/nodeMailer');
+const { findCarAvailability, addLocationAndDate } = require('../service/userService');
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -186,11 +186,26 @@ async function filterCars(req, res) {
     transmission,
     fuel,
   carCategory,
+  pickDateData,
+  dropDateData,
 } = req.body;
+let AvailabilityId = [];
+console.log(pickDateData, dropDateData);
+  if (pickDateData && dropDateData) {
+    const pickDate = new Date(pickDateData);
+    const dropDate = new Date(dropDateData);
+    const availability = await findCarAvailability(pickDate, dropDate);
+    console.log(availability);
+    AvailabilityId = availability.map((entry) => entry._id);
+  }
+  console.log(AvailabilityId);
   const model = [
     {
       $match: {
-        TransmitionType: { $in: transmission }, // Convert to single value
+        _id: {
+          $nin: AvailabilityId,
+        },
+        TransmitionType: { $in: transmission },
         fuelType: { $in: fuel },
         carCategory: { $in: carCategory },
       },
@@ -256,7 +271,7 @@ async function generateOtpEmail(req, res) {
       return res.status(500).send(error);
     }
       console.log(otp, email);
-      res.status(201).json(email);
+      return res.status(201).json(email);
   });
   } catch (error) {
   console.error('Error search car', error);
@@ -306,7 +321,7 @@ if (isValid) {
   }
 }
 
-async function userOtpCheck(req, res) {
+const userOtpCheck = async (req, res) => {
   const { otp, Email } = req.body;
   if (emailOtp[Email] && emailOtp[Email] === otp) {
     const user = await User.findOne({ role: 'user', email: Email });
@@ -319,13 +334,12 @@ async function userOtpCheck(req, res) {
       req.session.password = hashPassword;
       req.session.name = user.name;
       req.session.userId = uuidv4();
-      res.status(200).redirect('/');
-    } else {
-      const error = 'not found user';
-      res.status(404).redirect('/login');
+      return res.status(200).redirect('/');
     }
+      const error = 'not found user';
 }
-}
+return res.status(404).redirect('/login');
+};
 
 const contactPage = (req, res) => {
   const { name, password } = req.session;
@@ -346,7 +360,7 @@ async function userMessageToAdmin(req, res) {
         console.log(error);
         return res.status(500).send(error);
       }
-        res.status(201).json('Success fully send message');
+         return res.status(201).json('Success fully send message');
     });
   }
 } catch (error) {
@@ -358,8 +372,52 @@ const aboutPage = (req, res) => {
   res.status(200).render('user/about');
 };
 
-const carBookingPage = (req, res) => {
-   res.status(200).render('user/booking');
+const carBookingPage = async (req, res) => {
+  try {
+     const { carId, pickDate, dropDate } = req.query;
+     if (!carId) {
+      return res.status(500).json({ error: 'not found car id' });
+     }
+        const car = await Car.findById(carId);
+        if (!car) {
+          res.status(500).json({ error: 'not found car' });
+        }
+          if (!pickDate && !dropDate) {
+            return res.status(200).render('user/booking', { car });
+          }
+          const data = await addLocationAndDate(pickDate, dropDate, car.dayRent);
+          return res.status(200).render('user/booking', { car, data });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'server Error', details: error });
+}
+};
+const carBookingPagePost = async (req, res) => {
+  try {
+     const { carId, pickDateInput, dropDateInput } = req.body;
+     if (!carId) {
+      return res.status(500).json({ error: 'not found car id' });
+     }
+        const car = await Car.findById(carId);
+        if (!car) {
+          return res.status(500).json({ error: 'not found car' });
+        }
+          if (!pickDateInput && !dropDateInput) {
+            return res.status(200).render('user/booking', { car });
+          }
+           const pickDate = new Date(pickDateInput);
+          const dropDate = new Date(dropDateInput);
+          const availability = await findCarAvailability(pickDate, dropDate);
+          const isCarAvailable = availability.some((item) => item._id.toString() === carId);
+          if (isCarAvailable) {
+            const message = 'Not Available This Car';
+            return res.status(200).render('user/booking', { car, message });
+          }
+          const data = await addLocationAndDate(pickDate, dropDate, car.dayRent);
+          return res.status(200).render('user/booking', { car, data });
+  } catch (error) {
+    return res.status(500).json({ error: 'server Error', details: error });
+}
 };
 
 module.exports = {
@@ -382,4 +440,6 @@ module.exports = {
   userMessageToAdmin,
   aboutPage,
   carBookingPage,
+  addLocationAndDate,
+  carBookingPagePost,
 };
