@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+// /* eslint-disable no-undef */
 const mongoose = require('mongoose');
 
 try {
@@ -93,7 +94,7 @@ try {
     },
 
   }, { timeseries: true });
-  const Car = mongoose.model('cars', carSchema);
+  const Car = mongoose.model('Car', carSchema);
   module.exports = {
     Car,
   };

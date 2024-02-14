@@ -177,6 +177,7 @@ formDataElement.addEventListener('submit', function(event) {
             .then(response => {
                 console.log('Form submitted successfully');
                 // Handle success response
+				console.log(response)
 				window.location.href = '/'
             })
             .catch(error => {

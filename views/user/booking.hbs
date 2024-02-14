@@ -1,12 +1,11 @@
 <style>
-    #detailsDiv,#paymentDiv{
-        display: none;
-    } 
+  display: none;
+    
    .col-12 input[type="text"],input[type="email"],input[type="date"] {
     border: 1px solid rgb(10, 10, 10);
-    border-radius: 20px;
-    {{!-- border-left: 2px solid rgb(5, 5, 5); --}}
+    border-radius: 15px;
     outline: none; /* Removes the default focus outline */
+   }
   .glass-effect {
     background-color: rgba(255, 255, 255, 0.265); /* Adjust opacity as needed */
     border-radius: 10px;
@@ -16,13 +15,169 @@
       color: black;
     }
 </style>
-<body style="background-color: rgb(35, 145, 108);">
+<body style="background-color: #23916c;">
 
 
-    <section class="ftco-section ftco-car-details  px-md-0 ">
+    <section class="ftco-section ftco-car-details col-md-12  px-md-3 ">
+ {{#if data}}
+
+      <div class="container p-md-4 p-4  col-md-12">
+        <div class="row  slider-text js-fullheight align-items-end justify-content-start">
+         	<div class="container ">
+    		<div class="row mb-4">
+          <div class="col-md-5 mb-4">
+                                            <div class="car-wrap rounded ftco-animate ">
+                          <div class="text mb-0 pb-0">
+                          <h2 class="mb-0"><a>{{car.carName}}</a></h2>
+						  <div class="d-flex mb-1">
+                            <span class="cat">Days </span>
+                             </span>
+                            <p class="price ml-md-auto ml-2">{{data.date}} <span></span></p>
+                          </div>
+						   <div class="d-flex mb-1">
+                            <span class="cat">Rent Price </span>
+                             </span>
+                            <p class="price ml-md-auto ml-2">{{data.rate}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Brand </span>
+                             </span>
+                            <p class="price ml-md-auto ml-2">{{car.brandName}} <span></span></p>
+                          </div>
+						  <div class="d-flex mb-1">
+                            <span class="cat">Year </span>
+                             </span>
+                            <p class="price ml-md-auto ml-2">{{car.year}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Per Day Rent </span>
+</span>
+                            <p class="price ml-md-auto ml-2">{{car.dayRent}} <span></span></p>
+                          </div>
+                         
+                          <div class="d-flex mb-1">
+                            <span class="cat">Model </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{car.carModal}} <span></span></p>
+                          </div>
+                           <div class="d-flex mb-1">
+                            <span class="cat">Color </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{car.color}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Fuel Type </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{car.fuelType}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Transmition Type </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{car.TransmitionType}} <span></span></p>
+                          </div>
+                      
+                        </div>
+                        <div class="text">
+                          <h2 class="mb-0"><a>{{user.name}}</a></h2>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Email </span>
+</span>
+                            <p class="price ml-md-auto ml-2">{{user.email}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Phone </span>
+</span>
+                            <p class="price ml-md-auto ml-2">{{user.phone}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">Age </span>
+                          </span>
+                            <p class="price ml-md-auto ml-2">{{user.age}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">License Number </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{user.licenseNumber}} <span></span></p>
+                          </div>
+                            <p style="color: black;" >Address</p>
+                           <div class="d-flex mb-1">
+                            <span class="cat">Place </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{address.place}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">zip </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{address.zip}} <span></span></p>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <span class="cat">House Name </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2">{{address.houseName}} <span></span></p>
+                          </div>
+                      
+                        </div>
+                        
+                      </div>
+                    </div>
+                    <div class="col-md-7  ">
+                     <div class="car-wrap rounded ftco-animate ">
+                        <div class="text mb-0 pb-0">
+							<center><h1 class="text-dark align-text-center"><i class='bx bx-heart' >Payment</i></h1>
+</center>
+                           <div class="col-12 p-2">
+						<form action="" id="paymentForm">
+    <div class="col-12 p-2">
+        <label class="mb-1" for="email">Email Address</label>
+        <input type="text" class="form-control" name="email" value="{{user.email}}" placeholder="Email Address">
+    </div>
+    <label class="p-0 ml-2 my-1" for="">Card Details</label>
+    <div class="d-flex align-items-center justify-content-between card-atm border rounded m-2">
+        <div class="fab fa-cc-visa"></div>
+        <input style="border: 0;" type="text" name="cardNumber" class="form-control" placeholder="Card Number">
+        <div class="d-flex w-50">
+            <input style="border: 0;" type="text" class="form-control px-0" name="expire" placeholder="MM/YY">
+            <input style="border: 0;" type="password" maxlength="3" class="form-control px-0" name="cvv" placeholder="CVV">
+        </div>
+    </div>
+    <div class="col-12 p-2">
+        <label class="mb-1" for="HolderName">Card Holder Name</label>
+        <input type="text" class="form-control" value="{{user.name}}" name="holderName" placeholder="Card Holder Name">
+    </div>
+    <label class="p-0 ml-2 my-1" for="">Address</label>
+    <div class="d-flex align-items-center justify-content-between card-atm border rounded m-2">
+        <input style="border: 0;" type="text" class="form-control" name="houseName" value="{{address.houseName}}" placeholder="House Name">
+        <div class="d-flex w-60">
+            <input style="border: 0;" type="text" class="form-control px-2" name="place" value="{{address.place}}" placeholder="Place">
+            <input style="border: 0;" type="text" maxlength="3" class="form-control px-2" name="zip" value="{{address.zip}}" placeholder="Zip">
+        </div>
+    </div>
+    <div class="col-12 p-2">
+        <button type="button" id="bookingCarButton" class="btn btn-primary col-12">Pay <span class="fas fa-dollar-sign px-1">$ {{data.rate}}</span></button>
+    </div>
+</form>
+
+						   </div>
+                        </div>
+                      </div>
+                    </div>
+                  
+
+                    
+                    
+        </div>
+      </div>
+      
+      
+        </div>
+      </div>
+					</div> {{else}}
+ 
       <div class="container p-md-4 p-0 m-0">
       	<div class="row justify-content-center p-0"> 
 <div class="row col-12    ">
+                 
+
           <div class="col-md-3 d-none d-md-block  ">
                       <div class="car-wrap md rounded ftco-animate ">
                         
@@ -43,19 +198,8 @@
                     <p class="ml-auto mr-3">{{car.dayRent}}<span>/Day </span></p>
                    </div>
                    <hr class="">
-                    {{#if data}}
 
-				   <div class="d-flex   row  ">
-                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
-                    
-                    <h5 class="ml-2">Days</h5>
-                    {{!-- <h5 class="ml-auto mr-3">Totel</h5> --}}
-                   </div>
-                    <div class="d-flex   row  ">
-                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
-                    <p class="ml-2">{{data.date}}</p>
-                    <p class="ml-auto mr-3">{{data.rate}}<span>/{{data.date}} </span></p>
-					{{else}}
+				
 					<div class="d-flex   row  ">
                     {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
                     
@@ -78,7 +222,6 @@
     </div>
 </form>
  <p class="px-4 text-danger">{{message}}</p>
-					{{/if}}
                    </div>
                    <hr class="">
 
@@ -88,17 +231,7 @@
                     </div>
                     
                     <div class="col-md-9 col-12   ">
-                       <div class=" car-wrap rounded py-2 ftco-animate col-12 row m-0 mb-3 d-flex justify-content-center ">
-                      <a type="button" id="confirm" class="m-md-2 col-md-2 col-4">
-                        Confirm
-                    </a >
-                     <a type="button" id="details" class=" m-md-2 col-md-2 col-4 ">
-                        Details
-                    </a>
-                     <a type="button" id="payment" class=" m-md-2 col-md-2 col-4 ">
-                        Payment
-                    </a>
-                       </div>
+                      
                      
                       
                     
@@ -365,61 +498,10 @@
 				</div>
                     </div>
         </div>
+{{/if}}
 
                     {{!-- add details section --}}
-                     <div   id="detailsDiv" class="car-wrap rounded  ftco-animate  py-4">
-                       <h2 class="text-center ftco-animate">Enter Details</h2>
-                       <form>
-                       <div class="col-12 row p-3 ftco-animate pl-5">
-                         <div class="col-md-6">
-                          <input class="col-12 p-2 pl-4" type="text" name="name" placeholder="Name" value="{{user.name}}">
-                         </div>
-                         <div class="col-md-6">
-
-                          <input class="col-12  p-2 pl-4" type="email" name="email" placeholder="Email" value="{{user.email}}">
-
-                         </div>
-                       </div>
-                      
-                       <div class="col-12 row p-3 ftco-animate pl-5">
-                          <div class="col-md-5">
-                          <input class="col-12 col-12 p-2 pl-4" type="text" name="age" placeholder="Age" value="{{user.age}}">
-                        
-
-                         </div>
-                         <div class="col-md-7 ftco-animate ">
                      
-                          <input class="col-12 col-12 p-2 pl-4 ftco-animate" type="text" name="phone" placeholder="Phone" value="{{user.phone}}">
-
-
-                         </div>                         
-                       </div>
-                       
-                       <div class="col-12 row p-3 ftco-animate pl-5">
-                          <div class="col-md-4 ftco-animate ">
-                      
-
-                          <input class="col-12 col-12 p-2 pl-4" type="text" name="houseName" placeholder="House Name" value="{{user.houseName}}">
-                         </div>
-                         <div class="col-md-4 ftco-animate">
-
-                          <input class="col-12 col-12 p-2 pl-4" type="text" name="place" placeholder="Place" value="{{user.place}}">
-
-                         </div> 
-                         <div class="col-md-4 ftco-animate">
-
-                          <input class="col-12 col-12 p-2 pl-4" type="text" name="zip" placeholder="Zip" value="{{user.zip}}">
-
-                         </div>                        
-                       </div>
-                    </form>
-                      </div>
-                      
-                    
-                      <div  id="paymentDiv"  class="car-wrap rounded ftco-animate ftco-animate">
-                payment
-                
-                      </div>
       	</div>
                       
                     
@@ -444,7 +526,29 @@
     const details = document.getElementById('details')
     const payment=document.getElementById('payment')
     const confirm=document.getElementById('confirm')
+    const carId = document.getElementById('carId')
+const paymentForm = document.getElementById('paymentForm');
+const bookingCarButton = document.getElementById('bookingCarButton');
 
+if (bookingCarButton) {
+    bookingCarButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        const paymentFormData = new FormData(paymentForm);
+  const { houseName, email, holderName, cardNumber, zip, place, expire, cvv } = Object.fromEntries(paymentFormData.entries());
+		console.log(houseName);
+
+        axios.post('/carBooked', {  email, holderName, cardNumber,houseName, zip, place, expire, cvv })
+            .then(response => {
+                console.log(response);
+				window.location.href='/bookedCars'
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+} else {
+    console.error('Element with ID "bookingCarButton" not found.');
+}
 
 
 
@@ -453,22 +557,6 @@
     
 
 
-    details.addEventListener('click', function(){
-        conformDiv.style.display = 'none';
-        paymentDiv.style.display = 'none';
-        detailsDiv.style.display = 'block';
-
-
-    })
-    payment.addEventListener('click', function(){
-        conformDiv.style.display = 'none';
-        paymentDiv.style.display = 'block';
-        detailsDiv.style.display = 'none';    
-        })
-    confirm.addEventListener('click', function(){
-        conformDiv.style.display = 'block';
-        paymentDiv.style.display = 'none';
-        detailsDiv.style.display = 'none';    })
-    
+    {{!--  --}}
 
 </script>

@@ -47,11 +47,16 @@ const addLocationAndDate = async (pickDateInput, dropDateInput, dayRent) => {
     data = {
       date,
       rate: dayRent * date,
+      pickDate,
+      dropDate,
     };
   }
   return data;
 };
+// const pendingCarBooking = async () => {
+// }
 module.exports = {
   findCarAvailability,
   addLocationAndDate,
+  // pendingCarBooking,
 };

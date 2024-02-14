@@ -5,15 +5,15 @@ const { Car } = require('./car');
 
 try {
   const bookingSchema = new mongoose.Schema({
-    user: {
+    userId: {
       type: mongoose.Types.ObjectId,
       ref: User,
     },
-    cars: {
+    carId: {
       type: mongoose.Types.ObjectId,
       ref: Car,
     },
-    totalRent: {
+    price: {
       type: Number,
       require: true,
     },
@@ -25,13 +25,47 @@ try {
       type: Date,
       require: true,
     },
+    email: {
+      type: String,
+      require: true,
+    },
+    holderName: {
+      type: String,
+      require: true,
+    },
+    cardNumber: {
+      type: String,
+      require: true,
+    },
+    expire: {
+      type: String,
+      require: true,
+    },
+    cvv: {
+      type: String,
+      require: true,
+    },
+    address: {
+      houseName: {
+        type: String,
+        require: true,
+      },
+      place: {
+        type: String,
+        require: true,
+      },
+      zip: {
+        type: Number,
+        require: true,
+      },
+    },
     status: {
       type: String,
-      enum: ['pending', 'confirmed', 'cancelled'],
-      default: 'pending',
+      enum: ['confirmed', 'cancelled'],
+      default: 'confirmed',
     },
   });
-  const Booking = mongoose.model('booking', bookingSchema);
+  const Booking = mongoose.model('Booking', bookingSchema);
 
   module.exports = { Booking };
 } catch {

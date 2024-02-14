@@ -1,5 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const mongoose = require('mongoose');
+// eslint-disable-next-line no-unused-vars
+const { Car } = require('./car');
 
 mongoose.connect('mongodb://localhost:27017/userDB', {
   useNewUrlParser: true,
@@ -108,6 +110,18 @@ const userSchema = new mongoose.Schema({
       require: false,
     },
   },
+  ],
+  whishList: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Car',
+    },
+  ],
+  bookedCar: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Booking',
+    },
   ],
 }, { timestamps: true, timeseries: true });
 

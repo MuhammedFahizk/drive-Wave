@@ -1,0 +1,17 @@
+<section style="background-color: #799181f4;" class="ftco-section ftco-car-details col-md-12  px-md-3 ">
+      <div class="container p-md-4 p-4  col-md-12">
+      	<div class="row justify-content-center p-1 "> 
+            {{#each data}}
+                      <div style="background-color: rgba(49, 113, 54, 0);" class="car-wrap rounded ftco-animate col-md-12 row py-4  justify-content-center align-middle m-2">
+                    <img style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;" alt="Car Image" class=" col-md-2 img rounded d-flex align-items-end" src="{{carImage}}">
+                      <div class="col-md-10  rounded ftco-animate m-0 justify-content-center align-middle row">
+                        <h4 class="align-middle py-md-4 col-7">{{this.carName}} {{this.carModal}}</h4>
+                         <h5 class="col-md-3 py-md-4"><span>$</span>{{this.dayRent}}/Day</h5>
+                         <input type="button" value="Booking" class=" col-1 my-md4">
+                         <a class="col-md-1" href="/clearCar"><svg  xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 20 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg></a>
+                      </div>
+                      </div>
+                 {{/each}}    
+        </div>
+      </div>
+    </section>

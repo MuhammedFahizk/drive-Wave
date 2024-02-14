@@ -23,8 +23,11 @@ router.post('/registrationValidation', userController.registrationValidation);
 router.get('/contact', userController.contactPage);
 router.post('/contactMessage', userController.userMessageToAdmin);
 router.get('/about', userController.aboutPage);
-router.get('/carBooking', userController.carBookingPage);
-router.post('/carBooking', userController.carBookingPagePost);
-router.post('/addLocationAndDate', userController.addLocationAndDate);
+router.get('/carBooking', middleware.LoginUser, userController.carBookingPage);
+router.post('/carBooking', middleware.LoginUserPost, userController.carBookingPagePost);
+router.post('/addWishlist', userController.addToWishlist);
+router.get('/whishList', userController.wishListPage);
+router.post('/carBooked', userController.carAddToBooking);
+router.get('/bookedCars', userController.bookedCarsPage);
 
 module.exports = router;
