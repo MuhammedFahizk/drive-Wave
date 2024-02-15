@@ -2,80 +2,14 @@
       <div class="container p-md-4 p-4  col-md-12">
       	<div class="row justify-content-center p-1 "> 
             {{#each data}}
-                      {{!-- <div style="background-color: rgba(49, 113, 54, 0);" class="car-wrap rounded ftco-animate col-md-12 row py-4  justify-content-center align-middle m-2">
-                    <img style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;" alt="Car Image" class=" col-md-2 img rounded d-flex align-items-end" src="{{carImage}}">
-                      <div class="col-md-10  rounded ftco-animate m-0 justify-content-center align-middle row">
-                        <h4 class="align-middle py-md-4 col-7">{{this.carName}} {{this.carModal}}</h4>
-                         <h5 class="col-md-3 py-md-4"><span>$</span>{{this.dayRent}}/Day</h5>
-                         <input type="button" value="Booking" class=" col-1 my-md4">
-                         <a class="col-md-1" href="/clearCar"><svg  xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 20 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg></a>
+                      <div style="background-color: rgba(235, 240, 235, 0.979);" class="car-wrap rounded ftco-animate col-md-12 row py-4  justify-content-center align-middle m-2">
+                         <p class="col-md-12">Pick Date: {{this.pickDate}}</p>
+      <p class="col-md-12">Drop Date: {{this.dropDate}}</p>
+      <p class="col-md-12">Email: {{this.email}}</p>
+      
+      <p class="col-md-12">Status: {{this.status}}</p>
                       </div>
-                      </div> --}}
-                       <div class="col-md-4 ">
-                      <div class="car-wrap rounded ftco-animate">
-                        
-                         <div class="card">
-                <div class="card-body">
-                  <div class="d-flex flex-column align-items-center text-center">
-                    <div class="mt-3 mb-4">
-                      <h4>{{this.pickDate}}</h4>
-                      <p class="text-secondary mb-3 mt-2">{{data.email}}</p>
-                      {{!-- <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p> --}}
-                      <a href="" data-toggle="modal" data-target="#exampleModalCenter"  class="btn btn-info px-4">Edit</a>
-                      <a href="/logout"  class="btn btn-outline-warning px-4">Logout</a>
-                      <a href="/delete" class="btn btn-outline-danger">Delete</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-                      </div>
-                    </div>
-                    <div class="col-md-8  ">
-                      <div class="car-wrap rounded ftco-animate ">
-                        
-                        <div class="text">
-                          <h2 class="mb-0"><a>{{name}}</a></h2>
-                          <div class="d-flex mb-1">
-                            <span class="cat">Email </span>
-</span>
-                            <p class="price ml-md-auto ml-2">{{data.email}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">Phone </span>
-</span>
-                            <p class="price ml-md-auto ml-2">{{data.phone}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">Age </span>
-                          </span>
-                            <p class="price ml-md-auto ml-2">{{data.age}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">License Number </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{data.licenseNumber}} <span></span></p>
-                          </div>
-                            <p style="color: black;" >Address</p>
-                           <div class="d-flex mb-1">
-                            <span class="cat">Place </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{address.place}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">zip </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{address.zip}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">House Name </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{address.houseName}} <span></span></p>
-                          </div>
-                      
-                        </div>
-                        
-                      </div>
-                    </div>
+                    
                  {{/each}}    
         </div>
       </div>

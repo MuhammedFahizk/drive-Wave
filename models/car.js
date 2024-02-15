@@ -95,6 +95,7 @@ try {
 
   }, { timeseries: true });
   const Car = mongoose.model('Car', carSchema);
+
   module.exports = {
     Car,
   };

@@ -3,11 +3,6 @@ const mongoose = require('mongoose');
 // eslint-disable-next-line no-unused-vars
 const { Car } = require('./car');
 
-mongoose.connect('mongodb://localhost:27017/userDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
 const adminSchema = new mongoose.Schema({
 
   email: {

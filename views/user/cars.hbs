@@ -91,10 +91,7 @@
 	  					<div class=" col-md-4 d-flex align-items-center">
 	  						<form action="#" class=" request-form ftco-animate glass-effect ">
 		          		<h2>Make your trip</h2>
-			    				<div class="form-group  px-3 py-0  col-12 ">
-			    					<label for="" class="label px-0">Pick-up location</label>
-			    					<input style="border-radius: 10px;" id="location"  type="text" class=" col-12 p-1" placeholder="City, Airport, Station, etc">
-			    				</div>
+			    				
 			    				{{!-- <div class="form-group  px-3 py-0  col-12">
 			    					<label for="" class="label px-0">Drop-off location</label>
 			    					<input style="border-radius: 10px;" id=""  type="text" class="p-1 col-12" placeholder="City, Airport, Station, etc">
@@ -109,12 +106,10 @@
 			                <input style="border-radius: 10px;"  type="date" id="dropDate" class="p-1 col-12" id="book_off_date" placeholder="Date">
 			              </div>
                           <div class="form-group col-12 px-3 py-0">
-		                <label for="" class="label px-0">Pick-up time</label>
 		                
-                    <input style="border-radius: 10px;" id="pickTime" type="text" class=" p-1 col-12  " id="time_pick" placeholder="Time">
                       <input type="hidden" id="id" value="{{car._id}}" >
 					
-					 <button id="submitButton" type="button">Submit</button>
+					 <button id="submitButton"  class="col-12 btn btn-light" type="button">Submit</button>
 			    			</form>
 	  					</div>
                         
@@ -211,9 +206,8 @@
                         <p class="price ml-auto">${{dayRent}} <span>/day</span></p>
                     </div>
                     <p class="d-flex mb-0 d-block">
-                        <a href="/carBooking?carId={{_id}}" class="btn btn-primary py-2 mr-1">Book now</a> 
-                        <a href="/carDetails?id={{_id}}" class="btn btn-secondary py-2 ml-1">Details</a>
-                    </p>
+                         <a href="/carBooking?carId={{_id}}" class="btn btn-primary py-2 mr-1">Book now</a> 
+                        <a href="/carDetails?id={{_id}}" class="btn btn-secondary py-2 ml-1">Details</a>   </p>
                 </div>
             </div>
         </div>

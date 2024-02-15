@@ -129,24 +129,24 @@
 						<form action="" id="paymentForm">
     <div class="col-12 p-2">
         <label class="mb-1" for="email">Email Address</label>
-        <input type="text" class="form-control" name="email" value="{{user.email}}" placeholder="Email Address">
+        <input type="text" class="form-control" name="email" value="{{user.email}}" placeholder="Email Address" required>
     </div>
     <label class="p-0 ml-2 my-1" for="">Card Details</label>
     <div class="d-flex align-items-center justify-content-between card-atm border rounded m-2">
         <div class="fab fa-cc-visa"></div>
-        <input style="border: 0;" type="text" name="cardNumber" class="form-control" placeholder="Card Number">
+        <input style="border: 0;" type="text" name="cardNumber" class="form-control" placeholder="Card Number" >
         <div class="d-flex w-50">
-            <input style="border: 0;" type="text" class="form-control px-0" name="expire" placeholder="MM/YY">
-            <input style="border: 0;" type="password" maxlength="3" class="form-control px-0" name="cvv" placeholder="CVV">
+            <input style="border: 0;" type="text" class="form-control px-0" name="expire" placeholder="MM/YY" required>
+            <input style="border: 0;" type="password" maxlength="3" class="form-control px-0" name="cvv" placeholder="CVV" required>
         </div>
     </div>
     <div class="col-12 p-2">
         <label class="mb-1" for="HolderName">Card Holder Name</label>
-        <input type="text" class="form-control" value="{{user.name}}" name="holderName" placeholder="Card Holder Name">
+        <input type="text" class="form-control" value="{{user.name}}" name="holderName" placeholder="Card Holder Name" required>
     </div>
     <label class="p-0 ml-2 my-1" for="">Address</label>
     <div class="d-flex align-items-center justify-content-between card-atm border rounded m-2">
-        <input style="border: 0;" type="text" class="form-control" name="houseName" value="{{address.houseName}}" placeholder="House Name">
+        <input style="border: 0;" type="text" class="form-control" name="houseName" value="{{address.houseName}}" placeholder="House Name" >
         <div class="d-flex w-60">
             <input style="border: 0;" type="text" class="form-control px-2" name="place" value="{{address.place}}" placeholder="Place">
             <input style="border: 0;" type="text" maxlength="3" class="form-control px-2" name="zip" value="{{address.zip}}" placeholder="Zip">

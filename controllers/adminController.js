@@ -1,19 +1,8 @@
 /* eslint-disable import/order */
-/* eslint-disable arrow-parens */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-else-return */
-/* eslint-disable object-shorthand */
-/* eslint-disable no-undef */
-/* eslint-disable consistent-return */
-/* eslint-disable prefer-destructuring */
 /* eslint-disable no-shadow */
-/* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-unused-vars */
-// adminRoute.js
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
-const path = require('path');
 
 const { admin } = require('../models/users');
 
@@ -23,7 +12,6 @@ const { User } = require('../models/users');
 const cloudinary = require('../service/cloudnery');
 
 const { Car } = require('../models/car');
-const { upload, uploadFile, deleteFile } = require('../service/fileUpload-delete');
 const { sendAdminOtp, generateOtp, sendmailVendor } = require('../service/nodeMailer');
 const { error } = require('console');
 
@@ -35,9 +23,7 @@ const showLoginPageAdmin = (req, res) => {
 };
 async function getAdminDashBoard(req, res) {
   const { email, password } = req.body;
-  console.log(email);
   try {
-    const bcryptPassword = await bcrypt.hash(password, 10);
     const Admin = await admin.findOne({ email });
     if (Admin && await bcrypt.compare(password, Admin.password)) {
       const adminId = uuidv4();
@@ -45,7 +31,7 @@ async function getAdminDashBoard(req, res) {
       res.redirect('/admin/DashboardPage');
     } else {
       const error = 'enter valid password and email';
-      res.render('loginPage', { error: error });
+      res.render('loginPage', { error });
     }
   } catch (error) {
     res.status(500).json({ error: 'server Error', details: error });
@@ -55,7 +41,7 @@ async function loginOtp(req, res) {
   const { otp } = req.body;
   const { email } = req.session;
   if (emailOtp[email] && emailOtp[email] === otp) {
-    const admin = Car.find({ email: email });
+    const admin = Car.find({ email });
     if (admin) {
       delete emailOtp[email];
       const adminId = uuidv4();
@@ -78,9 +64,9 @@ const logout = (req, res) => {
   if (req.session.adminId) {
     req.session.destroy((error) => {
       if (error) {
-        console.log(error);
+        res.status(401).json('email error');
       } else {
-        res.redirect('/admin/login');
+        res.status(200).redirect('/admin/login');
       }
     });
   }
@@ -131,7 +117,6 @@ async function addCarAdmin(req, res) {
 
     const newPath = req.newPath.url;
     newCar.imageId = req.newPath.id;
-    console.log(req.newPath.id);
     newCar.carImage = newPath;
     await newCar.save();
     res.status(201).redirect('/admin/CarPage');
@@ -151,33 +136,30 @@ async function getCar(req, res) {
   }
 }
 
-async function deleteCar(req, res) {
+const deleteCar = async (req, res) => {
   try {
     const deleteId = req.query.deleteCarId;
     if (!deleteId) {
-      res.status(400).json('/admin/carPage');
-    } else {
-      const car = await Car.findById(deleteId);
-      const publicIdToDelete = car.imageId;
-      cloudinary.deleteImage(publicIdToDelete)
-        .then(result => {
-          console.log('Image deleted:', result);
-        })
-        .catch(error => {
-          console.error('Error deleting image:', error);
-        });
-      const result = await Car.findByIdAndDelete(deleteId);
-      if (result) {
-        res.status(200).redirect('/admin/carPage');
-      } else {
-        return res.status(404).json('Car not found');
-      }
+      return res.status(400).json('/admin/carPage');
     }
+    const car = await Car.findById(deleteId);
+    const publicIdToDelete = car.imageId;
+    cloudinary.deleteImage(publicIdToDelete)
+      .then((result) => {
+        res.json('Image deleted:', result);
+      })
+      .catch((error) => {
+        console.error('Error deleting image:', error);
+      });
+    const result = await Car.findByIdAndDelete(deleteId);
+    if (!result) {
+      return res.status(404).json('Car not found');
+    }
+    return res.status(200).redirect('/admin/carPage');
   } catch (error) {
-    console.log('Bad Request:', error);
     return res.status(500).send(`Server Error:  ${{ error }}`);
   }
-}
+};
 function OtpPage(req, res) {
   res.status(200).render('loginOtpPage');
 }
@@ -186,17 +168,14 @@ function otpGenerate(req, res) {
   const otp = generateOtp();
   emailOtp[email] = otp;
   req.session.email = email;
-  console.log(req.session.email);
-  console.log(otp, email);
 
   sendAdminOtp(email, otp, (error, info) => {
     if (error) {
-      return res.status(500).send(error);
-    } else {
-      console.log(otp, email);
-      req.session.email = email;
-      res.status(201).render('generateOtp', { email });
+      return res.status(500).send(error, info);
     }
+    console.error(otp, email);
+    req.session.email = email;
+    return res.status(201).render('generateOtp', { email });
   });
 }
 async function getCarDetails(req, res) {
@@ -232,10 +211,10 @@ async function updateCar(req, res) {
       // If a new image is uploaded, delete the old image from Cloudinary
       if (publicIdToDelete) {
         cloudinary.deleteImage(publicIdToDelete)
-          .then(result => {
-            console.log('Image deleted:', result);
+          .then((result) => {
+            console.error('Image deleted:', result);
           })
-          .catch(error => {
+          .catch((error) => {
             console.error('Error deleting image:', error);
           });
       }
@@ -251,27 +230,40 @@ async function updateCar(req, res) {
     return res.status(500).send(`Server Error: ${error}`);
   }
 }
-async function findCarCategories(req, res) {
+const findCarCategories = async (req, res) => {
   try {
     const { category } = req.query;
-    if (!category) {
-      console.log('Bad Request:');
-      return res.status(400).send('Server Error:');
-    } else {
-      const cars = await Car.find({ carCategory: category });
-      const carsCount = await Car.find({ carCategory: category }).countDocuments();
 
-      if (cars) {
-        res.status(200).render('admin/adminCarPage', {
-          data: cars, count: carsCount, category: category, NotificationCount,
-        });
-      }
+    // Check if category is provided
+    if (!category) {
+      console.error('Bad Request: Category parameter is missing');
+      return res.status(400).send('Bad Request: Category parameter is missing');
     }
+
+    // Find cars based on category
+    const cars = await Car.find({ carCategory: category });
+
+    // Count the number of cars found
+    const carsCount = cars.length;
+
+    // Check if cars are found
+    if (carsCount === 0) {
+      console.warn('No cars found for the provided category');
+      // Optionally handle the case where no cars are found
+    }
+
+    // Render the admin car page with data
+    return res.status(200).render('admin/adminCarPage', {
+      data: cars,
+      count: carsCount,
+      category,
+      NotificationCount, // Assuming NotificationCount is defined somewhere
+    });
   } catch (error) {
-    console.log('Bad Request:', error);
-    return res.status(500).send(`Server Error:  ${{ error }}`);
+    console.error('Server Error:', error);
+    return res.status(500).send(`Server Error: ${error.message}`);
   }
-}
+};
 
 async function alphabeticallySort(req, res) {
   const { Category, search } = req.query;
@@ -280,7 +272,7 @@ async function alphabeticallySort(req, res) {
       const cars = await Car.find({ carCategory: Category }).sort({ carName: 1 });
       const count = cars.length;
       res.status(200).render('admin/adminCarPage', {
-        data: cars, count: count, category: Category, NotificationCount,
+        data: cars, count, category: Category, NotificationCount,
       });
     } else {
       const cars = await Car.find({ carCategory: Category, carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
@@ -288,40 +280,40 @@ async function alphabeticallySort(req, res) {
       res.status(200).render(
         'admin/adminCarPage',
         {
-          data: cars, count: count, category: Category, search: search, NotificationCount,
+          data: cars, count, category: Category, search, NotificationCount,
         },
       );
     }
   } else if (!search) {
     const cars = await Car.find({}).sort({ carName: 1 });
     const count = cars.length;
-    res.status(200).render('admin/adminCarPage', { data: cars, count: count, NotificationCount });
+    res.status(200).render('admin/adminCarPage', { data: cars, count, NotificationCount });
   } else {
     const cars = await Car.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
     const count = cars.length;
     res.status(200).render(
       'admin/adminCarPage',
       {
-        data: cars, count: count, search: search, NotificationCount,
+        data: cars, count, search, NotificationCount,
       },
     );
   }
 }
 async function searchByCarName(req, res) {
-  const search = req.query.search;
+  const { search } = req.query;
   const encodedCategory = req.query.category;
   const category = decodeURIComponent(encodedCategory).trim();
   if (category === '') {
     const cars = await Car.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
     const count = cars.length;
-    res.status(200).render('admin/adminCarPage', { data: cars, count: count, search: search });
+    res.status(200).render('admin/adminCarPage', { data: cars, count, search });
   } else {
     const cars = await Car.find({ carName: { $regex: new RegExp(search, 'i') }, carCategory: category }).sort({ carName: 1 });
     const count = cars.length;
     res.status(200).render(
       'admin/adminCarPage',
       {
-        data: cars, count: count, category: category, search: search, NotificationCount,
+        data: cars, count, category, search, NotificationCount,
       },
     );
   }
@@ -354,33 +346,29 @@ const disableVendor = async (req, res) => {
   try {
     const { id } = req.query;
     if (!id) {
-      console.error({ error: 'could not  get id' });
-    } else {
-      const vendor = await Vendor.findById(id);
-      if (!vendor) {
-        console.error({ error: 'could not find vendor' });
-      } else {
-        const email = vendor.email;
-        const message = `${vendor.name}Sorry Admin Not Accept Your Vendor Application`;
-        const subject = 'Disable';
-        sendmailVendor(email, message, subject, (error, info => {
-          if (error) {
-            console.log(error);
-            return res.status(500).send(error);
-          }
-          res.status(200).json('Disable the Vendor');
-        }));
-        const result = await Vendor.deleteOne({ _id: id });
-        if (!result) {
-          res.status(404).json({ error: 'vendor Deleting Error' });
-        } else {
-          res.status(200).redirect('/admin/notification', { NotificationCount });
-        }
-      }
+      return res.status(401).send('not find Id');
     }
+    const vendor = await Vendor.findById(id);
+    if (!vendor) {
+      return res.status(401).send('not find vender');
+    }
+    const { email } = vendor;
+    const message = `${vendor.name}Sorry Admin Not Accept Your Vendor Application`;
+    const subject = 'Disable';
+    sendmailVendor(email, message, subject, (error, (info) => {
+      if (error) {
+        return res.status(500).send(error, info);
+      }
+      return res.status(200).json('Disable the Vendor');
+    }));
+    const result = await Vendor.deleteOne({ _id: id });
+    if (!result) {
+      return res.status(404).json({ error: 'vendor Deleting Error' });
+    }
+    return res.status(200).redirect('/admin/notification', { NotificationCount });
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -392,25 +380,23 @@ const enableVendor = async (req, res) => {
     }
     const vendor = await Vendor.findById(id);
     const vendorUpdate = await Vendor.updateOne({ _id: id }, { vendorAccessEnabled: true });
-    if (!vendor) {
+    if (!vendorUpdate) {
       return res.status(404).json('Could not find vendor');
-    } else {
-      const email = vendor.email;
-      const message = `${vendor.name} Welcome To Drive Wave Admin. You can allow your vendor account <a href="http://localhost:5000/vendor/login">Login</a>`;
-      const subject = 'Enable';
-      sendmailVendor(email, message, subject, (error, info) => {
-        if (error) {
-          console.error(error);
-          return res.status(500).send(error);
-        }
-        res.status(200).json('Disable the Vendor');
-      });
-
-      res.status(200).redirect('/admin/notification');
     }
+    const { email } = vendor;
+    const message = `${vendor.name} Welcome To Drive Wave Admin. You can allow your vendor account <a href="http://localhost:5000/vendor/login">Login</a>`;
+    const subject = 'Enable';
+    sendmailVendor(email, message, subject, (error, info) => {
+      if (error) {
+        return res.status(500).send(error, info);
+      }
+      return res.status(200).json('Disable the Vendor');
+    });
+
+    return res.status(200).redirect('/admin/notification');
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -463,7 +449,7 @@ async function searchingVendor(req, res) {
     const { search } = req.body;
     if (search) {
       const vendor = await Vendor.find({ role: 'vendor', name: { $regex: new RegExp(search, 'i') } });
-      res.status(200).render('admin/adminVendorPage', { data: vendor, search: search, NotificationCount });
+      res.status(200).render('admin/adminVendorPage', { data: vendor, search, NotificationCount });
     } else {
       res.status(204).json('no search content');
     }
@@ -511,7 +497,7 @@ async function searchingUser(req, res) {
     const { search } = req.body;
     if (search) {
       const user = await User.find({ role: 'user', name: { $regex: new RegExp(search, 'i') } });
-      res.status(200).render('admin/adminUserPage', { data: user, search: search, NotificationCount });
+      res.status(200).render('admin/adminUserPage', { data: user, search, NotificationCount });
     } else {
       res.status(204).json('no search content');
     }
@@ -539,7 +525,6 @@ async function deleteUser(req, res) {
       res.redirect('/admin/users');
     }
   } else {
-    const error = `could not delete ${user.name} delete must after one month`;
     res.status(304).redirect('/admin/users');
   }
   // Sending the dayDifference as the response

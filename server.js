@@ -8,11 +8,20 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const handlebars = require('express-handlebars');
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
+const dotEnv = require('dotenv');
+const mongoose = require('mongoose');
 
 const adminRoute = require('./routes/adminRoute');
 const admin = require('./models/users');
 const userRoute = require('./routes/userRout');
 const vendorRoute = require('./routes/vendorRoute');
+
+dotEnv.config();
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const app = express();
 const PORT = 5000;

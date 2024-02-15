@@ -1,11 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 const { v4: uuidv4 } = require('uuid');
 
-// const { admin } = require('../models/users');
-
 const { Vendor } = require('../models/users');
 
-// const { User } = require('../models/users');
 const { Car } = require('../models/car');
 const cloudinary = require('../service/cloudnery');
 
