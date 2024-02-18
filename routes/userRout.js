@@ -23,11 +23,12 @@ router.post('/registrationValidation', userController.registrationValidation);
 router.get('/contact', userController.contactPage);
 router.post('/contactMessage', userController.userMessageToAdmin);
 router.get('/about', userController.aboutPage);
-router.get('/carBooking', middleware.LoginUser, userController.carBookingPage);
-router.post('/carBooking', middleware.LoginUserPost, userController.carBookingPagePost);
 router.post('/addWishlist', userController.addToWishlist);
-router.get('/whishList', userController.wishListPage);
-router.post('/carBooked', userController.carAddToBooking);
-router.get('/bookedCars', userController.bookedCarsPage);
+router.get('/whishList', middleware.mustLogin, userController.wishListPage);
+router.post('/userRecoveryMessage', userController.userRecoveryMessage);
+router.get('/carBooking', middleware.mustLogin, userController.carBookingPage);
+router.get('/addDate', middleware.mustLogin, userController.addDate);
+router.get('/changeDate', middleware.mustLogin, userController.changeDate);
+router.get('/removeWishlist', middleware.mustLogin, userController.removeWishlist);
 
 module.exports = router;

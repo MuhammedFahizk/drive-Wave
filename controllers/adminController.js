@@ -24,7 +24,7 @@ const showLoginPageAdmin = (req, res) => {
 async function getAdminDashBoard(req, res) {
   const { email, password } = req.body;
   try {
-    const Admin = await admin.findOne({ email });
+    const Admin = await admin.findOne({ role: 'Admin', email });
     if (Admin && await bcrypt.compare(password, Admin.password)) {
       const adminId = uuidv4();
       req.session.adminId = adminId;
@@ -331,14 +331,22 @@ const viewNotificationPage = async (req, res) => {
     ]);
     if (!vendor) {
       console.error({ error: 'not found Notification' });
-    } else {
-      const count = vendor.length;
-      NotificationCount = count;
-      res.status(200).render('admin/notification', { data: vendor, count, NotificationCount });
     }
+    const count = vendor.length;
+    NotificationCount = count;
+    const adminDoc = await admin.findOne({ role: 'Admin' }).populate({
+      path: 'notifications.userId',
+      select: 'name email phone',
+    });
+    if (!adminDoc) {
+      return res.status(404).send('Admin not found');
+    }
+    return res.status(200).render('admin/notification', {
+      data: vendor, count, NotificationCount, adminDoc,
+    });
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -462,8 +470,10 @@ async function searchingVendor(req, res) {
 // user page ,
 async function userPage(req, res) {
   try {
-    const user = await User.find({ role: 'user' });
-    res.status(200).render('admin/adminUserPage', { data: user, NotificationCount });
+    const user = await User.find({ role: 'user', deletedAt: null });
+    const count = await User.find({ role: 'user', deletedAt: null }).countDocuments();
+
+    res.status(200).render('admin/adminUserPage', { data: user, NotificationCount, count });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -508,27 +518,70 @@ async function searchingUser(req, res) {
 }
 async function deleteUser(req, res) {
   const { deleteUserId } = req.query;
-  const user = await User.findById(deleteUserId);
+  const user = await User.findByIdAndUpdate(deleteUserId, { deletedAt: new Date() });
+  res.status(200).json('status : ok');
 
   if (!user) {
     // Handle case where user with given ID is not found
-    res.status(404).send('User not found');
+    res.status(404).json('User not found');
   }
-
-  const loginDate = user.createdAt;
-  const toDay = new Date();
-  const timeDifference = toDay - loginDate;
-  const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-  if (dayDifference >= 31) {
-    const deleted = await User.findByIdAndDelete(deleteUserId);
-    if (deleted) {
-      res.redirect('/admin/users');
-    }
-  } else {
-    res.status(304).redirect('/admin/users');
-  }
-  // Sending the dayDifference as the response
 }
+
+const deleteUserData = async (req, res) => {
+  const { id } = req.query;
+  const adminDoc = await admin.findOneAndUpdate(
+    { role: 'Admin' },
+    { $pull: { notifications: { _id: id } } },
+    { new: true },
+  );
+
+  if (!adminDoc) {
+    return res.status(404).send('Admin not found');
+  }
+  return res.status(200).redirect('/admin/Notification');
+};
+
+async function cleanupSoftDeletedData() {
+  try {
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+    // Remove soft-deleted users older than one month
+    await User.deleteMany({ deletedAt: { $lt: oneMonthAgo } });
+
+    // Remove soft-deleted vendors older than one month
+    await Vendor.deleteMany({ deletedAt: { $lt: oneMonthAgo } });
+
+    console.error('Soft-deleted data older than one month cleaned up successfully');
+  } catch (error) {
+    console.error('Error cleaning up soft-deleted data:', error);
+  }
+}
+
+const deleteCancelUser = async (req, res) => {
+  const { id, userId } = req.query;
+  const userDoc = await User.findOneAndUpdate(
+    { _id: userId },
+    { $unset: { deletedAt: '' } },
+    { new: true },
+  );
+
+  if (!userDoc) {
+    return res.status(404).send('User not found');
+  }
+  const adminDoc = await admin.findOneAndUpdate(
+    { role: 'Admin' },
+    { $pull: { notifications: { _id: id } } },
+    { new: true },
+  );
+
+  if (!adminDoc) {
+    return res.status(404).send('Admin not found');
+  }
+  return res.status(200).redirect('/admin/Notification');
+};
+// Schedule the cleanup task to run periodically, for example, once a day
+setInterval(cleanupSoftDeletedData, 24 * 60 * 60 * 1000);
 
 module.exports = {
   showLoginPageAdmin,
@@ -562,4 +615,6 @@ module.exports = {
   alphabeticallySortUser,
   searchingUser,
   deleteUser,
+  deleteUserData,
+  deleteCancelUser,
 };

@@ -41,5 +41,7 @@ router.get('/getUserDetails', login.requireAuth, adminController.userDetails);
 router.get('/user/alphabeticallySort', login.requireAuth, adminController.alphabeticallySortUser);
 router.post('/searchUser', login.requireAuth, adminController.searchingUser);
 router.get('/deleteUser', login.requireAuth, adminController.deleteUser);
+router.get('/deleteUserData', login.requireAuth, adminController.deleteUserData);
+router.get('/deleteCancelUser', login.requireAuth, adminController.deleteCancelUser);
 
 module.exports = router;

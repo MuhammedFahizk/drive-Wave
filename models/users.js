@@ -14,6 +14,19 @@ const adminSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  role: {
+    require: true,
+    type: String,
+  },
+  notifications: [{
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'dealers',
+    },
+    message: String,
+    sender: String,
+    createdAt: { type: Date, default: Date.now },
+  }],
 });
 const VendorSchema = new mongoose.Schema({
   name: {
@@ -60,6 +73,10 @@ const VendorSchema = new mongoose.Schema({
     require: true,
     type: String,
   },
+  deletedAt: {
+    require: false,
+    type: Date,
+  },
 }, { timestamps: true, timeseries: true });
 const userSchema = new mongoose.Schema({
   name: {
@@ -90,6 +107,10 @@ const userSchema = new mongoose.Schema({
   password: {
     require: true,
     type: String,
+  },
+  deletedAt: {
+    require: false,
+    type: Date,
   },
   address: [{
     place: {

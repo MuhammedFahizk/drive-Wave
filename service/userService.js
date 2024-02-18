@@ -31,32 +31,10 @@ const findCarAvailability = async (pickDate, dropDate) => {
     throw error;
   }
 };
-const addLocationAndDate = async (pickDateInput, dropDateInput, dayRent) => {
-  const pickDate = new Date(pickDateInput);
-  const dropDate = new Date(dropDateInput);
-  let data = {};
 
-  if (Number.isNaN(pickDate.getTime()) || Number.isNaN(dropDate.getTime())) {
-    console.error('pickDate or dropDate is invalid');
-    // Changed to || instead of &&
-    console.error('pickDate and dropDate not defined');
-  } else {
-    const differenceInMilliSecond = dropDate - pickDate;
-    const date = differenceInMilliSecond / (1000 * 60 * 60 * 24);
-
-    data = {
-      date,
-      rate: dayRent * date,
-      pickDate,
-      dropDate,
-    };
-  }
-  return data;
-};
 // const pendingCarBooking = async () => {
 // }
 module.exports = {
   findCarAvailability,
-  addLocationAndDate,
-  // pendingCarBooking,
+
 };

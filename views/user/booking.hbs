@@ -1,562 +1,297 @@
 <style>
-  display: none;
-    
-   .col-12 input[type="text"],input[type="email"],input[type="date"] {
-    border: 1px solid rgb(10, 10, 10);
-    border-radius: 15px;
-    outline: none; /* Removes the default focus outline */
-   }
-  .glass-effect {
-    background-color: rgba(255, 255, 255, 0.265); /* Adjust opacity as needed */
-    border-radius: 10px;
-    backdrop-filter: blur(15px);
-    }
-    label{
-      color: black;
-    }
+  #calendar {
+    width: 250px;
+    /* Adjust the width as needed */
+    height: 300px;
+    /* Adjust the height as needed */
+    overflow: hidden;
+    display: none;
+    /* Hide overflow if necessary */
+  }
 </style>
-<body style="background-color: #23916c;">
 
+<body style="color: black;">
 
-    <section class="ftco-section ftco-car-details col-md-12  px-md-3 ">
- {{#if data}}
+  <section style="background-color: #127a50fd;" class="ftco-section ftco-car-details col-md-12  px-1" style=""
+    data-stellar-background-ratio="0.5">
+    <div class="overlay">
 
-      <div class="container p-md-4 p-4  col-md-12">
-        <div class="row  slider-text js-fullheight align-items-end justify-content-start">
-         	<div class="container ">
-    		<div class="row mb-4">
-          <div class="col-md-5 mb-4">
-                                            <div class="car-wrap rounded ftco-animate ">
-                          <div class="text mb-0 pb-0">
-                          <h2 class="mb-0"><a>{{car.carName}}</a></h2>
-						  <div class="d-flex mb-1">
-                            <span class="cat">Days </span>
-                             </span>
-                            <p class="price ml-md-auto ml-2">{{data.date}} <span></span></p>
+    </div>
+    <div class="container ">
+      <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+        <div class="container">
+          <div class="row ">
+            <div class="col-md-6 ">
+              <div class="car-wrap rounded ftco-animate">
+
+                <div class="card">
+                  <div class="card-body p-0 m-0">
+                    <div class="d-flex flex-column p-0">
+                      <div class="mt-3 m-0 p-4 row">
+                        <div class="col-1 pt-2">
+                          <a type="button" onclick="goBack()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                              style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                              <path
+                                d="M21 11H6.414l5.293-5.293-1.414-1.414L2.586 12l7.707 7.707 1.414-1.414L6.414 13H21z">
+                              </path>
+                            </svg>
+
+                          </a>
+                        </div>
+
+                        <h2 class="text-center col-11">Your Booking Details</h2>
+                        <h5 class="text-left m-2 ml-2">$343</h5>
+                        
+                        <div style="border: 1px solid;" class="car-wrap rounded ftco-animate row col-12 m-0 p-1 ">
+                          <div class="col-2 px-2 py-2 img-fluid"
+                            style="background-image: url({{car.carImage}}); background-size: cover; background-position: center; height: 100px; width: 100%;">
                           </div>
-						   <div class="d-flex mb-1">
-                            <span class="cat">Rent Price </span>
-                             </span>
-                            <p class="price ml-md-auto ml-2">{{data.rate}} <span></span></p>
+                          <div class="col-10 px-4 py-2">
+                            <h6 class="text-dark">{{car.carName}}</h6>
+                            {{#if dayDifferenceIn }}
+                            <h6 class="text-dark">{{formattedDropDate}} to {{formattedPickDate}}</h6>
+                            <h6 class="text-dark">0{{dayDifferenceIn}} / dayes</h6>
+                            {{else }}
+                            <div class="row col-12 m-0 p-0">
+                              <label for="" class="col-6 m-0">Pick-up</label>
+                              <label for="" class="col-6 m-0">Drop-off</label>
+                              <form>
+                                <input style="border: 1px solid;" id="pickDate" type="text" class="col-5  rounded  ">
+                                <input style="border: 1px solid;" id="dropDate" type="text"
+                                  class="col-5 ml-1  rounded ">
+                                <input style="border: 1px solid;" id="carId" value="{{car._id}}" type="hidden"
+                                  class="col-5 ml-1  rounded ">
+
+                                <input type="button" id="submitButton" class="btn btn-outline-success col-1 mx-1 p-1"
+                                  value="OK">
+
+                              </form>
+                            </div>
+                            {{/if}}
                           </div>
+
+                          <div id="calendar" class="car-wrap rounded ftco-animate row col-12 m-0 p-1 "> </div>
+
+                          <br>
+
+                        </div>
+                        
+                            <div class="col-md-12 p-0 " >
+                              <br>
+                      <div id="userDetails" class="car-wrap rounded ftco-animate ">
+                        
+                        <div class="text">
                           <div class="d-flex mb-1">
-                            <span class="cat">Brand </span>
-                             </span>
-                            <p class="price ml-md-auto ml-2">{{car.brandName}} <span></span></p>
-                          </div>
-						  <div class="d-flex mb-1">
-                            <span class="cat">Year </span>
-                             </span>
-                            <p class="price ml-md-auto ml-2">{{car.year}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">Per Day Rent </span>
+                            <span class="cat">Car Model </span>
 </span>
-                            <p class="price ml-md-auto ml-2">{{car.dayRent}} <span></span></p>
-                          </div>
-                         
-                          <div class="d-flex mb-1">
-                            <span class="cat">Model </span>
-                            </span>
                             <p class="price ml-md-auto ml-2">{{car.carModal}} <span></span></p>
-                          </div>
-                           <div class="d-flex mb-1">
-                            <span class="cat">Color </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{car.color}} <span></span></p>
                           </div>
                           <div class="d-flex mb-1">
                             <span class="cat">Fuel Type </span>
-                            </span>
+</span>
                             <p class="price ml-md-auto ml-2">{{car.fuelType}} <span></span></p>
                           </div>
                           <div class="d-flex mb-1">
-                            <span class="cat">Transmition Type </span>
-                            </span>
+                            <span class="cat">Transmission </span>
+                          </span>
                             <p class="price ml-md-auto ml-2">{{car.TransmitionType}} <span></span></p>
                           </div>
-                      
-                        </div>
-                        <div class="text">
-                          <h2 class="mb-0"><a>{{user.name}}</a></h2>
                           <div class="d-flex mb-1">
-                            <span class="cat">Email </span>
-</span>
-                            <p class="price ml-md-auto ml-2">{{user.email}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">Phone </span>
-</span>
-                            <p class="price ml-md-auto ml-2">{{user.phone}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">Age </span>
-                          </span>
-                            <p class="price ml-md-auto ml-2">{{user.age}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">License Number </span>
+                            <span class="cat">Day Rent</span>
                             </span>
-                            <p class="price ml-md-auto ml-2">{{user.licenseNumber}} <span></span></p>
+                            <p class="price ml-md-auto ml-2">{{car.dayRent}} <span></span></p>
                           </div>
-                            <p style="color: black;" >Address</p>
-                           <div class="d-flex mb-1">
-                            <span class="cat">Place </span>
+                          
+                        {{#if message}}
+                        <div class="d-flex m-4">
                             </span>
-                            <p class="price ml-md-auto ml-2">{{address.place}} <span></span></p>
+                            <p class="price ml-md-auto ml-2 text-danger">{{message}} <span><a type="button" id="recover" class="col-2 btn btn-success" href="#">Recuver</a></span></p>
                           </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">zip </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{address.zip}} <span></span></p>
-                          </div>
-                          <div class="d-flex mb-1">
-                            <span class="cat">House Name </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{address.houseName}} <span></span></p>
-                          </div>
-                      
+                        {{/if}}
+
                         </div>
                         
                       </div>
+                      
                     </div>
-                    <div class="col-md-7  ">
-                     <div class="car-wrap rounded ftco-animate ">
-                        <div class="text mb-0 pb-0">
-							<center><h1 class="text-dark align-text-center"><i class='bx bx-heart' >Payment</i></h1>
-</center>
-                           <div class="col-12 p-2">
-						<form action="" id="paymentForm">
-    <div class="col-12 p-2">
-        <label class="mb-1" for="email">Email Address</label>
-        <input type="text" class="form-control" name="email" value="{{user.email}}" placeholder="Email Address" required>
-    </div>
-    <label class="p-0 ml-2 my-1" for="">Card Details</label>
-    <div class="d-flex align-items-center justify-content-between card-atm border rounded m-2">
-        <div class="fab fa-cc-visa"></div>
-        <input style="border: 0;" type="text" name="cardNumber" class="form-control" placeholder="Card Number" >
-        <div class="d-flex w-50">
-            <input style="border: 0;" type="text" class="form-control px-0" name="expire" placeholder="MM/YY" required>
-            <input style="border: 0;" type="password" maxlength="3" class="form-control px-0" name="cvv" placeholder="CVV" required>
-        </div>
-    </div>
-    <div class="col-12 p-2">
-        <label class="mb-1" for="HolderName">Card Holder Name</label>
-        <input type="text" class="form-control" value="{{user.name}}" name="holderName" placeholder="Card Holder Name" required>
-    </div>
-    <label class="p-0 ml-2 my-1" for="">Address</label>
-    <div class="d-flex align-items-center justify-content-between card-atm border rounded m-2">
-        <input style="border: 0;" type="text" class="form-control" name="houseName" value="{{address.houseName}}" placeholder="House Name" >
-        <div class="d-flex w-60">
-            <input style="border: 0;" type="text" class="form-control px-2" name="place" value="{{address.place}}" placeholder="Place">
-            <input style="border: 0;" type="text" maxlength="3" class="form-control px-2" name="zip" value="{{address.zip}}" placeholder="Zip">
-        </div>
-    </div>
-    <div class="col-12 p-2">
-        <button type="button" id="bookingCarButton" class="btn btn-primary col-12">Pay <span class="fas fa-dollar-sign px-1">$ {{data.rate}}</span></button>
-    </div>
-</form>
+                     
+                        <br>
+                        <div style="border: 1px solid;" class="car-wrap rounded ftco-animate row col-12 m-0 px-4 p-2 ">
+                          <input type="button" id="changeDate" class="btn btn-outline-info mx-2" value="Change Date">
 
-						   </div>
+                          <a type="button"  href="/cars"  class="btn btn-outline-success mx-2" value="">Change Car</a>
+                          <input type="button" class="btn btn-outline-danger mx-2" value="">
+
                         </div>
                       </div>
                     </div>
-                  
 
-                    
-                    
-        </div>
-      </div>
-      
-      
-        </div>
-      </div>
-					</div> {{else}}
- 
-      <div class="container p-md-4 p-0 m-0">
-      	<div class="row justify-content-center p-0"> 
-<div class="row col-12    ">
-                 
-
-          <div class="col-md-3 d-none d-md-block  ">
-                      <div class="car-wrap md rounded ftco-animate ">
-                        
-                         <div class="card">
-                <div class="card-body">
-                   <hr class="text-black">
-
-                  <div class="d-flex   row  ">
-                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
-                    
-                    <h5 class="ml-2">Car Name</h5>
-                    <h5 class="ml-auto mr-3">Totel</h5>
-                   </div>
-                    <div class="d-flex   row  ">
-                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
-                    
-                    <p class="ml-2">{{car.carName}}</p>
-                    <p class="ml-auto mr-3">{{car.dayRent}}<span>/Day </span></p>
-                   </div>
-                   <hr class="">
-
-				
-					<div class="d-flex   row  ">
-                    {{!-- <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150"> --}}
-                    
-                    <h5 class="ml-2">Date</h5>
-                    {{!-- <h5 class="ml-auto mr-3">Totel</h5> --}}
-                   </div>
-                    <div class="d-flex   row  ">
-						<form action="/carBooking" method="post">
-    <input type="hidden" name="carId" value="{{car._id}}">
-    <div class="form-group col-12">
-        <label for="pickDate" class="label">Pick-up Date</label>
-        <input style="border-radius: 10px;" id="pickDate" name="pickDateInput" type="date" class="p-1 col-12" placeholder="Date" required>
-    </div>
-    <div class="form-group col-12">
-        <label for="dropDate" class="label">Drop-off Date</label>
-        <input style="border-radius: 10px;" id="dropDate" name="dropDateInput" type="date" class="p-1 col-12" placeholder="Date" required>
-    </div>
-    <div class="form-group col-12">
-        <input style="border-radius: 10px;" type="submit" id="DateButton" class="p-1 col-12" value="Submit">
-    </div>
-</form>
- <p class="px-4 text-danger">{{message}}</p>
-                   </div>
-                   <hr class="">
-
+                  </div>
                 </div>
               </div>
+            </div>
+            <div class="col-md-6  ">
+
+              <div id="userDetails" class="car-wrap rounded ftco-animate ">
+              							<h1 class="text-dark text-center pt-4"><i class='bx bx-heart' >Payment</i></h1>
+
+                <div class="text">
+                  <form action="" id="paymentForm">
+                    <div class="col-12 p-2">
+                      <label class="mb-1" for="email">Email Address</label>
+                      <input type="text" class="form-control" name="email" value="{{user.email}}"
+                        placeholder="Email Address" required>
+                    </div>
+                    <label class="p-0 ml-2 my-1" for="">Card Details</label>
+                    <div class="d-flex align-items-center justify-content-between card-atm border rounded m-2">
+                      <div class="fab fa-cc-visa"></div>
+                      <input style="border: 0;" type="text" name="cardNumber" class="form-control"
+                        placeholder="Card Number">
+                      <div class="d-flex w-50">
+                        <input style="border: 0;" type="text" class="form-control px-0" name="expire"
+                          placeholder="MM/YY" required>
+                        <input style="border: 0;" type="password" maxlength="3" class="form-control px-0" name="cvv"
+                          placeholder="CVV" required>
                       </div>
                     </div>
-                    
-                    <div class="col-md-9 col-12   ">
-                      
-                     
-                      
-                    
-              
-                             
-                    {{!-- conformation section --}}
-                       
-
-                       <div id="conformDiv" class=" car-wrap rounded ftco-animate ">
-                      	<div class="row justify-content-center">
-      		<div class="col-md-12">
-      			<div class="car-details">
-      				<div class="img rounded d-flex justify-content-md-end align-items-center align-items-md-center   " style="background-image: url({{car.carImage}});">
-                
-               
-              </div>
-      				<div class="text text-center">
-      					<span class="subheading">{{car.carName}}</span>
-      					<h2>{{car.brandName}}</h2>
-
-      				</div>
-      			</div>
-      		</div>
-      	<div class="row row justify-content-center pl-3">
-      		<div class="col-md d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services">
-              <div class="media-body py-md-4">
-              	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-dashboard"></span></div>
-	              	<div class="text">
-		                <h3 class="heading mb-0 pl-3">
-		                	Mileage
-		                	<span>{{car.milage}}</span>
-		                </h3>
-	                </div>
-                </div>
-              </div>
-            </div>      
-          </div>
-          <div class="col-md d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services">
-              <div class="media-body py-md-4">
-              	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-pistons"></span></div>
-	              	<div class="text">
-		                <h3 class="heading mb-0 pl-3">
-		                	Transmission
-		                	<span>{{car.TransmitionType}}</span>
-		                </h3>
-	                </div>
-                </div>
-              </div>
-            </div>      
-          </div>
-          <div class="col-md d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services">
-              <div class="media-body py-md-4">
-              	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-car-seat"></span></div>
-	              	<div class="text">
-		                <h3 class="heading mb-0 pl-3">
-		                	Seats
-		                	<span>{{car.seats}} Adults</span>
-		                </h3>
-	                </div>
-                </div>
-              </div>
-            </div>      
-          </div>
-          <div class="col-md d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services">
-              <div class="media-body py-md-4">
-              	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-backpack"></span></div>
-	              	<div class="text">
-		                <h3 class="heading mb-0 pl-3">
-		                	Luggage
-		                	<span>{{car.luggage}} Bags</span>
-		                </h3>
-	                </div>
-                </div>
-              </div>
-            </div>      
-          </div>
-          <div class="col-md d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services">
-              <div class="media-body py-md-4">
-              	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-diesel"></span></div>
-	              	<div class="text">
-		                <h3 class="heading mb-0 pl-3">
-		                	Fuel
-		                	<span>{{car.fuelType}}</span>
-		                </h3>
-	                </div>
-                </div>
-              </div>
-            </div>      
-          </div>
-      	</div>
-      	<div class="row">
-      		<div class="col-md-12 pills">
-						<div class="bd-example bd-example-tabs">
-							<div class="d-flex justify-content-center">
-							  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-
-							    <li class="nav-item">
-							      <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description" role="tab" aria-controls="pills-description" aria-expanded="true">Features</a>
-							    </li>
-							    <li class="nav-item">
-							      <a class="nav-link" id="pills-manufacturer-tab" data-toggle="pill" href="#pills-manufacturer" role="tab" aria-controls="pills-manufacturer" aria-expanded="true">Description</a>
-							    </li>
-							    <li class="nav-item">
-							      <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab" aria-controls="pills-review" aria-expanded="true">Review</a>
-							    </li>
-							  </ul>
-							</div>
-
-						  <div class="tab-content" id="pills-tabContent">
-						    <div class="tab-pane fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
-						    	
-
-                                <p> {{car.features}}</p>
-
-						    </div>
-
-						    <div class="tab-pane fade" id="pills-manufacturer" role="tabpanel" aria-labelledby="pills-manufacturer-tab">
-                                    <p> {{car.description}}</p>
-                                
-                           </div>
-
-						    <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
-						      <div class="row">
-							   		<div class="col-md-7">
-							   			<h3 class="head">23 Reviews</h3>
-							   			<div class="review d-flex">
-									   		<div class="user-img" style="background-image: url(images/person_1.jpg)"></div>
-									   		<div class="desc">
-									   			<h4>
-									   				<span class="text-left">Jacob Webb</span>
-									   				<span class="text-right">14 March 2018</span>
-									   			</h4>
-									   			<p class="star">
-									   				<span>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-								   					</span>
-								   					<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-									   			</p>
-									   			<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
-									   		</div>
-									   	</div>
-									   	<div class="review d-flex">
-									   		<div class="user-img" style="background-image: url(images/person_2.jpg)"></div>
-									   		<div class="desc">
-									   			<h4>
-									   				<span class="text-left">Jacob Webb</span>
-									   				<span class="text-right">14 March 2018</span>
-									   			</h4>
-									   			<p class="star">
-									   				<span>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-								   					</span>
-								   					<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-									   			</p>
-									   			<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
-									   		</div>
-									   	</div>
-									   	<div class="review d-flex">
-									   		<div class="user-img" style="background-image: url(images/person_3.jpg)"></div>
-									   		<div class="desc">
-									   			<h4>
-									   				<span class="text-left">Jacob Webb</span>
-									   				<span class="text-right">14 March 2018</span>
-									   			</h4>
-									   			<p class="star">
-									   				<span>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-								   					</span>
-								   					<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-									   			</p>
-									   			<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
-									   		</div>
-									   	</div>
-							   		</div>
-							   		<div class="col-md-5">
-							   			<div class="rating-wrap">
-								   			<h3 class="head">Give a Review</h3>
-								   			<div class="wrap">
-									   			<p class="star">
-									   				<span>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					(98%)
-								   					</span>
-								   					<span>20 Reviews</span>
-									   			</p>
-									   			<p class="star">
-									   				<span>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					(85%)
-								   					</span>
-								   					<span>10 Reviews</span>
-									   			</p>
-									   			<p class="star">
-									   				<span>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					(70%)
-								   					</span>
-								   					<span>5 Reviews</span>
-									   			</p>
-									   			<p class="star">
-									   				<span>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					(10%)
-								   					</span>
-								   					<span>0 Reviews</span>
-									   			</p>
-									   			<p class="star">
-									   				<span>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					<i class="ion-ios-star"></i>
-									   					(0%)
-								   					</span>
-								   					<span>0 Reviews</span>
-									   			</p>
-									   		</div>
-								   		</div>
-							   		</div>
-							   	</div>
-						    </div>
-						  </div>
-						</div>
-		      </div>
-				</div>
+                    <div class="col-12 p-2">
+                      <label class="mb-1" for="HolderName">Card Holder Name</label>
+                      <input type="text" class="form-control" value="{{user.name}}" name="holderName"
+                        placeholder="Card Holder Name" required>
                     </div>
+                    <label class="p-0 ml-2 my-1" for="">Address</label>
+                    <div class="d-flex align-items-center  card-atm  rounded m-2 row ">
+                      <input style="border: 0;" type="text" class="form-control col-12 border" name="houseName"
+                        value="{{address.houseName}}" placeholder="House Name">
+                      <div class="col-12 row m-0 p-0">
+                        <input style="border: 0;" type="text" class="form-control px-2 col-6 border" name="place"
+                          value="{{address.place}}" placeholder="Place">
+                        <input style="border: 0;" type="text" maxlength="3" class="form-control px-2 col-6 border"
+                          name="zip" value="{{address.zip}}" placeholder="Zip">
+                      </div>
+                    </div>
+                    <div class="col-12 p-2">
+                      <button type="button" id="bookingCarButton" class="btn btn-primary col-12">Pay <span
+                          class="fas fa-dollar-sign px-1">$ {{data.rate}}</span></button>
+                    </div>
+                  </form>
+
+
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
         </div>
-{{/if}}
-
-                    {{!-- add details section --}}
-                     
-      	</div>
-                      
-                    
-
-                     
-                  
-
-                    
-                    
-        </div>
-      </div>
-    </section>
+  </section>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js'></script>
 
 <script>
-  
-    const conformDiv=document.getElementById('conformDiv')
-    const detailsDiv=document.getElementById('detailsDiv')
-    const paymentDiv=document.getElementById('paymentDiv')
+  function goBack() {
+    window.history.back();
+  }
+  const changeDateButton = document.getElementById('changeDate');
+  changeDateButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    axios.get('/changeDate')
+      .then(response => {
+        // Handle response data here
+        console.log(response.data); // Just an example, replace with your handling logic
+        window.location.href = '/carBooking'
+      })
+      .catch(error => {
+        // Handle error
+        console.error('Error:', error);
+      });
+  });
 
-    const details = document.getElementById('details')
-    const payment=document.getElementById('payment')
-    const confirm=document.getElementById('confirm')
-    const carId = document.getElementById('carId')
-const paymentForm = document.getElementById('paymentForm');
-const bookingCarButton = document.getElementById('bookingCarButton');
+  const pickDateInput = document.getElementById('pickDate');
+  const dropDateInput = document.getElementById('dropDate');
+  const calendarEl = document.getElementById('calendar');
 
-if (bookingCarButton) {
-    bookingCarButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        const paymentFormData = new FormData(paymentForm);
-  const { houseName, email, holderName, cardNumber, zip, place, expire, cvv } = Object.fromEntries(paymentFormData.entries());
-		console.log(houseName);
 
-        axios.post('/carBooked', {  email, holderName, cardNumber,houseName, zip, place, expire, cvv })
-            .then(response => {
-                console.log(response);
-				window.location.href='/bookedCars'
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+  // Add event listeners to open the calendar when the input fields are clicked
+  pickDateInput.addEventListener('click', function () {
+    openCalendar(pickDateInput);
+  });
+
+  dropDateInput.addEventListener('click', function () {
+    openCalendar(dropDateInput);
+  });
+
+  function openCalendar(inputField) {
+    // Get today's date
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+    // Create the FullCalendar instance
+    calendarEl.style.display = 'block'
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      themeSystem: 'bootstrap',
+      initialView: 'dayGridMonth',
+      selectable: true,
+      select: function (info) {
+        // Check if the selected date is today or after today
+        if (info.start >= today) {
+          // Set the value of the input field to the selected date
+          inputField.value = info.startStr;
+        } else {
+          // Show an error message or handle the invalid selection
+          alert('Please select a date today or after today.');
+        }
+      },
+      // Set constraints for date selection (today or after today)
+      selectConstraint: {
+        start: todayStr, // Start date must be today or after today
+        end: '2024-12-31' // End date constraint (optional)
+      },
+      headerToolbar: {
+        start: 'title',
+        center: '',
+        end: ' prev,next'
+      },
+
     });
-} else {
-    console.error('Element with ID "bookingCarButton" not found.');
-}
+    calendar.render();
+
+  }
+
+
+  const submitBtn = document.getElementById('submitButton');
+
+  submitBtn.addEventListener('click', function (e) {
+    e.preventDefault()
+    const pickDate = document.getElementById('pickDate').value;
+    const dropDate = document.getElementById('dropDate').value;
+    calendarEl.style.display = 'none'
+    console.log(pickDate)
+    axios.get(`/addDate?pickDate=${pickDate}&&dropDate=${dropDate} `)
+      .then(response => {
+
+        window.location.href = '/carBooking'
+      })
 
 
 
 
+  });
 
-    
+  window.addEventListener('popstate', function (event) {
+    // Check if the popstate event is triggered by navigating back
+    if (event.state && event.state.pageReload) {
+      // Reload the page
+      location.reload();
 
+    }
+  });
 
-    {{!--  --}}
-
+  // Push a state into history to trigger popstate event when navigating back
+  history.pushState({ pageReload: true }, '');
 </script>

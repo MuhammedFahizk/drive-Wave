@@ -1,16 +1,18 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/order */
 /* eslint-disable no-unused-vars */
 const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
 const emailValidator = require('email-validator');
+const { differenceInDays, differenceInMonths, differenceInYears } = require('date-fns');
 
-const { User } = require('../models/users');
+const { User, admin } = require('../models/users');
 const { Car } = require('../models/car');
-const { Booking } = require('../models/booking');
 
 const { sendAdminOtp, generateOtp, sendMailToAdmin } = require('../service/nodeMailer');
 const { findCarAvailability, addLocationAndDate } = require('../service/userService');
+const { format } = require('date-fns');
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -59,7 +61,7 @@ const userLogin = async (req, res) => {
       return res.status(400).render('user/login', { error: 'Password miss match' });
     }
     const hashPassword = await bcrypt.hash(password, 10);
-    const { previous } = req.session;
+    const { originalUrl } = req.session;
     req.session.password = hashPassword;
     req.session.name = user.name;
     req.session.email = email;
@@ -68,12 +70,8 @@ const userLogin = async (req, res) => {
 
     // Avoid storing password in session
     // req.session.password = password;
-    if (previous) {
-      const { carId, dropDate, pickDate } = req.session;
-      if (pickDate) {
-        return res.redirect(`${previous}?carId=${carId}&&pickDate=${pickDate}&&dropDate=${dropDate}`);
-      }
-      return res.redirect(`${previous}?carId=${carId}`);
+    if (originalUrl) {
+      return res.redirect(`${originalUrl}`);
     }
     return res.redirect('/');
   } catch (error) {
@@ -94,6 +92,11 @@ async function profilePage(req, res) {
         const passwordMatch = bcrypt.compare(psw, user.password);
         if (passwordMatch) {
           const address = user.address[0];
+          if (user.deletedAt) {
+            res.status(200).render('user/profile', {
+              data: user, name, address, message: `${name} your account is Permanently Deleted `,
+            });
+          }
           res.status(200).render('user/profile', { data: user, name, address });
         } else {
           res.status(404).render('user/login', { error: 'User name or password is invalid' });
@@ -210,6 +213,8 @@ async function filterCars(req, res) {
     const dropDate = new Date(dropDateData);
     const availability = await findCarAvailability(pickDate, dropDate);
     AvailabilityId = availability.map((entry) => entry._id);
+    req.session.pickDate = pickDate;
+    req.session.dropDate = dropDate;
   }
   const model = [
     {
@@ -384,81 +389,6 @@ const aboutPage = (req, res) => {
   res.status(200).render('user/about', { name });
 };
 
-const carBookingPage = async (req, res) => {
-  try {
-    const { pickDate, dropDate } = req.query;
-    const { _id, carId, name } = req.session;
-    if (!carId) {
-      return res.status(401).json({ error: 'not found car id' });
-    }
-    if (!_id) {
-      return res.status(401).json({ error: 'not found user id' });
-    }
-    const car = await Car.findById(carId);
-    if (!car) {
-      res.status(401).json({ error: 'not found car' });
-    }
-    const user = await User.findById(_id);
-    const address = user.address[0];
-    if (!pickDate && !dropDate) {
-      return res.status(200).render('user/booking', {
-        car, user, address, name,
-      });
-    }
-    const data = await addLocationAndDate(pickDate, dropDate, car.dayRent);
-    req.session.pickDate = data.pickDate;
-    req.session.dropDate = data.dropDate;
-    return res.status(200).render('user/booking', {
-      car, data, user, address, name,
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'server Error', details: error });
-  }
-};
-const carBookingPagePost = async (req, res) => {
-  try {
-    const { carId, pickDateInput, dropDateInput } = req.body;
-    const { _id, name } = req.session;
-    if (!_id) {
-      return res.status(500).json({ error: 'not found user id' });
-    }
-    if (!carId) {
-      return res.status(500).json({ error: 'not found car id' });
-    }
-    const car = await Car.findById(carId);
-    if (!car) {
-      return res.status(500).json({ error: 'not found car' });
-    }
-    const user = await User.findById(_id);
-    const address = user.address[0];
-    if (!pickDateInput && !dropDateInput) {
-      return res.status(200).render('user/booking', { car, user, name });
-    }
-    const pickDate = new Date(pickDateInput);
-    const dropDate = new Date(dropDateInput);
-    req.session.pickDate = pickDate;
-    req.session.dropDate = dropDate;
-
-    const availability = await findCarAvailability(pickDate, dropDate);
-    const isCarAvailable = availability.some((item) => item._id && item._id.toString() === carId);
-    if (isCarAvailable) {
-      const message = 'Not Available This Car';
-      return res.status(200).render('user/booking', {
-        car, message, user, address, name,
-      });
-    }
-    const data = await addLocationAndDate(pickDate, dropDate, car.dayRent);
-    return res.status(200).render('user/booking', {
-      car, data, user, address, name,
-    });
-  } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({ error: 'server Error', details: error });
-  }
-};
-
 const addToWishlist = async (req, res) => {
   const { carId } = req.body;
   const { _id } = req.session;
@@ -505,63 +435,97 @@ const wishListPage = async (req, res) => {
     return res.status(500).json({ error: 'Error fetching wishlist', message: error.message });
   }
 };
-const carAddToBooking = async (req, res) => {
-  const {
-    carId, _id, pickDate, dropDate, name,
-  } = req.session;
 
+const carBookingPage = async (req, res) => {
+  const {
+    pickDate, dropDate, _id, name,
+  } = req.session;
+  let { carId } = req.query;
   try {
-    if (!carId && !_id) {
-      return res.status(401).json('not found user and car');
+    if (!carId) {
+      carId = req.session.carId;
     }
     const car = await Car.findById(carId);
-
-    if (!mongoose.Types.ObjectId.isValid(car._id)) {
-      return res.status(400).json({ error: 'Invalid carId' });
+    const user = await User.findById(_id);
+    if (!car || !user) {
+      return res.status(401).json('not found car or user');
     }
-    const { ...bookingData } = req.body;
-    const newCarBooking = new Booking({
-      ...bookingData,
-      address: {
-        place: bookingData.place,
-        zip: bookingData.zip,
-        houseName: bookingData.houseName,
-      },
-      carId: car._id,
-      dropDate,
-      pickDate,
-    });
+    req.session.carId = carId;
+    if (pickDate && dropDate) {
+      const dayDifferenceIn = differenceInDays(dropDate, pickDate);
+      const pickDateObj = new Date(pickDate);
+      const dropDateObj = new Date(dropDate);
+      // Format the dates using date-fns
+      const formattedPickDate = format(pickDateObj, 'yyyy/MM/dd');
+      const formattedDropDate = format(dropDateObj, 'yyyy/MM/dd');
 
-    await newCarBooking.save();
-    const user = await User.findByIdAndUpdate(_id, {
-      $addToSet: {
-        bookedCar: newCarBooking._id,
-      },
-    });
-    if (!user) {
-      return res.json('could not found user');
+      return res.status(200).render('user/booking', {
+        car, user, dayDifferenceIn, formattedPickDate, formattedDropDate, name,
+      });
     }
-    return res.status(201).json(bookingData);
-  } catch (error) {
-    console.error('Error fetching wishlist:', error);
-    return res.status(500).json({ error: 'Error fetching wishlist', message: error.message });
+    return res.status(200).render('user/booking', { car, user, name });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json('error : server error');
   }
 };
+const addDate = async (req, res) => {
+  const { pickDate, dropDate } = req.query;
+  req.session.pickDate = pickDate;
+  req.session.dropDate = dropDate;
+  res.status(200).json('success');
+};
 
-const bookedCarsPage = async (req, res) => {
+const changeDate = async (req, res) => {
+  const { pickDate, dropDate } = req.query;
+  req.session.pickDate = '';
+  req.session.dropDate = '';
+  res.status(200).json('success');
+};
+
+const removeWishlist = async (req, res) => {
+  const { id } = req.query;
+  const { _id } = req.session;
+  if (!id || !_id) {
+    return res.status(401).json('not  fide id');
+  }
+  const user = await User.findByIdAndUpdate(_id, {
+    $pull: {
+      whishList: id,
+    },
+  }, {
+    new: true,
+  });
+  return res.status(200).redirect('/whishList');
+};
+
+const userRecoveryMessage = async (req, res) => {
   try {
-    const { _id, name } = req.session;
-    if (!_id) {
-      return res.status(401).render('user/carsBooked');
+    const { ...data } = req.body;
+    const { _id } = req.session;
+
+    // Find the admin with the role 'Admin'
+    const adminDoc = await admin.findOne({ role: 'Admin' });
+
+    if (!adminDoc) {
+      return res.status(404).send('Admin not found');
     }
-    const cars = await User.findById(_id).populate('bookedCar');
-    if (!cars) {
-      return res.render('user/carsBooked');
-    }
-    return res.render('user/carsBooked', { data: cars.bookedCar, name });
+
+    // Update the notifications field of the admin document
+    adminDoc.notifications.push({
+      userId: _id,
+      message: data.message, // Assuming the message is provided in the request body
+      sender: data.sender, // Assuming the sender is provided in the request body
+      createdAt: new Date(),
+    });
+
+    // Save the updated admin document
+    await adminDoc.save();
+
+    return res.status(201).redirect('/profile');
   } catch (error) {
-    console.error('Error fetching wishlist:', error);
-    return res.status(500).json({ error: 'Error fetching bookedCar', message: error.message });
+    console.error('Error:', error);
+    return res.status(500).send('An error occurred while processing the recovery message');
   }
 };
 
@@ -584,11 +548,11 @@ module.exports = {
   contactPage,
   userMessageToAdmin,
   aboutPage,
-  carBookingPage,
-  addLocationAndDate,
-  carBookingPagePost,
   addToWishlist,
   wishListPage,
-  carAddToBooking,
-  bookedCarsPage,
+  userRecoveryMessage,
+  carBookingPage,
+  addDate,
+  changeDate,
+  removeWishlist,
 };

@@ -177,6 +177,34 @@
 
                 {{/each}}
 
+				 {{#each adminDoc.notifications}}
+<ul class="box-info col-md-12">
+    <li>
+        <div class="row col-md-12">
+            <div class="col-md-9">
+<p>Message: {{this.message}}</p>
+{{#if userId}}
+  <p>Name: {{userId.name}}</p>
+  <p>Phone: {{userId.phone}}</p>
+  <p>Email: {{userId.email}}</p>
+{{else}}
+  <p>User information not available</p>
+{{/if}}
+            </div>
+			<div class="col-md-3">
+				
+                <a type="button" href="/admin/deleteUserData?id={{_id}}" class=" col-12 btn btn-outline-danger mb-2">
+                    Disable
+                </a>
+                <a type="button" href="/admin/deleteCancelUser?id={{_id}}&&userId={{userId._id}}" methode="post" class=" col-12 btn btn-outline-success mb-2">
+                    Enable
+                </a>
+			</div>
+        </div>
+    </li>
+</ul>
+{{/each}}
+
 			{{!-- <div class="table-data">
 				<div class="order">
 					<div class="head">

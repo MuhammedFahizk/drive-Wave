@@ -218,14 +218,33 @@ function handleRowClickUser(row) {
                 <li class="list-group-item">Update Date: ${data.updatedAt}</li>
               </ul> 
               <div class="card-footer d-flex justify-content-center">
-              <form action="/admin/deleteUser" method='get' id="deleteForm">
+              <form action="#" class="deleteForm">
               <input type="hidden" name="deleteUserId" value="${data._id}">
-              <button type="submit" class="btn btn-danger me-4 mt-4" ">Delete</button>
-          </form>
+              <button type="submit" class="btn btn-danger me-4 mt-4 deleteButton">Delete</button>
+              </form>
               </div>
             </div>
           </div>
         </div>`;
+      document.addEventListener('click', (event) => {
+        if (event.target.classList.contains('deleteButton')) {
+          event.preventDefault(); // Prevent form submission
+
+          const deleteUserId = event.target.closest('.deleteForm').querySelector('[name="deleteUserId"]').value;
+
+          // eslint-disable-next-line no-alert, no-restricted-globals
+          if (confirm('Are you sure you want to delete this user?')) {
+            axios.get(`/admin/deleteUser?deleteUserId=${encodeURIComponent(deleteUserId)}`)
+              .then(responses => {
+                // Handle successful deletion (if needed)
+                console.log(responses.data);
+                window.location.href = '/admin/users';
+                // Optionally, you can remove the user from the UI here
+              })
+              .catch(error => console.error('Error deleting user:', error));
+          }
+        }
+      });
     })
     .catch(error => console.error('Error:', error));
 }

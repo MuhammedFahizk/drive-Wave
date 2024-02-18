@@ -1,20 +1,57 @@
-<section style="background-color: #799181f4;" class="ftco-section ftco-car-details col-md-12  px-md-3 ">
-      <div class="container p-md-4 p-4  col-md-12">
-      	<div class="row justify-content-center p-1 "> 
-            {{#each data}}
-                      <div style="background-color: rgba(250, 252, 250, 0.97);" class="car-wrap rounded ftco-animate col-md-12 row py-4  justify-content-center align-middle m-2">
-                    <img style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;" alt="Car Image" class=" col-md-2 img rounded d-flex align-items-end" src="{{carImage}}">
-                      <div class="col-md-10  rounded ftco-animate m-0 justify-content-center align-middle row">
-                        <h4 class="align-middle py-md-4 col-md-6">{{this.carName}} {{this.carModal}}</h4>
-                         <h5 class="col-md-2 py-md-4"><span>$</span>{{this.dayRent}}/Day</h5>
-                           <div class="col-3 my-4">
-                            <a href="/carBooking?carId={{_id}}" class=" btn-primary rounded py-2 col-1 ">Book now</a> 
-                              <a href="/carDetails?id={{_id}}" class="btn btn-secondary py-2 ">Details</a>                         {{!-- <a class="col-md-1" href="/clearCar"><svg  xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 20 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg></a> --}}
-                     
-                           </div>
-                         </div>
-                      </div>
-                 {{/each}}    
+<section style="background-color: #799181f4;" class="ftco-section ftco-car-details col-md-12 px-md-3">
+  <div class="container p-md-4 p-4 col-md-12">
+    <div class="row justify-content-center p-1">
+      {{#each data}}
+      <div style="background-color: rgba(250, 252, 250, 0.97);" class="car-wrap rounded ftco-animate col-md-12 row py-4 justify-content-center align-middle m-2">
+        <img style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;" alt="Car Image" class="col-md-2 img rounded d-flex align-items-end" src="{{carImage}}">
+        <div class="col-md-10 rounded ftco-animate m-0 justify-content-center align-middle row">
+          <h4 class="align-middle py-md-4 col-md-6">{{this.carName}} {{this.carModal}}</h4>
+          <h5 class="col-md-2 py-md-4"><span>$</span>{{this.dayRent}}/Day</h5>
+          <div class="col-4 my-4 row">
+            <a href="/carBooking?carId={{_id}}" class="btn-primary rounded py-2 col-5">Book now</a>
+            <a href="/carDetails?id={{_id}}" class="btn btn-secondary py-2 col-4 mx-2">Details</a>
+            <input type="hidden" class="car-id" value="{{this._id}}">
+            <a class="remove-wishlist p-2 col-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                <path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
-    </section>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<script>
+  const removeButtons = document.querySelectorAll('.remove-wishlist');
+
+  removeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const id = button.parentElement.querySelector('.car-id').value;
+      
+      axios.get(`/removeWishlist?id=${id}`)
+        .then(response => {
+          console.log('Item removed from wishlist:', response.data);
+          // Remove the item from the DOM
+          button.closest('.car-wrap').remove();
+        })
+        .catch(error => {
+          console.error('Error removing item from wishlist:', error);
+        });
+    });
+  });
+
+   window.addEventListener('popstate', function (event) {
+    // Check if the popstate event is triggered by navigating back
+    if (event.state && event.state.pageReload) {
+      // Reload the page
+      location.reload();
+
+    }
+  });
+
+  // Push a state into history to trigger popstate event when navigating back
+  history.pushState({ pageReload: true }, '');
+</script>
