@@ -6,15 +6,16 @@
 const bcrypt = require('bcrypt');
 const emailValidator = require('email-validator');
 const { differenceInDays, differenceInMonths, differenceInYears } = require('date-fns');
+const mongoose = require('mongoose');
 
 const { User, admin } = require('../models/users');
 const { Car } = require('../models/car');
 
 const { sendAdminOtp, generateOtp, sendMailToAdmin } = require('../service/nodeMailer');
-const { findCarAvailability, addLocationAndDate } = require('../service/userService');
-const { format } = require('date-fns');
+const { findCarAvailability, confirm, formattedDate } = require('../service/userService');
 
 const { v4: uuidv4 } = require('uuid');
+const { log } = require('handlebars');
 
 const getHomePage = (req, res) => {
   const { previous } = req.session;
@@ -438,41 +439,65 @@ const wishListPage = async (req, res) => {
 
 const carBookingPage = async (req, res) => {
   const {
-    pickDate, dropDate, _id, name,
+    pickDate, dropDate, _id, name, bookingId,
   } = req.session;
   let { carId } = req.query;
+  if (!carId) {
+    carId = req.session.carId;
+  }
+  req.session.carId = carId;
+  const car = await Car.findById(carId);
+  const user = await User.findById(_id);
+  const address = user.address[0];
   try {
-    if (!carId) {
-      carId = req.session.carId;
-    }
-    const car = await Car.findById(carId);
-    const user = await User.findById(_id);
-    if (!car || !user) {
-      return res.status(401).json('not found car or user');
-    }
-    req.session.carId = carId;
     if (pickDate && dropDate) {
+      const formattedPickDate = formattedDate(pickDate);
+      const formattedDropDate = formattedDate(dropDate);
       const dayDifferenceIn = differenceInDays(dropDate, pickDate);
-      const pickDateObj = new Date(pickDate);
-      const dropDateObj = new Date(dropDate);
-      // Format the dates using date-fns
-      const formattedPickDate = format(pickDateObj, 'yyyy/MM/dd');
-      const formattedDropDate = format(dropDateObj, 'yyyy/MM/dd');
-
+      const amount = car.dayRent * dayDifferenceIn;
+      req.session.amount = amount;
+      if (bookingId) {
+        if (car.bookings.includes(bookingId)) {
+          return res.status(200).render('user/booking', {
+            car,
+            user,
+            name,
+            amount,
+            address,
+            payment: 'payment',
+            dayDifferenceIn,
+            formattedPickDate,
+            formattedDropDate,
+          });
+        }
+      }
+      req.session.carId = carId;
       return res.status(200).render('user/booking', {
-        car, user, dayDifferenceIn, formattedPickDate, formattedDropDate, name,
+        car,
+        user,
+        dayDifferenceIn,
+        formattedPickDate,
+        formattedDropDate,
+        name,
+        amount,
+        address,
+        bookingId,
+        booking: 'booking',
       });
     }
-    return res.status(200).render('user/booking', { car, user, name });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json('error : server error');
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).send('An error occurred while processing the recovery message');
   }
+  return res.status(200).render('user/booking', {
+    car, user, name, address, booking: 'booking',
+  });
 };
 const addDate = async (req, res) => {
   const { pickDate, dropDate } = req.query;
   req.session.pickDate = pickDate;
   req.session.dropDate = dropDate;
+
   res.status(200).json('success');
 };
 
@@ -483,6 +508,33 @@ const changeDate = async (req, res) => {
   res.status(200).json('success');
 };
 
+const findCarByDate = async (req, res) => {
+  const { pickDateData, dropDateData } = req.body;
+  let AvailabilityId = [];
+
+  if (!pickDateData || !dropDateData) {
+    return res.status(401).redirect('/');
+  }
+  const pickDate = new Date(pickDateData);
+  const dropDate = new Date(dropDateData);
+  AvailabilityId = await findCarAvailability(pickDate, dropDate);
+  AvailabilityId = AvailabilityId.map((entry) => entry._id);
+  req.session.pickDate = pickDate;
+  req.session.dropDate = dropDate;
+  const car = await Car.aggregate([
+    {
+      $match: {
+        _id: {
+          $nin: AvailabilityId,
+        },
+      },
+    },
+  ]);
+  if (!car) {
+    return res.status(401).redirect('/');
+  }
+  return res.status(200).render('user/cars', { data: car });
+};
 const removeWishlist = async (req, res) => {
   const { id } = req.query;
   const { _id } = req.session;
@@ -528,7 +580,99 @@ const userRecoveryMessage = async (req, res) => {
     return res.status(500).send('An error occurred while processing the recovery message');
   }
 };
+const userBookedCar = async (req, res) => {
+  const formData = req.body;
+  const {
+    _id, carId, pickDate, dropDate, amount,
+  } = req.session;
 
+  const bookingDate = new Date();
+
+  const userCheck = await User.findById(_id).populate('bookedCar');
+  const confirmArray = await confirm(_id, carId, userCheck);
+  if (confirmArray.length > 0) {
+    return res.status(409).redirect('/carBooking');
+  }
+  const bookingData = {
+    car: carId,
+    bookingDate,
+    pickupDate: pickDate,
+    returnDate: dropDate,
+    totalPrice: amount,
+    status: 'pending',
+  };
+  try {
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { $addToSet: { bookedCar: bookingData } },
+      { new: true },
+    );
+
+    const bookingId = user.bookedCar[user.bookedCar.length - 1]._id;
+    const car = await Car.findByIdAndUpdate(carId, {
+      $addToSet: {
+        bookings: bookingId,
+      },
+    }, {
+      new: true,
+    });
+    req.session.bookingId = bookingId;
+    return res.redirect('/carBooking');
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return res.status(500).json('Internal server error');
+  }
+};
+
+const bookedCars = async (req, res) => {
+  try {
+    const { _id, name } = req.session;
+    if (!_id) {
+      return res.status(401).render('user/carsBooked');
+    }
+    const cars = await User.findById(_id).populate('bookedCar.car');
+
+    if (!cars) {
+      return res.render('user/carsBooked');
+    }
+
+    return res.render('user/carsBooked', { data: cars.bookedCar, name });
+  } catch (error) {
+    console.error('Error fetching bookedCar:', error);
+    return res.status(500).json({ error: 'Error fetching wishlist', message: error.message });
+  }
+};
+const removeBookings = async (req, res) => {
+  const { id } = req.query;
+  const { _id } = req.session;
+  if (!id || !_id) {
+    return res.status(401).json('not  find id');
+  }
+  const user = await User.findByIdAndUpdate(
+    _id,
+    { $pull: { bookedCar: { _id: id } } },
+    { new: true },
+  );
+
+  return res.status(200).redirect('/bookedCars');
+};
+
+const userPayRent = async (req, res) => {
+  const { bookingId } = req.body;
+  res.send(bookingId);
+};
+
+const paymentPageByCar = async (req, res) => {
+  const {
+    bookingId, pickDate, dropDate, id,
+  } = req.body;
+  req.session.bookingId = bookingId;
+  req.session.pickDate = pickDate;
+  req.session.dropDate = dropDate;
+  req.session.carId = id;
+
+  res.status(200).json('OK');
+};
 module.exports = {
   getHomePage,
   loginPage,
@@ -555,4 +699,10 @@ module.exports = {
   addDate,
   changeDate,
   removeWishlist,
+  findCarByDate,
+  userBookedCar,
+  bookedCars,
+  removeBookings,
+  userPayRent,
+  paymentPageByCar,
 };

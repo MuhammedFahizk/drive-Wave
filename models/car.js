@@ -92,6 +92,11 @@ try {
       required: false,
 
     },
+    bookings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+      },
+    ],
 
   }, { timeseries: true });
   const Car = mongoose.model('Car', carSchema);

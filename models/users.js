@@ -133,12 +133,34 @@ const userSchema = new mongoose.Schema({
       ref: 'Car',
     },
   ],
-  bookedCar: [
-    {
+  bookedCar: [{
+    car: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Booking',
+      ref: 'Car',
     },
-  ],
+    bookingDate: {
+      type: Date,
+      required: true,
+    },
+    pickupDate: {
+      type: Date,
+      required: true,
+    },
+    returnDate: {
+      type: Date,
+      required: true,
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'confirmed', 'cancelled'],
+      default: 'pending',
+    },
+    // Other booking details specific to your application
+  }],
 }, { timestamps: true, timeseries: true });
 
 const Vendor = mongoose.model('vendor', VendorSchema, 'users');

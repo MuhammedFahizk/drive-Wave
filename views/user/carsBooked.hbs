@@ -1,16 +1,97 @@
-<section style="background-color: #23916c;" class="ftco-section ftco-car-details col-md-12  px-md-3 ">
-      <div class="container p-md-4 p-4  col-md-12">
-      	<div class="row justify-content-center p-1 "> 
-            {{#each data}}
-                      <div style="background-color: rgba(235, 240, 235, 0.979);" class="car-wrap rounded ftco-animate col-md-12 row py-4  justify-content-center align-middle m-2">
-                         <p class="col-md-12">Pick Date: {{this.pickDate}}</p>
-      <p class="col-md-12">Drop Date: {{this.dropDate}}</p>
-      <p class="col-md-12">Email: {{this.email}}</p>
-      
-      <p class="col-md-12">Status: {{this.status}}</p>
-                      </div>
-                    
-                 {{/each}}    
-        </div>
-      </div>
-    </section>
+<section style="background-color: #799181f4;" class="ftco-section ftco-car-details col-md-12 px-md-3">
+  <div class="container p-md-4 p-4 col-md-12">
+    <div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Car Image</th>
+        <th>Car Name</th>
+        <th>Car Model</th>
+        <th>Total Price</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+ <tbody>
+  {{#each data}}
+  <tr>
+    <td><img src="{{this.car.carImage}}" alt="Car Image" class="img-thumbnail img rounded d-flex align-items-end p-0 car-image" style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;"></td>
+    <td>{{this.car.carName}}</td>
+    <td>{{this.car.carModal}}</td>
+    <td>{{this.totalPrice}}</td>
+    <td>{{this.status}}</td>
+    <td>
+      <input type="hidden" class="booking-id" value="{{this._id}}">
+      <input type="hidden" class="pick-date" value="{{this.pickupDate}}">
+      <input type="hidden" class="drop-date" value="{{this.returnDate}}">
+      <input type="hidden" class="car-id" value="{{this.car._id}}">
+
+      <a class="btn btn-primary payment-page">Payment</a>
+      <a href="/carDetails?id={{this.car._id}}" class="btn btn-secondary">Details</a>
+      <button class="btn btn-danger remove-booking" data-car-id="{{this._id}}">Remove Booking</button>
+    </td>
+  </tr>
+  {{/each}}
+</tbody>
+
+  </table>
+</div>
+
+  </div>
+</section>
+
+<script>
+     document.querySelectorAll('.payment-page').forEach(button => {
+  button.addEventListener('click', () => {
+    const row = button.closest('tr');
+    const bookingId = row.querySelector('.booking-id').value;
+    const pickDate = row.querySelector('.pick-date').value;
+    const dropDate = row.querySelector('.drop-date').value;
+    const id = row.querySelector('.car-id').value;
+
+    axios.post('/paymentPageByCar', { bookingId, pickDate, dropDate, id })
+      .then(resolve => {
+        window.location.href = '/carBooking';
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  });
+});
+
+  // Use event delegation to handle clicks on dynamically added buttons
+  document.addEventListener('click', function(event) {
+    // Check if the clicked element is a "Remove Booking" button
+  
+    
+    console.log(bookingId,pickDate,dropDate,id)
+
+    if (event.target.classList.contains('remove-booking')) {
+      const button = event.target;
+       // Use dataset to access the data attribute
+    const id = button.dataset.carId;
+
+      axios.get(`/removeBookings?id=${id}`)
+        .then(response => {
+          console.log('Booking removed:', response.data);
+          // Remove the row from the table
+          button.closest('tr').remove();
+        })
+        .catch(error => {
+          console.error('Error removing booking:', error);
+        });
+    }
+  });
+
+  window.addEventListener('popstate', function (event) {
+    // Check if the popstate event is triggered by navigating back
+    if (event.state && event.state.pageReload) {
+      // Reload the page
+      location.reload();
+    }
+  });
+
+  // Push a state into history to trigger popstate event when navigating back
+  history.pushState({ pageReload: true }, '');
+</script>
+

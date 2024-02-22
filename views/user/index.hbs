@@ -26,40 +26,43 @@
       </div>
     </div>
 
-     <section class="ftco-section ftco-no-pt bg-light">
+     <section style="color: black;" class="ftco-section ftco-no-pt bg-light">
     	<div class="container">
     		<div class="row no-gutters">
     			<div class="col-md-12	featured-top">
     				<div class="row no-gutters">
 	  					<div class="col-md-4 d-flex align-items-center">
-	  						<form action="#" class="request-form ftco-animate bg-primary">
+	  						<form action="/findCarByDate" class="request-form ftco-animate bg-primary" method="post">
 		          		<h2>Make your trip</h2>
-			    				<div class="form-group">
+			    				{{!-- <div class="form-group">
 			    					<label for="" class="label">Pick-up location</label>
 			    					<input type="text" class="form-control" placeholder="City, Airport, Station, etc">
-			    				</div>
-			    				<div class="form-group">
+			    				</div> --}}
+			    				{{!-- <div class="form-group">
 			    					<label for="" class="label">Drop-off location</label>
 			    					<input type="text" class="form-control" placeholder="City, Airport, Station, etc">
-			    				</div>
+			    				</div> --}}
 			    				<div class="d-flex">
 			    					<div class="form-group mr-2">
 			                <label for="" class="label">Pick-up date</label>
-			                <input type="text" class="form-control" id="book_pick_date" placeholder="Date">
+			                <input type="text" class="form-control" name="pickDateData" id="pickDate" placeholder="Date">
 			              </div>
 			              <div class="form-group ml-2">
 			                <label for="" class="label">Drop-off date</label>
-			                <input type="text" class="form-control" id="book_off_date" placeholder="Date">
+			                <input type="text" class="form-control" name="dropDateData" id="dropDate" placeholder="Date">
 			              </div>
 		              </div>
-		              <div class="form-group">
+		              {{!-- <div class="form-group">
 		                <label for="" class="label">Pick-up time</label>
 		                <input type="text" class="form-control" id="time_pick" placeholder="Time">
-		              </div>
+		              </div> --}}
 			            <div class="form-group">
-			              <input type="submit" value="Rent A Car Now" class="btn btn-secondary py-3 px-4">
+			              <button type="submit" id="submitButton" value="Rent A Car Now" class="btn btn-secondary py-3 px-4">Rent A Car Now</button>
 			            </div>
+													                           <div id="calendar" class="p-0 m-0 request-form ftco-animate bg-primary" > </div>
+
 			    			</form>
+
 	  					</div>
 	  					<div class="col-md-8 d-flex align-items-center">
 	  						<div class="services-wrap rounded-right w-100">
@@ -430,3 +433,60 @@
  
     
   </body>
+      <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+
+  <script>
+	    const calendarEl = document.getElementById('calendar');
+const pickDateInput = document.getElementById('pickDate');
+const dropDateInput = document.getElementById('dropDate');
+
+
+// Add event listeners to open the calendar when the input fields are clicked
+pickDateInput.addEventListener('click', function() {
+    openCalendar(pickDateInput);
+});
+
+dropDateInput.addEventListener('click', function() {
+    openCalendar(dropDateInput);
+});
+
+function openCalendar(inputField) {
+    // Get today's date
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+    // Create the FullCalendar instance
+    calendarEl.style.display = 'block'
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        themeSystem: 'bootstrap',
+        initialView: 'dayGridMonth',
+        selectable: true,
+        select: function(info) {
+            // Check if the selected date is today or after today
+            if (info.start >= today) {
+                // Set the value of the input field to the selected date
+                inputField.value = info.startStr;
+            } else {
+                // Show an error message or handle the invalid selection
+                alert('Please select a date today or after today.');
+            }
+        },
+        // Set constraints for date selection (today or after today)
+        selectConstraint: {
+            start: todayStr, // Start date must be today or after today
+            end: '2024-12-31' // End date constraint (optional)
+        },
+            headerToolbar: {
+        start: 'title',
+        center: '',
+        end: ' prev,next'
+    },
+
+    });
+
+    // Render the calendar
+    calendar.render();
+}
+
+
+  </script>

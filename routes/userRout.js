@@ -29,6 +29,11 @@ router.post('/userRecoveryMessage', userController.userRecoveryMessage);
 router.get('/carBooking', middleware.mustLogin, userController.carBookingPage);
 router.get('/addDate', middleware.mustLogin, userController.addDate);
 router.get('/changeDate', middleware.mustLogin, userController.changeDate);
+router.post('/findCarByDate', userController.findCarByDate);
 router.get('/removeWishlist', middleware.mustLogin, userController.removeWishlist);
-
+router.post('/userBookedCar', middleware.mustLogin, userController.userBookedCar);
+router.get('/bookedCars', middleware.mustLogin, userController.bookedCars);
+router.get('/removeBookings', middleware.mustLogin, userController.removeBookings);
+router.get('/userPayRent', middleware.mustLogin, userController.userPayRent);
+router.post('/paymentPageByCar', middleware.mustLogin, userController.paymentPageByCar);
 module.exports = router;
