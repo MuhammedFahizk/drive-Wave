@@ -148,6 +148,7 @@
 					<span class="text">
 						<h3>$2543</h3>
 						<p>Total Sales</p>
+                        {{notification}}
 					</span>
 				</li>
 			</ul>
@@ -157,159 +158,51 @@
     <li>
         <div class="row col-md-12">
             <div class="col-md-7">
-                <p>{{this.name}}</p>
-                <p>{{email}}</p>
+                <p>{{this.createdAt}}</p>
+                <p class="text-dark">{{this.message}}</p>
             </div>
             <div class="col-md-5">
-                <a type="button" onclick="handleRowClickVendorNotification(this)"  data-bs-toggle="modal" class="btn btn-outline-warning mb-2" data-bs-target="#viewVendorDetails" data-vendorId='{{_id}}'>
-                    Information
+                <a type="button" id="recover"  data-bs-toggle="modal" class="btn btn-outline-warning mb-2" data-bs-target="#viewVendorDetails" data-vendorId='{{_id}}'>
+                    Mesage To Admin
                 </a>
-                <a type="button" href="/admin/disableVendor?id={{_id}}" class="btn btn-outline-danger mb-2">
-                    Disable
-                </a>
-                <a type="button" href="/admin/enableVendor?id={{_id}}" methode="post" class="btn btn-outline-success mb-2">
-                    Enable
-                </a>
+                    <div style="display:none" id="adminMessage" class="car-wrap rounded ftco-animate ">
+                         <form action='/vendor/RecoveryMessage' id="contactForm" class="bg-light p-5 pb-2 contact-form"  method="post">
+              <div class="form-group">
+                <input type="text" name="name" class="form-control" placeholder="Your Name">
+                <p style="color: red; font-size:small" id="nameError"></p>
+              </div>
+              <div class="form-group">
+                <input type="text" name="email" class="form-control" placeholder="Your Email">
+                <p style="color: red; font-size:small" id="emailError"></p>
+
+              </div>
+              <div class="form-group">
+                <input type="text" name="subject" class="form-control" placeholder="Subject">
+                <p style="color: red; font-size:small" id="subjectError"></p>
+
+              </div>
+              <div class="form-group">
+                <textarea  name="message"  cols="30" rows="3" class="form-control" placeholder="Message"></textarea>
+                <p  style="color: red; font-size:small" id="messageError"></p>
+
+              </div>
+              <div class="form-group">
+
+                <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
+              </div>
+            </form>
+                      </div>
             </div>
         </div>
     </li>
 </ul>
 
                 {{/each}}
-				 {{#each adminDoc.notifications}}
-<ul class="box-info col-md-12">
-    <li>
-        <div class="row col-md-12">
-            <div class="col-md-9">
-<p>Message: {{this.message}}</p>
-{{#if userId}}
-  <p>Name: {{userId.name}}</p>
-  <p>Phone: {{userId.phone}}</p>
-  <p>Email: {{userId.email}}</p>
-{{else}}
-  <p>User information not available</p>
-{{/if}}
-            </div>
-			<div class="col-md-3">
-				
-                <a type="button" href="/admin/deleteUserData?id={{_id}}" class=" col-12 btn btn-outline-danger mb-2">
-                    Disable
-                </a>
-				{{#if adminDoc.userId}}
-                <a type="button" href="/admin/deleteCancelUser?id={{_id}}&&userId={{userId._id}}" methode="post" class=" col-12 btn btn-outline-success mb-2">
-                    Enable
-                </a>
-				{{else}}
-				<a type="button" href="/admin/deleteCancelUser?id={{_id}}&&vender={{venderId._id}}" methode="post" class=" col-12 btn btn-outline-success mb-2">
-                    Enable
-                </a>
-				{{/if}}
-			</div>
-        </div>
-    </li>
-</ul>
-{{/each}}
- 
 
-			{{!-- <div class="table-data">
-				<div class="order">
-					<div class="head">
-						<h3>Recent Orders</h3>
-						<i class='bx bx-search' ></i>
-						<i class='bx bx-filter' ></i>
-					</div>
-					<table>
-						<thead>
-							<tr>
-								<th>User</th>
-								<th>Date Order</th>
-								<th>Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status process">Process</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="todo">
-					<div class="head">
-						<h3>To dos</h3>
-						<i class='bx bx-plus' ></i>
-						<i class='bx bx-filter' ></i>
-					</div>
-					<ul class="todo-list">
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-					</ul>
-				</div>
-			</div> --}}
-          <div class="modal fade" id="viewVendorDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-               
-            <div class="modal-body">
-              
-            </div>
-        </div>
-    </div>
-</div>
+	
+
+		
+
 
 
 		</main>
@@ -324,3 +217,10 @@
 	<script src="/script/script.js"></script>
 </body>
 </html>
+<script>
+       const recover = document.getElementById('recover')
+   const adminMessage = document.getElementById('adminMessage')
+   recover.addEventListener('click', ()=> {
+    adminMessage.style.display = 'block'
+   })
+</script>

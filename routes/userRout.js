@@ -35,5 +35,6 @@ router.post('/userBookedCar', middleware.mustLogin, userController.userBookedCar
 router.get('/bookedCars', middleware.mustLogin, userController.bookedCars);
 router.get('/removeBookings', middleware.mustLogin, userController.removeBookings);
 router.get('/userPayRent', middleware.mustLogin, userController.userPayRent);
-router.post('/paymentPageByCar', middleware.mustLogin, userController.paymentPageByCar);
+router.get('/paymentPageByCar', middleware.mustLogin, userController.paymentPageByCar);
+router.get('/BookedCar', middleware.mustLogin, userController.carDetails);
 module.exports = router;

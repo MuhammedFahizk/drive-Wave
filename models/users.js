@@ -23,6 +23,10 @@ const adminSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'dealers',
     },
+    venderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'vendor',
+    },
     message: String,
     sender: String,
     createdAt: { type: Date, default: Date.now },
@@ -77,6 +81,11 @@ const VendorSchema = new mongoose.Schema({
     require: false,
     type: Date,
   },
+  notifications: [{
+    message: String,
+    sender: String,
+    createdAt: { type: Date, default: Date.now },
+  }],
 }, { timestamps: true, timeseries: true });
 const userSchema = new mongoose.Schema({
   name: {

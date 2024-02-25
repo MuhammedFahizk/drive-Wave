@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable import/order */
 /* eslint-disable no-shadow */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -338,11 +339,12 @@ const viewNotificationPage = async (req, res) => {
       path: 'notifications.userId',
       select: 'name email phone',
     });
-    if (!adminDoc) {
-      return res.status(404).send('Admin not found');
-    }
+    const venderDoc = await admin.findOne({ role: 'Admin' }).populate({
+      path: 'notifications.venderId',
+      select: 'name email phone',
+    });
     return res.status(200).render('admin/notification', {
-      data: vendor, count, NotificationCount, adminDoc,
+      data: vendor, count, NotificationCount, adminDoc, venderDoc,
     });
   } catch (error) {
     console.error('Error:', error);
@@ -408,10 +410,41 @@ const enableVendor = async (req, res) => {
   }
 };
 
+const BookingPage = async (req, res) => {
+  try {
+    const userWithBookings = await User.find({}).populate('bookedCar.car');
+    const allBookings = userWithBookings.flatMap((user) => user.bookedCar.map((booking) => {
+      const { pickupDate, returnDate } = booking;
+      const totalDays = Math.ceil((new Date(returnDate) - new Date(pickupDate))
+      / (1000 * 60 * 60 * 24));
+      return {
+        userId: user._id,
+        userName: user.name,
+        bookingDetails: {
+          bookingDate: booking.bookingDate.toLocaleDateString(),
+          pickupDate: new Date(pickupDate).toLocaleDateString(),
+          returnDate: new Date(returnDate).toLocaleDateString(),
+          totalDays,
+          totalPrice: booking.totalPrice,
+          status: booking.status,
+          _id: booking._id,
+        },
+        car: booking.car,
+      };
+    }));
+    res.status(200).render('admin/bookingPage', { allBookings });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 // vendor page
 async function vendorPage(req, res) {
-  const vendors = await Vendor.find({ role: 'vendor' });
-  res.status(200).render('admin/adminVendorPage', { data: vendors, NotificationCount });
+  const vendors = await Vendor.find({ role: 'vendor', deletedAt: null });
+  const count = await Vendor.find({ role: 'vendor', deletedAt: null }).countDocuments();
+
+  res.status(200).render('admin/adminVendorPage', { data: vendors, NotificationCount, count });
 }
 
 async function vendorDetails(req, res) {
@@ -426,15 +459,23 @@ async function vendorDetails(req, res) {
 }
 async function deleteVendor(req, res) {
   try {
-    const { deleteVendorId } = req.query;
-    if (deleteVendorId) {
-      const result = await Vendor.findByIdAndDelete(deleteVendorId);
-      if (result) {
-        res.status(200).redirect('/admin/Vendor');
-      } else {
-        res.status(300).json('not modify');
-      }
+    const { deleteVenderId } = req.query;
+    const vendor = await Vendor.findByIdAndUpdate(deleteVenderId, { deletedAt: new Date() });
+    const notification = {
+      venderId: vendor._id,
+      message: `Vendor ${vendor.name} has been deleted.`,
+      sender: 'System', // You can set the sender as needed
+      createdAt: new Date(),
+    };
+    // Push the notification to the notifications array
+    vendor.notifications.push(notification);
+    await vendor.save();
+
+    if (!vendor) {
+      // Handle case where user with given ID is not found
+      res.status(404).json('User not found');
     }
+    res.status(200).json('status : ok');
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -559,7 +600,17 @@ async function cleanupSoftDeletedData() {
 }
 
 const deleteCancelUser = async (req, res) => {
-  const { id, userId } = req.query;
+  const { id, userId, venderId } = req.query;
+  if (venderId) {
+    const venderDoc = await Vendor.findOneAndUpdate(
+      { _id: userId },
+      { $unset: { deletedAt: '' } },
+      { new: true },
+    );
+    if (!venderDoc) {
+      return res.status(404).send('User not found');
+    }
+  }
   const userDoc = await User.findOneAndUpdate(
     { _id: userId },
     { $unset: { deletedAt: '' } },
@@ -603,6 +654,7 @@ module.exports = {
   viewNotificationPage,
   disableVendor,
   enableVendor,
+  BookingPage,
   // vendor
   vendorPage,
   vendorDetails,

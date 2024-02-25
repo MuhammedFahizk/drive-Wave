@@ -34,6 +34,8 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+hbs.registerHelper('formatDate', (date) => { new Date(date).toLocaleDateString(); });
+
 app.engine(
   'hbs',
   handlebars.engine({
@@ -52,11 +54,12 @@ app.set('view engine', 'hbs');
 app.set('views', './views');
 
 app.use((req, res, next) => {
-  res.locals.includeHeaderFooter = req.path.startsWith('/admin') || req.path.startsWith('/vendor');
+  res.locals.includeHeaderFooter = req.path.startsWith('/admin') || req.path.startsWith('/Vendor') || req.path.startsWith('/vendor');
   res.locals.excludeHeaderFooter = req.path.startsWith('/login') || req.path.startsWith('/register');
 
   next();
 });
+hbs.registerHelper('formatDate', (date) => { new Date(date).toLocaleDateString(); });
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static('uploads'));
 

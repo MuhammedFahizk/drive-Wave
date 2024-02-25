@@ -2,7 +2,7 @@
 const { v4: uuidv4 } = require('uuid');
 
 const { Vendor } = require('../models/users');
-
+const { admin } = require('../models/users');
 const { Car } = require('../models/car');
 const cloudinary = require('../service/cloudnery');
 
@@ -212,6 +212,41 @@ const vendorLogout = (req, res) => {
     });
   }
 };
+
+const vendorNotification = async (req, res) => {
+  const { ownerId } = req.session;
+  const vendor = await Vendor.findById(ownerId).populate('notifications');
+  res.status(200).render('vendor/notification', { data: vendor.notifications });
+};
+const venderRecoveryMessage = async (req, res) => {
+  try {
+    const { ...data } = req.body;
+    const { venderId } = req.session;
+
+    // Find the admin with the role 'Admin'
+    const adminDoc = await admin.findOne({ role: 'Admin' });
+
+    if (!adminDoc) {
+      return res.status(404).send('Admin not found');
+    }
+
+    // Update the notifications field of the admin document
+    adminDoc.notifications.push({
+      venderId,
+      message: data.message, // Assuming the message is provided in the request body
+      sender: data.sender, // Assuming the sender is provided in the request body
+      createdAt: new Date(),
+    });
+
+    // Save the updated admin document
+    await adminDoc.save();
+
+    return res.status(201).redirect('/vendor/Notification');
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).send('An error occurred while processing the recovery message');
+  }
+};
 module.exports = {
   loginPage,
   showVendorDashboard,
@@ -224,4 +259,6 @@ module.exports = {
   signUpPage,
   signupVendor,
   vendorLogout,
+  vendorNotification,
+  venderRecoveryMessage,
 };

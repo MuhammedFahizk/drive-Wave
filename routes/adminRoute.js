@@ -28,11 +28,12 @@ router.get('/searchByCarName', login.requireAuth, adminController.searchByCarNam
 router.get('/notification', login.requireAuth, adminController.viewNotificationPage)
 router.get('/disableVendor', login.requireAuth, adminController.disableVendor);
 router.get('/enableVendor', login.requireAuth, adminController.enableVendor);
+router.get('/Booking', login.requireAuth, adminController.BookingPage);
 
 // adminVendor routs
 router.get('/Vendor', login.requireAuth, adminController.vendorPage);
 router.get('/getVendorDetails', login.requireAuth, adminController.vendorDetails);
-router.get('/deleteVendor', login.requireAuth, adminController.deleteVendor);
+router.get('/deleteVender', login.requireAuth, adminController.deleteVendor);
 router.get('/vendor/alphabeticallySort', login.requireAuth, adminController.alphabeticallySortVendor);
 router.post('/searchVendor', login.requireAuth, adminController.searchingVendor);
 //  admin user page

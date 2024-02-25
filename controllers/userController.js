@@ -56,10 +56,10 @@ const userLogin = async (req, res) => {
     if (!user) {
       return res.status(404).render('user/login', { error: 'User name or password is invalid' });
     }
-    const passwordMatch = bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!passwordMatch) {
-      return res.status(400).render('user/login', { error: 'Password miss match' });
+    if (!isPasswordValid) {
+      return res.status(404).render('user/login', { error: ' password is invalid' });
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const { originalUrl } = req.session;
@@ -580,6 +580,7 @@ const userRecoveryMessage = async (req, res) => {
     return res.status(500).send('An error occurred while processing the recovery message');
   }
 };
+
 const userBookedCar = async (req, res) => {
   const formData = req.body;
   const {
@@ -635,8 +636,9 @@ const bookedCars = async (req, res) => {
     if (!cars) {
       return res.render('user/carsBooked');
     }
+    const count = cars.bookedCar.length;
 
-    return res.render('user/carsBooked', { data: cars.bookedCar, name });
+    return res.render('user/carsBooked', { data: cars.bookedCar, name, count });
   } catch (error) {
     console.error('Error fetching bookedCar:', error);
     return res.status(500).json({ error: 'Error fetching wishlist', message: error.message });
@@ -653,7 +655,7 @@ const removeBookings = async (req, res) => {
     { $pull: { bookedCar: { _id: id } } },
     { new: true },
   );
-
+  
   return res.status(200).redirect('/bookedCars');
 };
 
@@ -665,14 +667,26 @@ const userPayRent = async (req, res) => {
 const paymentPageByCar = async (req, res) => {
   const {
     bookingId, pickDate, dropDate, id,
-  } = req.body;
+  } = req.query;
   req.session.bookingId = bookingId;
   req.session.pickDate = pickDate;
   req.session.dropDate = dropDate;
   req.session.carId = id;
 
-  res.status(200).json('OK');
+  res.status(200).redirect('/carBooking');
 };
+
+const carDetails = async (req, res) => {
+  const { _id, name } = req.session;
+  const { bookingId } = req.query;
+  try {
+    const user = await User.findById(_id).populate('bookedCar.car');
+    const thisBooking = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
+    return res.json(thisBooking);
+  } catch (error) {
+    return res.status(500).json('server error', error);
+  }
+}
 module.exports = {
   getHomePage,
   loginPage,
@@ -705,4 +719,5 @@ module.exports = {
   removeBookings,
   userPayRent,
   paymentPageByCar,
+  carDetails,
 };
