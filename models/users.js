@@ -155,11 +155,18 @@ const userSchema = new mongoose.Schema({
       type: Date,
       required: true,
     },
+    payment_id: {
+      type: String,
+    },
     returnDate: {
       type: Date,
       required: true,
     },
     totalPrice: {
+      type: Number,
+      required: true,
+    },
+    totalDays: {
       type: Number,
       required: true,
     },

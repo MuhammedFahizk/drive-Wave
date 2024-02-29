@@ -23,7 +23,6 @@ const requireAuth = (req, res, next) => {
 
 async function addImage(req, res, next) {
   const uploader = async (path) => await cloudinary.uploads(path, 'carImages');
-
   try {
     const { file } = req;
     if (file) {

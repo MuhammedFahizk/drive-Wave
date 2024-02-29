@@ -19,7 +19,7 @@
     background-color: #fff; /* Color of the corner */
 }
 </style>
-<section style="background-color: #83d0c9;" class="ftco-section ftco-car-details col-md-12 px-md-3 py-4">
+<section style="background-color: #f9fafa;" class="ftco-section ftco-car-details col-md-12 px-md-3 py-4">
   <div class="container p-md-4 p-4 col-md-12">
     <div class="table-responsive">
   <table class="table">
@@ -95,7 +95,7 @@
        {{/each}}
       </div>
     </div>
-    <div  style="background-color:#2edbcd ;" class="col-4 ">
+    <div style="display: none;" id="rightSide" style="background-color:#2edbcd ;" class="col-4 ">
           <div class="col-md-12 mt-4" >
              <div class="car-wrap rounded ftco-animate " id="summaryContainer">
 
@@ -139,11 +139,14 @@ document.addEventListener('DOMContentLoaded', function() {
 rowClickElements.forEach((rowClick) => {
     rowClick.addEventListener('click', (e) => {
         e.preventDefault();
+         const rightSide = document.getElementById('rightSide')
+                    rightSide.style.display = 'block'
         const carId = rowClick.getAttribute('data-car-id');
         axios.get(`/BookedCar?bookingId=${carId}`)
             .then(res => {
                 console.log(res);
                  const summaryContainer = document.getElementById('summaryContainer');
+       
 if(summaryContainer) {
                 summaryContainer.innerHTML = `
                 <div class="image-container position-relative">
@@ -183,7 +186,7 @@ if(summaryContainer) {
 
     axios.post('/paymentPageByCar', { bookingId, pickDate, dropDate, id })
       .then(resolve => {
-        window.location.href = '/carBooking';
+        window.location.href = '/bookingCar';
       })
       .catch(error => {
         console.error('Error:', error);

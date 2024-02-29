@@ -26,7 +26,8 @@ router.get('/about', userController.aboutPage);
 router.post('/addWishlist', userController.addToWishlist);
 router.get('/whishList', middleware.mustLogin, userController.wishListPage);
 router.post('/userRecoveryMessage', userController.userRecoveryMessage);
-router.get('/carBooking', middleware.mustLogin, userController.carBookingPage);
+// router.get('/carBooking', middleware.mustLogin, userController.carBookingPage);
+router.get('/bookingCar', middleware.mustLogin, userController.bookingCar);
 router.get('/addDate', middleware.mustLogin, userController.addDate);
 router.get('/changeDate', middleware.mustLogin, userController.changeDate);
 router.post('/findCarByDate', userController.findCarByDate);
@@ -37,4 +38,6 @@ router.get('/removeBookings', middleware.mustLogin, userController.removeBooking
 router.get('/userPayRent', middleware.mustLogin, userController.userPayRent);
 router.get('/paymentPageByCar', middleware.mustLogin, userController.paymentPageByCar);
 router.get('/BookedCar', middleware.mustLogin, userController.carDetails);
+router.post('/paymentVerification', middleware.mustLogin, userController.paymentVerification);
+
 module.exports = router;
