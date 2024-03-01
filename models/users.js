@@ -158,6 +158,9 @@ const userSchema = new mongoose.Schema({
     payment_id: {
       type: String,
     },
+    paymentMethod: {
+      type: String,
+    },
     returnDate: {
       type: Date,
       required: true,

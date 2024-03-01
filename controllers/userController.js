@@ -548,8 +548,7 @@ const addDate = async (req, res) => {
   const { pickDate, dropDate } = req.query;
   req.session.pickDate = pickDate;
   req.session.dropDate = dropDate;
-
-  res.status(200).json('success');
+  res.status(200).redirect('/bookingCar');
 };
 
 const changeDate = async (req, res) => {
@@ -632,6 +631,7 @@ const userRecoveryMessage = async (req, res) => {
   }
 };
 
+// eslint-disable-next-line consistent-return
 const userBookedCar = async (req, res) => {
   const formData = req.body;
   const {
@@ -643,9 +643,8 @@ const userBookedCar = async (req, res) => {
   const userCheck = await User.findById(_id).populate('bookedCar');
   const confirmArray = await userService.confirm(_id, carId, userCheck);
   if (confirmArray.length > 0) {
-    return res.status(409).redirect('/carBooking');
+    return res.status(409).json({ message: 'already booked' });
   }
-
   const bookingData = {
     car: carId,
     bookingDate,
@@ -677,14 +676,14 @@ const userBookedCar = async (req, res) => {
           { _id, 'bookedCar._id': bookingId },
           { $set: { 'bookedCar.$.payment_id': razerPay.id } },
         );
-        console.log(razerPay); // Logging the entire razerPay object
-        console.log(razerPay.id); // Logging the 'id' property of razerPay
+
         // Rest of your code...
         return res.status(200).json({ razerPay, formData });
       })
       .catch((error) => {
         // Handle any errors that occur during order creation
         console.error('Error creating order:', error);
+        return res.status(400).json('error for payment');
       });
   } catch (error) {
     console.error('Error updating user:', error);
@@ -740,7 +739,7 @@ const paymentPageByCar = async (req, res) => {
   req.session.dropDate = dropDate;
   req.session.carId = id;
 
-  res.status(200).redirect('/bookingCar');
+  return res.status(200).redirect('/bookingCar');
 };
 
 const carDetails = async (req, res) => {
@@ -756,13 +755,16 @@ const carDetails = async (req, res) => {
 };
 
 const paymentVerification = async (req, res) => {
-  console.log(req.body);
-  userService.verifyPayment(req.body).then(() =>{
-    console.log('success');
-  })
-    .catch(() => {
-      console.log('Failed');
-    });
+  try {
+    const { _id } = req.session;
+    await userService.verifyPayment(req.body);
+    const updatedUser = await userService.changeStatus(req.body.razerPay, _id, req.body.method);
+    req.session.bookingId = '';
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error('Payment verification failed:', error);
+    res.status(500).json({ error: 'Payment verification failed' });
+  }
 };
 module.exports = {
   getHomePage,

@@ -9,7 +9,6 @@ const Razorpay = require('razorpay');
 const { createHmac } = require('crypto');
 
 const { format } = require('date-fns');
-const { log } = require('console');
 
 const instance = new Razorpay({
   key_id: 'rzp_test_4n6m1t1iIOWyRe',
@@ -110,25 +109,38 @@ function verifyPayment(details) {
       hmac.update(message);
       // Generate the digest (HMAC value) in hexadecimal format
       const generatedSignature = hmac.digest('hex');
-      console.log(generatedSignature);
-      console.log(razorpay_signature);
+
       // Compare the generated HMAC with the received signature
       if (generatedSignature === razorpay_signature) {
-        // HMAC verification successful
         resolve();
       } else {
-        // HMAC verification failed
         reject(new Error('HMAC verification failed'));
       }
     });
   } catch (error) {
-  console.log(error);
+    console.error(error);
+    return ('internal Server Error');
+  }
 }
-}
+
+const changeStatus = (details, _id, method) => new Promise((resolve, reject) => {
+  console.log(method);
+  User.findOneAndUpdate(
+    { _id, 'bookedCar._id': details.receipt },
+    {
+      $set: { 'bookedCar.$.status': 'Confirmed' },
+      'bookedCar.$.paymentMethod': method,
+    },
+    { new: true },
+  )
+    .then((updatedUser) => resolve(updatedUser))
+    .catch((error) => reject(error));
+});
 module.exports = {
   findCarAvailability,
   confirm,
   formattedDate,
   razerPayCreation,
   verifyPayment,
+  changeStatus,
 };
