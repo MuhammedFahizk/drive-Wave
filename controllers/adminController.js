@@ -14,6 +14,7 @@ const cloudinary = require('../service/cloudnery');
 
 const { Car } = require('../models/car');
 const { sendAdminOtp, generateOtp, sendmailVendor } = require('../service/nodeMailer');
+const adminService = require('../service/adminService');
 const { error } = require('console');
 
 const emailOtp = {};
@@ -446,6 +447,17 @@ const BookingPage = async (req, res) => {
   }
 };
 
+const payment = async (req, res) => {
+  try {
+    const customers = await adminService.customers();
+    console.log(customers);
+    res.status(200).render('admin/payment', { customers });
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send('internal server error');
+  }
+};
+
 // vendor page
 async function vendorPage(req, res) {
   const vendors = await Vendor.find({ role: 'vendor', deletedAt: null });
@@ -666,6 +678,7 @@ module.exports = {
   disableVendor,
   enableVendor,
   BookingPage,
+  payment,
   // vendor
   vendorPage,
   vendorDetails,

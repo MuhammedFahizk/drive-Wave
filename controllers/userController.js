@@ -578,7 +578,6 @@ const userRecoveryMessage = async (req, res) => {
       sender: data.sender, // Assuming the sender is provided in the request body
       createdAt: new Date(),
     });
-a    // Save the updated admin document
     await adminDoc.save();
 
     return res.status(201).redirect('/profile');

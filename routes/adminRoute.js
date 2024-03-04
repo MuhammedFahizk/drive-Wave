@@ -29,6 +29,7 @@ router.get('/notification', login.requireAuth, adminController.viewNotificationP
 router.get('/disableVendor', login.requireAuth, adminController.disableVendor);
 router.get('/enableVendor', login.requireAuth, adminController.enableVendor);
 router.get('/Booking', login.requireAuth, adminController.BookingPage);
+router.get('/Payment', login.requireAuth, adminController.payment);
 
 // adminVendor routs
 router.get('/Vendor', login.requireAuth, adminController.vendorPage);
