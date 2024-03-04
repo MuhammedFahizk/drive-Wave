@@ -1,198 +1,290 @@
 <style>
-::-webkit-scrollbar {
-    width: 10px; /* Width of the scrollbar */
-}
+  ::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+  }
 
-/* Change scrollbar thumb */
-::-webkit-scrollbar-thumb {
-    background-color: #64d3ca; /* Color of the thumb */
-    border-radius: 10px; /* Rounded corners of the thumb */
-}
+  /* Change scrollbar thumb */
+  ::-webkit-scrollbar-thumb {
+    background-color: #64d3ca;
+    /* Color of the thumb */
+    border-radius: 10px;
+    /* Rounded corners of the thumb */
+  }
 
-/* Change scrollbar track */
-::-webkit-scrollbar-track {
-    background-color: #faf3f3; /* Color of the track */
-}
+  /* Change scrollbar track */
+  ::-webkit-scrollbar-track {
+    background-color: #faf3f3;
+    /* Color of the track */
+  }
 
-/* Change scrollbar corner */
-::-webkit-scrollbar-corner {
-    background-color: #fff; /* Color of the corner */
-}
+  /* Change scrollbar corner */
+  ::-webkit-scrollbar-corner {
+    background-color: #fff;
+    /* Color of the corner */
+  }
 </style>
 <section style="background-color: #f9fafa;" class="ftco-section ftco-car-details col-md-12 px-md-3 py-4">
   <div class="container p-md-4 p-4 col-md-12">
     <div class="table-responsive">
-  <table class="table">
-    {{!-- <thead>
-      <tr>
-        <th>Car Image</th>
-        <th>Car Name</th>
-        <th>Car Model</th>
-        <th>Total Price</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead> --}}
- {{!-- <tbody>
-  {{#each data}}
-  <tr>
-    <td><img src="{{this.car.carImage}}" alt="Car Image" class="img-thumbnail img rounded d-flex align-items-end p-0 car-image" style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;"></td>
-    <td>{{this.car.carName}}</td>
-    <td>{{this.car.carModal}}</td>
-    <td>{{this.totalPrice}}</td>
-    <td>{{this.status}}</td>
-    <td>
-      <input type="hidden" class="booking-id" value="{{this._id}}">
-      <input type="hidden" class="pick-date" value="{{this.pickupDate}}">
-      <input type="hidden" class="drop-date" value="{{this.returnDate}}">
-      <input type="hidden" class="car-id" value="{{this.car._id}}">
+      <table class="table">
+        {{!-- <thead>
+          <tr>
+            <th>Car Image</th>
+            <th>Car Name</th>
+            <th>Car Model</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead> --}}
+        {{!-- <tbody>
+          {{#each data}}
+          <tr>
+            <td><img src="{{this.car.carImage}}" alt="Car Image"
+                class="img-thumbnail img rounded d-flex align-items-end p-0 car-image"
+                style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;"></td>
+            <td>{{this.car.carName}}</td>
+            <td>{{this.car.carModal}}</td>
+            <td>{{this.totalPrice}}</td>
+            <td>{{this.status}}</td>
+            <td>
+              <input type="hidden" class="booking-id" value="{{this._id}}">
+              <input type="hidden" class="pick-date" value="{{this.pickupDate}}">
+              <input type="hidden" class="drop-date" value="{{this.returnDate}}">
+              <input type="hidden" class="car-id" value="{{this.car._id}}">
 
-      <a class="btn btn-primary payment-page">Payment</a>
-      <a href="/carDetails?id={{this.car._id}}" class="btn btn-secondary">Details</a>
-      <button class="btn btn-danger remove-booking" data-car-id="{{this._id}}">Remove Booking</button>
-    </td>
-  </tr>
-  {{/each}}
-</tbody> --}}
+              <a class="btn btn-primary payment-page">Payment</a>
+              <a href="/carDetails?id={{this.car._id}}" class="btn btn-secondary">Details</a>
+              <button class="btn btn-danger remove-booking" data-car-id="{{this._id}}">Remove Booking</button>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody> --}}
 
-  </table>
-</div>
-  <div class="car-wrap rounded ftco-animate p-0   row m-4">
-<div class="col-8 row m-0 px-4">
-      <h3 class=" col-8 mx-4 mt-3 fw-4 fs-4"> Booked Car</h3>
-      <p id="count" class=" col-2 my-3 ml-5">{{count}} Items</p>
-      <div class="col-12 m-0 p-0 " style="overflow-y: auto; height: 450px; overflow-x: hidden;" >
-  {{#each data}}
-        
-       <div class="rowClick  m-2  p-0 row col-12 car-wrap rounded ftco-animate "   data-car-id="{{this._id}}" type="button" style="background-color: #fff;"  >
-        <div class="col-2 p-0 m-0">
-          <img src="{{this.car.carImage}}" alt="Car Image" class="img-thumbnail img rounded d-flex align-items-end p-0 car-image " style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;">
-        </div>
-        <div class="col-4">
-          <h6 class="my-3">{{this.car.carName}}</h6>
-          <h6 class="my-3">{{this.car.carModal}}</h6>
+      </table>
+    </div>
+    <div class="car-wrap rounded ftco-animate p-0   row m-4">
+      <div class="col-8 row m-0 px-4">
+        <h3 class=" col-8 mx-4 mt-3 fw-4 fs-4"> Booked Car</h3>
+        <p id="count" class=" col-2 my-3 ml-5">{{count}} Items</p>
+        <div class="col-12 m-0 p-0 " style="overflow-y: auto; height: 450px; overflow-x: hidden;">
+          {{#each data}}
 
-        </div>
-        <div class="col-2">
-          <h6 class="mt-5">{{this.totalPrice}} Rs</h6>
+          <div class="rowClick  m-2  p-0 row col-12 car-wrap rounded ftco-animate " data-car-id="{{this._id}}"
+            type="button" style="background-color: #fff;">
+            <div class="col-2 p-0 m-0">
+              <img src="{{this.car.carImage}}" alt="Car Image"
+                class="img-thumbnail img rounded d-flex align-items-end p-0 car-image "
+                style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;">
+            </div>
+            <div class="col-4">
+              <h6 class="my-3">{{this.car.carName}}</h6>
+              <h6 class="my-3">{{this.car.carModal}}</h6>
 
-        </div>
-        <div class="col-2 mt-4">
-          <h6 class="mt-4">{{this.status}}</h6>
+            </div>
+            <div class="col-2">
+              <h6 class="mt-5">{{this.totalPrice}} Rs</h6>
+
+            </div>
+            <div class="col-2 mt-4">
+              <h6 class="mt-4">{{this.status}}</h6>
+            </div>
+
+            <div class="col-2">
+              <button class="btn  remove-booking pt-4" data-car-id="{{this._id}} ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                  style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                  <path
+                    d="M16 2H8C4.691 2 2 4.691 2 8v13a1 1 0 0 0 1 1h13c3.309 0 6-2.691 6-6V8c0-3.309-2.691-6-6-6zm4 14c0 2.206-1.794 4-4 4H4V8c0-2.206 1.794-4 4-4h8c2.206 0 4 1.794 4 4v8z">
+                  </path>
+                  <path
+                    d="M15.292 7.295 12 10.587 8.708 7.295 7.294 8.709l3.292 3.292-3.292 3.292 1.414 1.414L12 13.415l3.292 3.292 1.414-1.414-3.292-3.292 3.292-3.292z">
+                  </path>
+                </svg>
+              </button>
+
+
+            </div>
+
           </div>
-       
-<div class="col-2">
-                      <button class="btn  remove-booking pt-4" data-car-id="{{this._id}} ">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M16 2H8C4.691 2 2 4.691 2 8v13a1 1 0 0 0 1 1h13c3.309 0 6-2.691 6-6V8c0-3.309-2.691-6-6-6zm4 14c0 2.206-1.794 4-4 4H4V8c0-2.206 1.794-4 4-4h8c2.206 0 4 1.794 4 4v8z"></path><path d="M15.292 7.295 12 10.587 8.708 7.295 7.294 8.709l3.292 3.292-3.292 3.292 1.414 1.414L12 13.415l3.292 3.292 1.414-1.414-3.292-3.292 3.292-3.292z"></path></svg>
-                      </button>
 
-                
+
+          {{/each}}
         </div>
+      </div>
+      <div style="display: none;" id="rightSide" style="background-color:#2edbcd ;" class="col-4 ">
+        <div class="col-md-12 mt-4">
+          <div class="car-wrap rounded ftco-animate " id="summaryContainer">
 
-       </div>
-        
+          </div>
 
-       {{/each}}
+        </div>
       </div>
     </div>
-    <div style="display: none;" id="rightSide" style="background-color:#2edbcd ;" class="col-4 ">
-          <div class="col-md-12 mt-4" >
-             <div class="car-wrap rounded ftco-animate " id="summaryContainer">
 
-             </div>
-           
-        </div>
+  </div>
+ 
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderDetails">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="orderDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body">
+      </div>
+      
     </div>
   </div>
-
-  </div>
+</div>
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Event listener for "Remove Booking" buttons
-  document.querySelectorAll('.remove-booking').forEach(button => {
-    button.addEventListener('click', function(event) {
-      event.preventDefault(); // Prevent the default action of the button
-      
-      const carId = button.dataset.carId; // Get the car ID from the data attribute
-      
-      // Send a request to remove the booking
-      axios.get(`/removeBookings?id=${carId}`)
-        .then(response => {
-          console.log('Booking removed:', response.data);
-          // Remove the booking element from the DOM
-          const count = document.getElementById('count')
-          let value = parseInt(count.textContent)
-          value--;
-          count.innerHTML = `${value} Items`
-          button.closest('.rowClick').remove(); 
-        })
-        .catch(error => {
-          console.error('Error removing booking:', error);
-        });
+  document.addEventListener('DOMContentLoaded', function () {
+    // Event listener for "Remove Booking" buttons
+    document.querySelectorAll('.remove-booking').forEach(button => {
+      button.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent the default action of the button
+
+        const carId = button.dataset.carId; // Get the car ID from the data attribute
+
+        // Send a request to remove the booking
+        axios.get(`/removeBookings?id=${carId}`)
+          .then(response => {
+            console.log('Booking removed:', response.data);
+            // Remove the booking element from the DOM
+            const count = document.getElementById('count')
+            let value = parseInt(count.textContent)
+            value--;
+            count.innerHTML = `${value} Items`
+            button.closest('.rowClick').remove();
+          })
+          .catch(error => {
+            console.error('Error removing booking:', error);
+          });
+      });
     });
   });
-});
   const rowClickElements = document.querySelectorAll('.rowClick');
 
-rowClickElements.forEach((rowClick) => {
+  rowClickElements.forEach((rowClick) => {
     rowClick.addEventListener('click', (e) => {
         e.preventDefault();
-         const rightSide = document.getElementById('rightSide')
-                    rightSide.style.display = 'block'
+        const rightSide = document.getElementById('rightSide');
+        rightSide.style.display = 'block';
         const carId = rowClick.getAttribute('data-car-id');
         axios.get(`/BookedCar?bookingId=${carId}`)
             .then(res => {
                 console.log(res);
-                 const summaryContainer = document.getElementById('summaryContainer');
-       
-if(summaryContainer) {
-                summaryContainer.innerHTML = `
-                <div class="image-container position-relative">
-                    <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${res.data.car.carImage}">
-                    <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0">
-                       
-                    </div>
-                </div>
-                <div class="text">
-                    <h2 class="mb-0"><a href="carDetails?id={{_id}}">${res.data.car.carName}</a></h2>
-                    <div class="d-flex mb-1">
-                        <span class="cat">${res.data.car.carModal}/${res.data.car.brandName}</span>
-                    </div>
-                        <p class="price m-0 p-0"> <span>${res.data.totalPrice}/Rent Amount</span></p>
+                const summaryContainer = document.getElementById('summaryContainer');
 
-                    <p class="d-flex mb-0 d-block">
-                         <a href="/paymentPageByCar?bookingId=${res.data._id}&&dropDate=${res.data.returnDate}&&pickDate=${res.data.pickupDate}&&totalPrice=${res.data.totalPrice}&&id=${res.data.car._id}" class="btn btn-primary py-2 mr-1">Pay</a> 
-                        <a href="/carDetails?id=${res.data.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>   </p>
-                </div>
-         `
-              } else {
-                console.error('Summary container not found in the DOM');
-            }            })
+                if (summaryContainer) {
+                    if (res.data.status === 'Confirmed') {
+                        console.log(res.data.status);
+
+                        summaryContainer.innerHTML = `
+                            <div class="image-container position-relative">
+                                <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${res.data.car.carImage}">
+                                <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0"></div>
+                            </div>
+                            <div class="text">
+                                <h2 class="mb-0"><a href="carDetails?id=${res.data.car._id}">${res.data.car.carName}</a></h2>
+                                <div class="d-flex mb-1">
+                                    <span class="cat">${res.data.car.carModal}/${res.data.car.brandName}</span>
+                                </div>
+                                <p class="price m-0 p-0"><span>${res.data.totalPrice}/Rent Amount</span></p>
+                                <p class="d-flex mb-0 d-block">
+                                <button type="text" class="btn btn-primary py-2 ml-1" id="orderBtn"> Details</button>
+                                    <a href="/carDetails?id=${res.data.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
+                                </p>
+                            </div>`;
+                            const orderBtn = document.getElementById('orderBtn');
+orderBtn.addEventListener('click', (e) => {
+  // Trigger a click event on the button that launches the modal
+  const modalLauncher = document.querySelector('[data-target="#orderDetails"]');
+  document.querySelector('#orderDetails .modal-body' ).innerHTML = `
+   <div class="justify-content-center row py-3">
+            <div style="align-items: center;" class="col-9">
+                         <div class="d-flex mb-1">
+                            <span class="cat">Payment Type </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2 m-0">Card<span></span></p>
+                        </div>
+                         <div class="d-flex mb-1">
+                            <span class="cat">Payment Status </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2 m-0">${res.data.status}<span></span></p>
+                        </div>
+                         <div class="d-flex m-0">
+                            <span class="cat">Days </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2 m-0">${res.data.totalDays} <span></span></p>
+                      </div>
+                           <div class="d-flex mb-1 mt-1 m-0 ">
+                            <span class="cat text-dark">Amount Payed </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2 m-0">${res.data.totalPrice} <span></span></p>
+                        </div>
+                         <div class="d-flex mb-0 m-0">
+                            <span class="cat">Transaction Id </span>
+                            </span>
+                            <p class="price ml-md-auto ml-2 m-0">${res.data.payment_id} <span></span></p>
+                        </div>
+                        </div>`
+  if (modalLauncher) {
+    modalLauncher.click();
+  }
+});
+                    } else {
+                        summaryContainer.innerHTML = `
+                            <div class="image-container position-relative">
+                                <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${res.data.car.carImage}">
+                                <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0"></div>
+                            </div>
+                            <div class="text">
+                                <h2 class="mb-0"><a href="carDetails?id=${res.data.car._id}">${res.data.car.carName}</a></h2>
+                                <div class="d-flex mb-1">
+                                    <span class="cat">${res.data.car.carModal}/${res.data.car.brandName}</span>
+                                </div>
+                                <p class="price m-0 p-0"><span>${res.data.totalPrice}/Rent Amount</span></p>
+                                <p class="d-flex mb-0 d-block">
+                                    <a href="/paymentPageByCar?bookingId=${res.data._id}&&dropDate=${res.data.returnDate}&&pickDate=${res.data.pickupDate}&&totalPrice=${res.data.totalPrice}&&id=${res.data.car._id}" class="btn btn-primary py-2 mr-1">Pay</a> 
+                                    <a href="/carDetails?id=${res.data.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
+                                </p>
+                            </div>`;
+                    }
+                } else {
+                    console.error('Summary container not found in the DOM');
+                }
+            })
             .catch(error => {
                 console.error(error);
             });
     });
 });
 
-     document.querySelectorAll('.payment-page').forEach(button => {
-  button.addEventListener('click', () => {
-    const row = button.closest('tr');
-    const bookingId = row.querySelector('.booking-id').value;
-    const pickDate = row.querySelector('.pick-date').value;
-    const dropDate = row.querySelector('.drop-date').value;
-    const id = row.querySelector('.car-id').value;
 
-    axios.post('/paymentPageByCar', { bookingId, pickDate, dropDate, id })
-      .then(resolve => {
-        window.location.href = '/bookingCar';
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+  document.querySelectorAll('.payment-page').forEach(button => {
+    button.addEventListener('click', () => {
+      const row = button.closest('tr');
+      const bookingId = row.querySelector('.booking-id').value;
+      const pickDate = row.querySelector('.pick-date').value;
+      const dropDate = row.querySelector('.drop-date').value;
+      const id = row.querySelector('.car-id').value;
+
+      axios.post('/paymentPageByCar', { bookingId, pickDate, dropDate, id })
+        .then(resolve => {
+          window.location.href = '/bookingCar';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
   });
-});
 
   // Use event delegation to handle clicks on dynamically added buttons
 
@@ -208,4 +300,3 @@ if(summaryContainer) {
   // Push a state into history to trigger popstate event when navigating back
   history.pushState({ pageReload: true }, '');
 </script>
-

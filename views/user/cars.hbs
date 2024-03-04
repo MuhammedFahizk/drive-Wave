@@ -540,7 +540,17 @@ function openCalendar(inputField) {
 }
 
 
+window.addEventListener('popstate', function (event) {
+        // Check if the popstate event is triggered by navigating back
+        if (event.state && event.state.pageReload) {
+            // Reload the page
+            location.reload();
 
+        }
+    });
+
+    // Push a state into history to trigger popstate event when navigating back
+    history.pushState({ pageReload: true }, '');
     
           
 

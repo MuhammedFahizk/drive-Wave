@@ -8,9 +8,10 @@ const router = express.Router();
 router.get('/', userController.getHomePage);
 router.get('/login', middleware.loginMiddleWare, userController.loginPage);
 router.get('/register', middleware.loginMiddleWare, userController.register);
+router.get('/logout', middleware.requireAuth, userController.logoutUser);
+
 router.post('/userLogin', userController.userLogin);
 router.get('/profile', middleware.requireAuth, userController.profilePage);
-router.get('/logout', middleware.requireAuth, userController.logoutUser);
 router.post('/editUser', middleware.requireAuth, userController.updateUser);
 router.post('/deleteUser', middleware.requireAuth, userController.deleteUser);
 router.get('/cars', userController.showCars);
@@ -26,6 +27,8 @@ router.get('/about', userController.aboutPage);
 router.post('/addWishlist', userController.addToWishlist);
 router.get('/whishList', middleware.mustLogin, userController.wishListPage);
 router.post('/userRecoveryMessage', userController.userRecoveryMessage);
+router.get('/carDetailsWhishList', userController.carDetailsWhishList);
+
 // router.get('/carBooking', middleware.mustLogin, userController.carBookingPage);
 router.get('/bookingCar', middleware.mustLogin, userController.bookingCar);
 router.get('/addDate', middleware.mustLogin, userController.addDate);
@@ -39,5 +42,6 @@ router.get('/userPayRent', middleware.mustLogin, userController.userPayRent);
 router.get('/paymentPageByCar', middleware.mustLogin, userController.paymentPageByCar);
 router.get('/BookedCar', middleware.mustLogin, userController.carDetails);
 router.post('/paymentVerification', middleware.mustLogin, userController.paymentVerification);
+router.post('/orderDetails', middleware.mustLogin, userController.orderDetails);
 
 module.exports = router;

@@ -1,4 +1,11 @@
-
+<style>
+  #inputField {
+    color: blue; /* Change 'blue' to the color you desire */
+}
+.fc-header-toolbar {
+    color: red; /* Change 'red' to the color you desire */
+}
+</style>
 <body>
     
 	  
@@ -42,8 +49,8 @@
 			    					<label for="" class="label">Drop-off location</label>
 			    					<input type="text" class="form-control" placeholder="City, Airport, Station, etc">
 			    				</div> --}}
-			    				<div class="d-flex">
-			    					<div class="form-group mr-2">
+			    				<div class="d-flex py-5">
+			    					<div class="form-group mr-2 p-2">
 			                <label for="" class="label">Pick-up date</label>
 			                <input type="text" class="form-control" name="pickDateData" id="pickDate" placeholder="Date">
 			              </div>
@@ -59,13 +66,13 @@
 			            <div class="form-group">
 			              <button type="submit" id="submitButton" value="Rent A Car Now" class="btn btn-secondary py-3 px-4">Rent A Car Now</button>
 			            </div>
-													                           <div id="calendar" class="p-0 m-0 request-form ftco-animate bg-primary" > </div>
 
 			    			</form>
 
 	  					</div>
-	  					<div class="col-md-8 d-flex align-items-center">
-	  						<div class="services-wrap rounded-right w-100">
+	  					<div  class="col-md-8 d-flex align-items-center">
+                <div id="calendar"  style="display: none;" class="p-0 m-0  ftco-animate services-wrap rounded-right col-8 p-3 " > </div>
+	  						<div id="servicePage" class=" services-wrap rounded-right w-100">
 	  							<h3 class="heading-section mb-4">Better Way to Rent Your Perfect Cars</h3>
 	  							<div class="row d-flex mb-4">
 					          <div class="col-md-4 d-flex align-self-stretch ftco-animate">
@@ -93,9 +100,11 @@
 					            </div>      
 					          </div>
 					        </div>
-					        <p><a href="#" class="btn btn-primary py-3 px-4">Reserve Your Perfect Car</a></p>
 	  						</div>
+
 	  					</div>
+                <div id="calendar"  class="p-0 m-0  ftco-animate col-12 " > </div>
+
 	  				</div>
 				</div>
   		</div>
@@ -107,68 +116,35 @@
     		<div class="row justify-content-center">
           <div class="col-md-12 heading-section text-center ftco-animate mb-5">
           	<span class="subheading">What we offer</span>
-            <h2 class="mb-2">Feeatured Vehicles</h2>
+            <h2 class="mb-2">Featured Vehicles</h2>
           </div>
         </div>
     		<div class="row">
     			<div class="col-md-12">
     				<div class="carousel-car owl-carousel">
+{{#each car}}
     					<div class="item">
     						<div class="car-wrap rounded ftco-animate">
-		    					<div class="img rounded d-flex align-items-end" style="background-image: url(images/car-1.jpg);">
+		    					<div class="img rounded d-flex align-items-end" style="background-image: url({{carImage}});">
 		    					</div>
 		    					<div class="text">
-		    						<h2 class="mb-0"><a href="#">Mercedes Grand Sedan</a></h2>
+		    						<h2 class="mb-0"><a href="#">{{carName}}</a></h2>
 		    						<div class="d-flex mb-3">
-			    						<span class="cat">Cheverolet</span>
-			    						<p class="price ml-auto">$500 <span>/day</span></p>
+			    						<span class="cat">{{carModal}}</span>
+			    						<p class="price ml-auto">{{dayRent}} <span>/day</span></p>
 		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Book now</a> <a href="#" class="btn btn-secondary py-2 ml-1">Details</a></p>
+	<div class="d-flex mb-3">
+			    						<span class="cat">Users</span>
+			    						<p class="price ml-auto">{{bookingsCount}} <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M20 2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-6 2.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM19 15H9v-.25C9 12.901 11.254 11 14 11s5 1.901 5 3.75V15z"></path><path d="M4 8H2v12c0 1.103.897 2 2 2h12v-2H4V8z"></path></svg>		    					
+		    						</div>
+
+
+
+		    						<p class="d-flex mb-0 d-block"><a href="/bookingCar?carId={{_id}}" class="btn btn-primary py-2 mr-1">Book now</a> <a href="/carDetails?id={{_id}}"class="btn btn-secondary py-2 ml-1">Details</a></p>
 		    					</div>
 		    				</div>
     					</div>
-    					<div class="item">
-    						<div class="car-wrap rounded ftco-animate">
-		    					<div class="img rounded d-flex align-items-end" style="background-image: url(images/car-2.jpg);">
-		    					</div>
-		    					<div class="text">
-		    						<h2 class="mb-0"><a href="#">Mercedes Grand Sedan</a></h2>
-		    						<div class="d-flex mb-3">
-			    						<span class="cat">Cheverolet</span>
-			    						<p class="price ml-auto">$500 <span>/day</span></p>
-		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Book now</a> <a href="#" class="btn btn-secondary py-2 ml-1">Details</a></p>
-		    					</div>
-		    				</div>
-    					</div>
-    					<div class="item">
-    						<div class="car-wrap rounded ftco-animate">
-		    					<div class="img rounded d-flex align-items-end" style="background-image: url(images/car-3.jpg);">
-		    					</div>
-		    					<div class="text">
-		    						<h2 class="mb-0"><a href="#">Mercedes Grand Sedan</a></h2>
-		    						<div class="d-flex mb-3">
-			    						<span class="cat">Cheverolet</span>
-			    						<p class="price ml-auto">$500 <span>/day</span></p>
-		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Book now</a> <a href="#" class="btn btn-secondary py-2 ml-1">Details</a></p>
-		    					</div>
-		    				</div>
-    					</div>
-    					<div class="item">
-    						<div class="car-wrap rounded ftco-animate">
-		    					<div class="img rounded d-flex align-items-end" style="background-image: url(images/car-4.jpg);">
-		    					</div>
-		    					<div class="text">
-		    						<h2 class="mb-0"><a href="#">Mercedes Grand Sedan</a></h2>
-		    						<div class="d-flex mb-3">
-			    						<span class="cat">Cheverolet</span>
-			    						<p class="price ml-auto">$500 <span>/day</span></p>
-		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Book now</a> <a href="#" class="btn btn-secondary py-2 ml-1">Details</a></p>
-		    					</div>
-		    				</div>
-    					</div>
+         {{/each}}
     				</div>
     			</div>
     		</div>
@@ -187,7 +163,7 @@
 
 	            <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
 	            <p>On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-	            <p><a href="#" class="btn btn-primary py-3 px-4">Search Vehicle</a></p>
+	            {{!-- <p><a href="" class="btn btn-primary py-3 px-4">Search Vehicle</a></p> --}}
 	          </div>
 					</div>
 				</div>
@@ -249,7 +225,7 @@
 				<div class="row justify-content-end">
 					<div class="col-md-6 heading-section heading-section-white ftco-animate">
             <h2 class="mb-3">Do You Want To Earn With Us? So Don't Be Late.</h2>
-            <a href="#" class="btn btn-primary btn-lg">Become A Driver</a>
+            <a href="/vendor" class="btn btn-primary btn-lg">Become A Vendor</a>
           </div>
 				</div>
 			</div>
@@ -328,7 +304,7 @@
       </div>
     </section>
 
-    <section class="ftco-section">
+    {{!-- <section class="ftco-section">
       <div class="container">
         <div class="row justify-content-center mb-5">
           <div class="col-md-7 heading-section text-center ftco-animate">
@@ -384,7 +360,7 @@
           </div>
         </div>
       </div>
-    </section>	
+    </section>	 --}}
 
     <section class="ftco-counter ftco-section img bg-light" id="section-counter">
 			<div class="overlay"></div>
@@ -439,6 +415,8 @@
 	    const calendarEl = document.getElementById('calendar');
 const pickDateInput = document.getElementById('pickDate');
 const dropDateInput = document.getElementById('dropDate');
+const servicePage = document.getElementById('servicePage')
+
 
 
 // Add event listeners to open the calendar when the input fields are clicked
@@ -456,6 +434,7 @@ function openCalendar(inputField) {
     const todayStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
     // Create the FullCalendar instance
+    servicePage.style.display = 'none'
     calendarEl.style.display = 'block'
     const calendar = new FullCalendar.Calendar(calendarEl, {
         themeSystem: 'bootstrap',

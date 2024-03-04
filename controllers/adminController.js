@@ -418,6 +418,7 @@ const BookingPage = async (req, res) => {
       const totalDays = Math.ceil((new Date(returnDate) - new Date(pickupDate))
       / (1000 * 60 * 60 * 24));
       return {
+        user,
         userId: user._id,
         userName: user.name,
         bookingDetails: {
@@ -432,7 +433,13 @@ const BookingPage = async (req, res) => {
         car: booking.car,
       };
     }));
-    res.status(200).render('admin/bookingPage', { allBookings });
+    const bookingsCount = allBookings.length;
+    const confirmedBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'Confirmed').length;
+    const pendingBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'pending').length;
+
+    res.status(200).render('admin/bookingPage', {
+      allBookings, bookingsCount, pendingBookingsCount, confirmedBookingsCount,
+    });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -600,16 +607,25 @@ async function cleanupSoftDeletedData() {
 }
 
 const deleteCancelUser = async (req, res) => {
-  const { id, userId, venderId } = req.query;
+  const {
+    id, userId, venderId, notificationId,
+  } = req.query;
+  const adminDoc = await admin.findOneAndUpdate(
+    { role: 'Admin' },
+    { $pull: { notifications: { _id: id } } },
+    { new: true },
+  );
   if (venderId) {
     const venderDoc = await Vendor.findOneAndUpdate(
-      { _id: userId },
-      { $unset: { deletedAt: '' } },
+      { _id: venderId },
+      { $unset: { deletedAt: '' }, $pull: { notifications: { _id: notificationId } } },
       { new: true },
     );
     if (!venderDoc) {
-      return res.status(404).send('User not found');
+      return res.status(404).send('Vender  not found');
     }
+
+    return res.status(200).redirect('/admin/Notification');
   }
   const userDoc = await User.findOneAndUpdate(
     { _id: userId },
@@ -620,11 +636,6 @@ const deleteCancelUser = async (req, res) => {
   if (!userDoc) {
     return res.status(404).send('User not found');
   }
-  const adminDoc = await admin.findOneAndUpdate(
-    { role: 'Admin' },
-    { $pull: { notifications: { _id: id } } },
-    { new: true },
-  );
 
   if (!adminDoc) {
     return res.status(404).send('Admin not found');

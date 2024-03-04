@@ -221,8 +221,7 @@ const vendorNotification = async (req, res) => {
 const venderRecoveryMessage = async (req, res) => {
   try {
     const { ...data } = req.body;
-    const { venderId } = req.session;
-
+    const { ownerId } = req.session;
     // Find the admin with the role 'Admin'
     const adminDoc = await admin.findOne({ role: 'Admin' });
 
@@ -232,9 +231,10 @@ const venderRecoveryMessage = async (req, res) => {
 
     // Update the notifications field of the admin document
     adminDoc.notifications.push({
-      venderId,
+      venderId: ownerId,
       message: data.message, // Assuming the message is provided in the request body
-      sender: data.sender, // Assuming the sender is provided in the request body
+      sender: data.sender,
+      notificationsId: data._id, // Assuming the sender is provided in the request body
       createdAt: new Date(),
     });
 

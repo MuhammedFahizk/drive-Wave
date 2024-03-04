@@ -163,10 +163,11 @@
             </div>
             <div class="col-md-5">
                 <a type="button" id="recover"  data-bs-toggle="modal" class="btn btn-outline-warning mb-2" data-bs-target="#viewVendorDetails" data-vendorId='{{_id}}'>
-                    Mesage To Admin
+                    Message To Admin
                 </a>
+				{{this}}
                     <div style="display:none" id="adminMessage" class="car-wrap rounded ftco-animate ">
-                         <form action='/vendor/RecoveryMessage' id="contactForm" class="bg-light p-5 pb-2 contact-form"  method="post">
+                         <form action='/vendor/RecoveryMessage?' id="contactForm" class="bg-light p-5 pb-2 contact-form"  method="post">
               <div class="form-group">
                 <input type="text" name="name" class="form-control" placeholder="Your Name">
                 <p style="color: red; font-size:small" id="nameError"></p>
@@ -179,6 +180,7 @@
               <div class="form-group">
                 <input type="text" name="subject" class="form-control" placeholder="Subject">
                 <p style="color: red; font-size:small" id="subjectError"></p>
+				<input type="hidden" name="_id" value="{{this._id}}">
 
               </div>
               <div class="form-group">

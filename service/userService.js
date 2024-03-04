@@ -2,8 +2,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/order */
 /* eslint-disable no-underscore-dangle */
-const { Booking } = require('../models/booking');
 const { User } = require('../models/users');
+const { Car } = require('../models/car'); // Assuming this is the correct path to your Car model
 const { ObjectId } = require('mongoose').Types;
 const Razorpay = require('razorpay');
 const { createHmac } = require('crypto');
@@ -16,31 +16,48 @@ const instance = new Razorpay({
 });
 
 const findCarAvailability = async (pickDate, dropDate) => {
-  const model = [
-    {
-      $match:
-     {
-       $or: [
-         {
-           pickDate: { $gte: pickDate, $lte: dropDate },
-         },
-         {
-           dropDate: { $gte: pickDate, $lte: dropDate },
-         },
-       ],
-     },
-    },
-    {
-      $group: {
-        _id: '$cars',
-        count: { $sum: 1 },
-      },
-    },
-  ];
-
   try {
-    const availability = await Booking.aggregate(model);
-    return availability;
+    const bookedCars = await User.aggregate([
+      {
+        $unwind: '$bookedCar',
+      },
+      {
+        $match: {
+          $or: [
+            {
+              $and: [
+                { 'bookedCar.pickupDate': { $lte: dropDate } },
+                { 'bookedCar.returnDate': { $gte: pickDate } },
+              ],
+            },
+            {
+              $and: [
+                { 'bookedCar.pickupDate': { $gte: pickDate } },
+                { 'bookedCar.returnDate': { $lte: dropDate } },
+              ],
+            },
+            {
+              $and: [
+                { 'bookedCar.pickupDate': { $lt: pickDate } },
+                { 'bookedCar.returnDate': { $gt: dropDate } },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        $group: {
+          _id: '$bookedCar.car',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const bookedCarIds = bookedCars.map((car) => car._id);
+
+    const availableCars = await Car.find({
+      _id: { $nin: bookedCarIds }, // Exclude cars that are booked
+    });
+    return availableCars;
   } catch (error) {
     console.error('Error finding availability:', error);
     throw error;
@@ -123,10 +140,9 @@ function verifyPayment(details) {
   }
 }
 
-const changeStatus = (details, _id, method) => new Promise((resolve, reject) => {
-  console.log(method);
+const changeStatus = (bookingId, _id, method) => new Promise((resolve, reject) => {
   User.findOneAndUpdate(
-    { _id, 'bookedCar._id': details.receipt },
+    { _id, 'bookedCar._id': bookingId },
     {
       $set: { 'bookedCar.$.status': 'Confirmed' },
       'bookedCar.$.paymentMethod': method,
@@ -136,6 +152,31 @@ const changeStatus = (details, _id, method) => new Promise((resolve, reject) => 
     .then((updatedUser) => resolve(updatedUser))
     .catch((error) => reject(error));
 });
+const FeaturedCar = async () => {
+  const mostBookedCar = await Car.aggregate([
+    {
+      $match: {
+        bookings: { $exists: true, $ne: [] }, // Filter cars that have bookings
+      },
+    },
+    {
+      $project: {
+        carName: 1,
+        bookingsCount: { $size: '$bookings' },
+        dayRent: 1,
+        carModal: 1,
+        carImage: 1,
+      },
+    },
+    {
+      $sort: { bookingsCount: -1 }, // Sort by bookingsCount in descending order
+    },
+    {
+      $limit: 4, // Take only the first result, which will be the car with the most bookings
+    },
+  ]);
+  return mostBookedCar;
+};
 module.exports = {
   findCarAvailability,
   confirm,
@@ -143,4 +184,5 @@ module.exports = {
   razerPayCreation,
   verifyPayment,
   changeStatus,
+  FeaturedCar,
 };

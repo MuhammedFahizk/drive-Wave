@@ -27,6 +27,9 @@ const adminSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'vendor',
     },
+    notificationsId: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
     message: String,
     sender: String,
     createdAt: { type: Date, default: Date.now },

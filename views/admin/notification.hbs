@@ -153,7 +153,7 @@
 			</ul>
     {{#each data}}
 
-<ul class="box-info col-md-12">
+{{!-- <ul class="box-info col-md-12">
     <li>
         <div class="row col-md-12">
             <div class="col-md-7">
@@ -167,13 +167,13 @@
                 <a type="button" href="/admin/disableVendor?id={{_id}}" class="btn btn-outline-danger mb-2">
                     Disable
                 </a>
-                <a type="button" href="/admin/enableVendor?id={{_id}}" methode="post" class="btn btn-outline-success mb-2">
+                <a type="button" href="/admin/enableVendor?id={{_id}}" method="post" class="btn btn-outline-success mb-2">
                     Enable
                 </a>
             </div>
         </div>
     </li>
-</ul>
+</ul> --}}
 
                 {{/each}}
 				 {{#each adminDoc.notifications}}
@@ -187,20 +187,20 @@
   <p>Phone: {{userId.phone}}</p>
   <p>Email: {{userId.email}}</p>
 {{else}}
-  <p>User information not available</p>
 {{/if}}
             </div>
+			{{this}}
 			<div class="col-md-3">
-				
                 <a type="button" href="/admin/deleteUserData?id={{_id}}" class=" col-12 btn btn-outline-danger mb-2">
                     Disable
                 </a>
-				{{#if adminDoc.userId}}
-                <a type="button" href="/admin/deleteCancelUser?id={{_id}}&&userId={{userId._id}}" methode="post" class=" col-12 btn btn-outline-success mb-2">
-                    Enable
+				{{#if this.userId}}
+				
+                <a type="button" href="/admin/deleteCancelUser?id={{_id}}&&userId={{userId._id}}" method="post" class=" col-12 btn btn-outline-success mb-2">
+                    Enabled
                 </a>
 				{{else}}
-				<a type="button" href="/admin/deleteCancelUser?id={{_id}}&&vender={{venderId._id}}" methode="post" class=" col-12 btn btn-outline-success mb-2">
+				<a type="button" href="/admin/deleteCancelUser?id={{_id}}&&venderId={{venderId}}&&notificationId={{this.notificationsId}}" method="post" class=" col-12 btn btn-outline-success mb-2">
                     Enable
                 </a>
 				{{/if}}

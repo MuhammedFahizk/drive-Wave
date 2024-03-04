@@ -16,7 +16,7 @@ const userService = require('../service/userService');
 const { v4: uuidv4 } = require('uuid');
 const { log } = require('handlebars');
 
-const getHomePage = (req, res) => {
+const getHomePage = async (req, res) => {
   const { previous } = req.session;
   if (previous) {
     if (!previous) {
@@ -29,11 +29,12 @@ const getHomePage = (req, res) => {
 
     return res.redirect(`${previous}?carId=${carId}`);
   }
+  const car = await userService.FeaturedCar();
   if (!req.session.name) {
-    return res.render('user/index');
+    return res.render('user/index', { car });
   }
   const { name } = req.session;
-  return res.render('user/index', { name });
+  return res.render('user/index', { name, car });
 };
 
 const loginPage = (req, res) => {
@@ -221,7 +222,7 @@ async function filterCars(req, res) {
     {
       $match: {
         _id: {
-          $nin: AvailabilityId,
+          $in: AvailabilityId,
         },
         TransmitionType: { $in: transmission },
         fuelType: { $in: fuel },
@@ -429,73 +430,14 @@ const wishListPage = async (req, res) => {
     if (!cars) {
       return res.render('user/wishList');
     }
-
-    return res.render('user/wishList', { data: cars.whishList, name });
+    const count = cars.whishList.length;
+    return res.render('user/wishList', { data: cars.whishList, name, count });
   } catch (error) {
     console.error('Error fetching wishlist:', error);
     return res.status(500).json({ error: 'Error fetching wishlist', message: error.message });
   }
 };
 
-// const carBookingPage = async (req, res) => {
-//   const {
-//     pickDate, dropDate, _id, name, bookingId,
-//   } = req.session;
-//   let { carId } = req.query;
-//   if (!carId) {
-//     carId = req.session.carId;
-//   }
-//   req.session.carId = carId;
-//   const car = await Car.findById(carId);
-//   const user = await User.findById(_id);
-//   const address = user.address[0];
-//   if (!car || !user) {
-//     return res.status(402).json('not find car or user');
-//   }
-//   try {
-//     if (pickDate && dropDate) {
-//       const formattedPickDate = userService.formattedDate(pickDate);
-//       const formattedDropDate = userService.formattedDate(dropDate);
-//       const dayDifferenceIn = differenceInDays(dropDate, pickDate);
-//       const amount = car.dayRent * dayDifferenceIn;
-//       req.session.amount = amount;
-//       if (bookingId) {
-//         if (car.bookings.includes(bookingId)) {
-//           res.status(200).render('user/booking', {
-//             car,
-//             user,
-//             name,
-//             amount,
-//             address,
-//             payment: 'payment',
-//             dayDifferenceIn,
-//             formattedPickDate,
-//             formattedDropDate,
-//           });
-//         }
-//       }
-//       req.session.carId = carId;
-//       return res.status(200).render('user/booking', {
-//         car,
-//         user,
-//         dayDifferenceIn,
-//         formattedPickDate,
-//         formattedDropDate,
-//         name,
-//         amount,
-//         address,
-//         bookingId,
-//         booking: 'booking',
-//       });
-//     }
-//   } catch (error) {
-//     console.error('Error:', error);
-//     return res.status(500).send('An error occurred while processing the recovery message');
-//   }
-//   return res.status(200).render('user/booking', {
-//     car, user, name, address, booking: 'booking',
-//   });
-// };
 const bookingCar = async (req, res) => {
   const {
     pickDate, dropDate, _id, name, bookingId,
@@ -529,6 +471,7 @@ const bookingCar = async (req, res) => {
         formattedPickDate,
         formattedDropDate,
         payment: 'payment',
+        bookingId,
       });
     }
     return res.status(200).render('user/checkOut', {
@@ -546,9 +489,24 @@ const bookingCar = async (req, res) => {
 };
 const addDate = async (req, res) => {
   const { pickDate, dropDate } = req.query;
-  req.session.pickDate = pickDate;
-  req.session.dropDate = dropDate;
-  res.status(200).redirect('/bookingCar');
+  const { carId } = req.session;
+  const pickDateNew = new Date(pickDate);
+  const dropDateNew = new Date(dropDate);
+  let AvailabilityId = []; // Initialize as an array
+  AvailabilityId = await userService.findCarAvailability(pickDateNew, dropDateNew);
+
+  // Filter the availabilityIds array to check if carId exists
+  AvailabilityId = AvailabilityId.map((entry) => entry._id);
+  const matchingCars = AvailabilityId.filter((id) => id.toString() === carId);
+  // Debugging output
+  // If matchingCars array is empty, the car is available
+  if (matchingCars.length !== 0) {
+    req.session.pickDate = pickDate;
+    req.session.dropDate = dropDate;
+    return res.status(200).redirect('/bookingCar');
+  }
+  // If matchingCars array is not empty, the car is already booked
+  return res.status(409).json({ message: 'Car is already booked' });
 };
 
 const changeDate = async (req, res) => {
@@ -575,7 +533,7 @@ const findCarByDate = async (req, res) => {
     {
       $match: {
         _id: {
-          $nin: AvailabilityId,
+          $in: AvailabilityId,
         },
       },
     },
@@ -620,8 +578,7 @@ const userRecoveryMessage = async (req, res) => {
       sender: data.sender, // Assuming the sender is provided in the request body
       createdAt: new Date(),
     });
-
-    // Save the updated admin document
+a    // Save the updated admin document
     await adminDoc.save();
 
     return res.status(201).redirect('/profile');
@@ -630,7 +587,14 @@ const userRecoveryMessage = async (req, res) => {
     return res.status(500).send('An error occurred while processing the recovery message');
   }
 };
-
+const carDetailsWhishList = async (req, res) => {
+  const { id } = req.query;
+  const car = await Car.findById(id);
+  if (!car) {
+    return res.status(200).json('car not find');
+  }
+  return res.status(200).json(car);
+};
 // eslint-disable-next-line consistent-return
 const userBookedCar = async (req, res) => {
   const formData = req.body;
@@ -748,6 +712,7 @@ const carDetails = async (req, res) => {
   try {
     const user = await User.findById(_id).populate('bookedCar.car');
     const thisBooking = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
+
     return res.json(thisBooking);
   } catch (error) {
     return res.status(500).json('server error', error);
@@ -758,13 +723,25 @@ const paymentVerification = async (req, res) => {
   try {
     const { _id } = req.session;
     await userService.verifyPayment(req.body);
-    const updatedUser = await userService.changeStatus(req.body.razerPay, _id, req.body.method);
+    const updatedUser = await userService.changeStatus(req.body.bookingId, _id, req.body.method);
     req.session.bookingId = '';
     res.status(200).json(updatedUser);
   } catch (error) {
     console.error('Payment verification failed:', error);
     res.status(500).json({ error: 'Payment verification failed' });
   }
+};
+
+const orderDetails = async (req, res) => {
+  const { _id } = req.session;
+  const { bookingId } = req.body;
+  const user = await User.findById(_id).populate('bookedCar.car');
+  const thisCar = user.bookedCar.find((bookings) => bookings.id.toString() === bookingId);
+
+  if (!thisCar) {
+    return res.status(401).json({ error: 'Error finding booking details' });
+  }
+  return res.status(200).json({ thisCar, user });
 };
 module.exports = {
   getHomePage,
@@ -788,6 +765,7 @@ module.exports = {
   addToWishlist,
   wishListPage,
   userRecoveryMessage,
+  carDetailsWhishList,
   // carBookingPage,
   bookingCar,
   addDate,
@@ -801,4 +779,5 @@ module.exports = {
   paymentPageByCar,
   carDetails,
   paymentVerification,
+  orderDetails,
 };
