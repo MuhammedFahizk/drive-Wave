@@ -54,8 +54,24 @@ async function loginOtp(req, res) {
     }
   }
 }
-const showAdminDashboard = (req, res) => {
-  res.render('admin/index', { NotificationCount });
+const showAdminDashboard = async (req, res) => {
+  const customers = await User.find().countDocuments();
+  const dailyRents = adminService.dailyRents();
+  const dailyRentalAmount = await adminService.dailyRentalAmount();
+  const dailyRentalPending = await adminService.dailyRentalAmountPending();
+  let confirmAmount = await adminService.confirmAmount();
+  confirmAmount = confirmAmount[0].totalRentalAmount;
+  let pendingAmount = await adminService.pendingAmount();
+  pendingAmount = pendingAmount[0].totalRentalAmount;
+  res.render('admin/index', {
+    NotificationCount,
+    dailyRents,
+    dailyRentalAmount,
+    dailyRentalPending,
+    confirmAmount,
+    pendingAmount,
+    customers,
+  });
 };
 async function showAdminCarPage(req, res) {
   const car = await Car.find();
@@ -453,8 +469,19 @@ const payment = async (req, res) => {
     const dailyRents = adminService.dailyRents();
     const dailyRentalAmount = await adminService.dailyRentalAmount();
     const dailyRentalPending = await adminService.dailyRentalAmountPending();
+    const conformedAmount = dailyRentalAmount
+      .reduce((total, current) => total + current.totalRentalAmount, 0);
+    const pendingAmount = dailyRentalPending
+      .reduce((total, current) => total + current.totalRentalAmount, 0);
+    const CustomersCount = customers.length;
     return res.status(200).render('admin/payment', {
-      customers, dailyRents, dailyRentalAmount, dailyRentalPending,
+      customers,
+      dailyRents,
+      dailyRentalAmount,
+      dailyRentalPending,
+      conformedAmount,
+      pendingAmount,
+      CustomersCount,
     });
   } catch (error) {
     console.error(error);

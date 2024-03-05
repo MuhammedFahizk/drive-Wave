@@ -22,7 +22,7 @@
 			<span class="text">AdminHub</span>
 		</a>
 		<ul class="side-menu top">
-			<li class="active">
+			<li >
 				<a href="/admin/DashboardPage">
 					<i class='bx bxs-dashboard'></i>
 					<span class="text">Dashboard</span>
@@ -52,7 +52,7 @@
 					<span class="text">Booking</span>
 				</a>
 			</li>
-			<li>
+			<li class="active" >
 				<a href="/admin/Payment">
 					<i class='bx bxs-group'></i>
 					<span class="text">Payment</span>
@@ -130,24 +130,23 @@
 
 			<ul class="box-info">
 				<li>
-					<i class='bx bxs-calendar-check'></i>
-					<span class="text">
-						<h3>1020</h3>
-						<p>New Order</p>
+					<i class='bx bx-rupee'></i> <span class="text">
+						<h3>{{conformedAmount}}</h3>
+						<p>Confirm Amount</p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bx-rupee'></i> <span class="text">
+						<h3>{{pendingAmount}}</h3>
+						<p>Pending Amount</p>
 					</span>
 				</li>
 				<li>
 					<i class='bx bxs-group'></i>
+
 					<span class="text">
-						<h3>2834</h3>
-						<p>Visitors</p>
-					</span>
-				</li>
-				<li>
-					<i class='bx bxs-dollar-circle'></i>
-					<span class="text">
-						<h3>$2543</h3>
-						<p>Total Sales</p>
+						<h3>{{CustomersCount}}</h3>
+						<p>Users</p>
 					</span>
 				</li>
 			</ul>
@@ -204,46 +203,48 @@
 
 </html>
 <script>
-  const ctx = document.getElementById('myChart');
+	const ctx = document.getElementById('myChart');
 
- new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: [{{#each dailyRents}} '{{this}}',{{/each}}],
-    datasets: [{
-      label: 'Confirmed',
-      data: [{{#each dailyRentalAmount}}{{totalRentalAmount}},{{/each}}],
-      borderWidth: 1,
-      backgroundColor: "rgba(151,187,205,0.2)",
-      borderColor: "#000",
-      pointBackgroundColor: "#000",
-      pointBorderColor: "#fff",
-      pointHoverBackgroundColor: "#fff",
-      pointHoverBorderColor: "#00",
-      cubicInterpolationMode: 'monotone' // Set interpolation mode here
+	new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [{{#each dailyRents}}'{{this}}',{{/each}}],
+        datasets: [
+            {
+                label: 'Confirmed',
+                data: [{{#each dailyRentalAmount}}{{totalRentalAmount}},{{/each}}],
+                borderWidth: 1,
+                backgroundColor: "rgba(151,187,205,0.2)",
+                borderColor: "#000",
+                pointBackgroundColor: "#000",
+                pointBorderColor: "#fff",
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: "#000",
+                cubicInterpolationMode: 'monotone' // Set interpolation mode here
+            },
+            {
+                label: 'Pending',
+                data: [{{#each dailyRentalPending}}{{totalRentalAmount}},{{/each}}],
+                borderWidth: 1,
+                backgroundColor: "rgba(255,187,151,0.2)",
+                borderColor: "rgba(255,187,151,1)",
+                pointBackgroundColor: "#000",
+                pointBorderColor: "#fff",
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: "rgba(255,187,151,1)",
+                cubicInterpolationMode: 'monotone' // Set interpolation mode here
+            }
+        ]
     },
-	{
-    labels: [{{#each dailyRents}} '{{this}}',{{/each}}],
-      data: [{{#each dailyRentalPending}}{{totalRentalAmount}},{{/each}}],
-      label: 'Pending',
-        borderWidth: 1,
-        backgroundColor: "rgba(255,187,151,0.2)",
-        borderColor: "rgba(255,187,151,1)",
-        pointBackgroundColor: "#000",
-        pointBorderColor: "#fff",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(255,187,151,1)",
-        cubicInterpolationMode: 'monotone' // Set interpolation mode here
-      }]
-  },
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    },
-  }
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
 });
+
 
 
 </script>

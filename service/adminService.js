@@ -38,6 +38,41 @@ const dailyRents = () => {
 
   return last7DaysNames;
 };
+const confirmAmount = async () => {
+  const sum = await User.aggregate([
+    { $unwind: '$bookedCar' },
+    {
+      $match: {
+        'bookedCar.status': 'Confirmed',
+      },
+    },
+    {
+      $group: {
+        _id: 0,
+        totalRentalAmount: { $sum: '$bookedCar.totalPrice' },
+      },
+    },
+  ]);
+  return sum;
+};
+
+const pendingAmount = async () => {
+  const sum = await User.aggregate([
+    { $unwind: '$bookedCar' },
+    {
+      $match: {
+        'bookedCar.status': 'pending',
+      },
+    },
+    {
+      $group: {
+        _id: 0,
+        totalRentalAmount: { $sum: '$bookedCar.totalPrice' },
+      },
+    },
+  ]);
+  return sum;
+};
 const dailyRentalAmount = async () => {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
@@ -148,4 +183,6 @@ module.exports = {
   dailyRents,
   dailyRentalAmount,
   dailyRentalAmountPending,
+  confirmAmount,
+  pendingAmount,
 };

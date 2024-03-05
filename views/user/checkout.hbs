@@ -429,15 +429,77 @@
     if (paymentBtn) {
         paymentBtn.addEventListener('click', function () {
             const cardName = document.querySelector('#cardPay input[name="cardHolderName"]').value;
-            const cardNumber = document.querySelector('#cardPay input[name="cardNumber"]').value;
+            let cardNumber = document.querySelector('#cardPay input[name="cardNumber"]').value.trim();
             const cvv = document.querySelector('#cardPay input[name="cvv"]').value;
             const expiryMonth = document.querySelector('#cardPay input[name="expiryMonth"]').value;
             const expiryYear = document.querySelector('#cardPay input[name="expiryYear"]').value;
             const errorPayment = document.getElementById('errorPayment');
             const bookingId = document.getElementById('bookingId').value;
+            cardNumber = cardNumber.replace(/\s/g, '');
+const cardNumberPattern = /^\d{16}$/;
+const cvvPattern = /^\d{3,4}$/;
+const expiryMonthPattern = /^(0[1-9]|1[0-2])$/;
+
+if (cardNumber === '') {
+    errorPayment.textContent = 'Please enter card number.';
+    return false;
+}
+
+if (!cardNumberPattern.test(cardNumber)) {
+    errorPayment.textContent = 'Please enter a valid card number (16 digits).';
+    return false;
+}
+
+if (cardName === '') {
+    errorPayment.textContent = 'Please enter card holder Name';
+    return false;
+}
+
+if (cvv === '') {
+    errorPayment.textContent = 'Please enter CVV.';
+    return false;
+}
+
+if (!cvvPattern.test(cvv)) {
+    errorPayment.textContent = 'Please enter a valid CVV (3 or 4 digits).';
+    return false;
+}
+
+if (expiryMonth === '') {
+    errorPayment.textContent = 'Please enter expiry month.';
+    return false;
+}
+
+if (!expiryMonthPattern.test(expiryMonth)) {
+    errorPayment.textContent = 'Please enter a valid expiry month (01 to 12).';
+    return false;
+}
+
+const currentYear = new Date().getFullYear();
+const expiryYearPattern = /^\d{2}$/;
+
+if (expiryYear === '') {
+    errorPayment.textContent = 'Please enter expiry year.';
+    return false;
+}
+
+if (!expiryYearPattern.test(expiryYear)) {
+    errorPayment.textContent = 'Please enter a valid expiry year.';
+    return false;
+}
+
+// Convert two-digit year to four-digit year
+const parsedExpiryYear = parseInt(expiryYear, 10);
+const fullExpiryYear = currentYear.toString().slice(0, 2) + expiryYear;
+
+if (parseInt(fullExpiryYear, 10) < currentYear) {
+    errorPayment.textContent = 'Expiry year must be in the future.';
+    return false;
+}
+    errorPayment.textContent = '';
 
 
-            // Define the Visa card regex pattern
+
 
             console.log("Card details:", cardName, cardNumber, cvv, expiryMonth, expiryYear);
             axios.post('/orderDetails', {
@@ -471,66 +533,72 @@
         )
     }
 
-    const paymentVerification = (resp, bookingId) => {
-        console.log(bookingId)
-        axios.post('/paymentVerification',
-            {
-                resp,
-                bookingId,
-                method: 'Card'
-            }).then((response) => {
-                sessionStorage.setItem('formData', '');
+   const paymentVerification = (resp, bookingId) => {
+    console.log(bookingId);
+    axios.post('/paymentVerification', {
+        resp,
+        bookingId,
+        method: 'Card'
+    }).then((response) => {
+        sessionStorage.setItem('formData', '');
 
-                const bookedCar = response.data.bookedCar[0]
-                console.log(bookedCar)
-                document.querySelector('#paymentSuccess .modal-body').innerHTML = `
-         <div class="justify-content-center row py-4">
+        const bookedCar = response.data.bookedCar[0];
+        console.log(bookedCar);
 
-            <p style="font-size: 35px;" class="text-success">Payment successful!</p>
-        </div>
-        
-        <div class="justify-content-center row py-3">
-            <div style="align-items: center;" class="col-9">
-                         <div class="d-flex mb-1">
-                            <span class="cat">Payment Type </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">Card<span></span></p>
-                        </div>
-                         <div class="d-flex m-0">
-                            <span class="cat">Email </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">${response.data.email} <span></span></p>
-                        </div> <div class="d-flex mb-0 m-0">
-                            <span class="cat">Phone </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">${response.data.phone} <span></span></p>
-                        </div>
-                           <div class="d-flex mb-1 mt-1 m-0 ">
-                            <span class="cat text-dark">Amount Payed </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">${bookedCar.totalPrice} <span></span></p>
-                        </div>
-                         <div class="d-flex mb-0 m-0">
-                            <span class="cat">Transaction Id </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">${bookedCar.payment_id} <span></span></p>
-                        </div>
-                        </div>
+        document.querySelector('#paymentSuccess .modal-body').innerHTML = `
+            <div class="justify-content-center row py-4">
+                <p style="font-size: 35px;" class="text-success">Payment successful!</p>
+            </div>
 
-        </div>
+            <div class="justify-content-center row py-3">
+                <div style="align-items: center;" class="col-9">
+                    <div class="d-flex mb-1">
+                        <span class="cat">Payment Type </span>
+                        </span>
+                        <p class="price ml-md-auto ml-2 m-0">Card<span></span></p>
+                    </div>
+                    <div class="d-flex m-0">
+                        <span class="cat">Email </span>
+                        </span>
+                        <p class="price ml-md-auto ml-2 m-0">${response.data.email} <span></span></p>
+                    </div>
+                    <div class="d-flex mb-0 m-0">
+                        <span class="cat">Phone </span>
+                        </span>
+                        <p class="price ml-md-auto ml-2 m-0">${response.data.phone} <span></span></p>
+                    </div>
+                    <div class="d-flex mb-1 mt-1 m-0 ">
+                        <span class="cat text-dark">Amount Payed </span>
+                        </span>
+                        <p class="price ml-md-auto ml-2 m-0">${bookedCar.totalPrice} <span></span></p>
+                    </div>
+                    <div class="d-flex mb-0 m-0">
+                        <span class="cat">Transaction Id </span>
+                        </span>
+                        <p class="price ml-md-auto ml-2 m-0">${bookedCar.payment_id} <span></span></p>
+                    </div>
+                </div>
+            </div>
+
             <div style="align-items: center;" class=" justify-content-center col-12 row my-3">
-                         <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
-                         <a href='/bookedCars' type="button" class="btn btn-secondary" data-dismiss="modal">Bookings</a>
+                <button type="button" id="close" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
+            </div>
+        `;
 
-</div>
-`
-                $('#paymentSuccess').modal('show');
-            }).catch((error) => {
-                console.error(error);
+        $('#paymentSuccess').modal('show');
+
+        // Event listener for the close button
+        const close = document.getElementById('close');
+        if (close) {
+            close.addEventListener('click', () => {
+                // Redirect to the bookedCars page
+                window.location.href = '/bookedCars';
             });
-    }
-
-
+        }
+    }).catch((error) => {
+        console.error(error);
+    });
+};
 
     document.addEventListener('DOMContentLoaded', function () {
         const submitBtn = document.getElementById('submitButton');
