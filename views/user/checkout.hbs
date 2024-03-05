@@ -408,7 +408,7 @@
             console.log(formDatas);
 
             e.preventDefault();
-            axios.post('/userBookedCar', formDatas)
+            axios.post('/bookedCar', formDatas)
                 .then((response) => {
 
                     console.log('message:', response.data);
@@ -535,7 +535,7 @@ if (parseInt(fullExpiryYear, 10) < currentYear) {
 
    const paymentVerification = (resp, bookingId) => {
     console.log(bookingId);
-    axios.post('/paymentVerification', {
+    axios.post('/payment/verification', {
         resp,
         bookingId,
         method: 'Card'

@@ -153,7 +153,7 @@
         const carId = button.dataset.carId; // Get the car ID from the data attribute
 
         // Send a request to remove the booking
-        axios.get(`/removeBookings?id=${carId}`)
+        axios.get(`/bookings/remove?id=${carId}`)
           .then(response => {
             console.log('Booking removed:', response.data);
             // Remove the booking element from the DOM
@@ -252,7 +252,7 @@ orderBtn.addEventListener('click', (e) => {
                                 </div>
                                 <p class="price m-0 p-0"><span>${res.data.totalPrice}/Rent Amount</span></p>
                                 <p class="d-flex mb-0 d-block">
-                                    <a href="/paymentPageByCar?bookingId=${res.data._id}&&dropDate=${res.data.returnDate}&&pickDate=${res.data.pickupDate}&&totalPrice=${res.data.totalPrice}&&id=${res.data.car._id}" class="btn btn-primary py-2 mr-1">Pay</a> 
+                                    <a href="/paymentPage?bookingId=${res.data._id}&&dropDate=${res.data.returnDate}&&pickDate=${res.data.pickupDate}&&totalPrice=${res.data.totalPrice}&&id=${res.data.car._id}" class="btn btn-primary py-2 mr-1">Pay</a> 
                                     <a href="/carDetails?id=${res.data.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
                                 </p>
                             </div>`;
@@ -276,7 +276,7 @@ orderBtn.addEventListener('click', (e) => {
       const dropDate = row.querySelector('.drop-date').value;
       const id = row.querySelector('.car-id').value;
 
-      axios.post('/paymentPageByCar', { bookingId, pickDate, dropDate, id })
+      axios.post('/paymentPage', { bookingId, pickDate, dropDate, id })
         .then(resolve => {
           window.location.href = '/bookingCar';
         })

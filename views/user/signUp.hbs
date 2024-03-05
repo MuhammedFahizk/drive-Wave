@@ -173,7 +173,7 @@ formDataElement.addEventListener('submit', function(event) {
         displayErrors(errors);
     } else {
         // If no errors, submit the form using Axios
-        axios.post('/registrationValidation', { name, email, password1, password, age,phone,place,zip, houseName, licenseNumber })
+        axios.post('/registration', { name, email, password1, password, age,phone,place,zip, houseName, licenseNumber })
             .then(response => {
                 console.log('Form submitted successfully');
                 // Handle success response

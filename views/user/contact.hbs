@@ -131,7 +131,7 @@
 
   if (isValid) {
     // If form is valid, make Axios API call here
-    axios.post('/contactMessage', { name, email, subject, message })
+    axios.post('/Message', { name, email, subject, message })
       .then(response => {
         // Handle response if needed
         console.log(response.data);

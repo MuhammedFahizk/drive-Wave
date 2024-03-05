@@ -98,7 +98,7 @@
         const carId = button.dataset.carId; // Get the car ID from the data attribute
 
         // Send a request to remove the booking
-        axios.get(`/removeWishlist?id=${carId}`)
+        axios.get(`/wishlist/remove?id=${carId}`)
           .then(response => {
             console.log('Booking removed:', response.data);
             // Remove the booking element from the DOM
@@ -124,7 +124,7 @@
       const carId = rowClick.getAttribute('data-car-id');
       console.log(carId)
 
-      axios.get(`/carDetailsWhishList?id=${carId}`)
+      axios.get(`/wishlist/details?id=${carId}`)
         .then(res => {
           console.log(res);
           const summaryContainer = document.getElementById('summaryContainer');
@@ -169,7 +169,7 @@
       const dropDate = row.querySelector('.drop-date').value;
       const id = row.querySelector('.car-id').value;
 
-      axios.post('/paymentPageByCar', { bookingId, pickDate, dropDate, id })
+      axios.post('/paymentPage', { bookingId, pickDate, dropDate, id })
         .then(resolve => {
           window.location.href = '/bookingCar';
         })

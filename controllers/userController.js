@@ -295,7 +295,7 @@ async function generateOtpEmail(req, res) {
     res.status(500).json('Internal Server Error');
   }
 }
-const registrationValidation = async (req, res) => {
+const registration = async (req, res) => {
   try {
     const {
       name,
@@ -693,7 +693,7 @@ const userPayRent = async (req, res) => {
   res.send(bookingId);
 };
 
-const paymentPageByCar = async (req, res) => {
+const paymentPage = async (req, res) => {
   const {
     bookingId, pickDate, dropDate, id,
   } = req.query;
@@ -757,7 +757,7 @@ module.exports = {
   carSearchByName,
   generateOtpEmail,
   userOtpCheck,
-  registrationValidation,
+  registration,
   contactPage,
   userMessageToAdmin,
   aboutPage,
@@ -775,7 +775,7 @@ module.exports = {
   bookedCars,
   removeBookings,
   userPayRent,
-  paymentPageByCar,
+  paymentPage,
   carDetails,
   paymentVerification,
   orderDetails,
