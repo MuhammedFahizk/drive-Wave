@@ -450,10 +450,14 @@ const BookingPage = async (req, res) => {
 const payment = async (req, res) => {
   try {
     const customers = await adminService.customers();
-    console.log(customers);
-    res.status(200).render('admin/payment', { customers });
+    const dailyRents = adminService.dailyRents();
+    const dailyRentalAmount = await adminService.dailyRentalAmount();
+    const dailyRentalPending = await adminService.dailyRentalAmountPending();
+    return res.status(200).render('admin/payment', {
+      customers, dailyRents, dailyRentalAmount, dailyRentalPending,
+    });
   } catch (error) {
-    console.error(error)
+    console.error(error);
     return res.status(500).send('internal server error');
   }
 };
