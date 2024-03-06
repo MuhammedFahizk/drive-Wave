@@ -209,6 +209,7 @@ async function filterCars(req, res) {
     pickDateData,
     dropDateData,
   } = req.body;
+
   let AvailabilityId = [];
   if (pickDateData && dropDateData) {
     const pickDate = new Date(pickDateData);
@@ -217,21 +218,37 @@ async function filterCars(req, res) {
     AvailabilityId = availability.map((entry) => entry._id);
     req.session.pickDate = pickDate;
     req.session.dropDate = dropDate;
+
+    const model = [
+      {
+        $match: {
+          _id: {
+            $in: AvailabilityId,
+          },
+          TransmitionType: { $in: transmission },
+          fuelType: { $in: fuel },
+          carCategory: { $in: carCategory },
+        },
+      },
+    ];
+
+    const allCollections = await Car.aggregate(model);
+
+    return res.status(200).json(allCollections);
   }
   const model = [
     {
       $match: {
-        _id: {
-          $in: AvailabilityId,
-        },
         TransmitionType: { $in: transmission },
         fuelType: { $in: fuel },
         carCategory: { $in: carCategory },
       },
     },
   ];
+
   const allCollections = await Car.aggregate(model);
-  res.status(200).json(allCollections);
+
+  return res.status(200).json(allCollections);
 }
 
 async function carDetailsUser(req, res) {

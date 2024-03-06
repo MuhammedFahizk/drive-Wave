@@ -27,7 +27,7 @@ const dailyRents = () => {
 
   const last7DaysNames = [];
 
-  for (let i = 6; i >= 0; i -= 1) {
+  for (let i = 7; i >= 1; i -= 1) {
     const date = new Date(today); // Create a new date object for each day
     date.setDate(today.getDate() - i); // Subtract i days from the current date
 
