@@ -1,4 +1,4 @@
-<style>
+{{!-- <style>
 
 
 
@@ -46,10 +46,48 @@
 
 
 
+</style> --}}
+
+<style>
+    
+.time-picker {
+  width: 300px;
+  height: 20px;
+  background-color: #f0f0f0;
+  position: relative;
+  cursor: pointer;
+}
+
+.time-handle {
+  width: 20px;
+  height: 20px;
+  background-color: #007bff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+     .flatpickr-calendar {
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        .flatpickr-day {
+            background-color: transparent;
+        }
+        .flatpickr-day.today {
+            background-color: #01d28e;
+        }
+        .flatpickr-month {
+            font-size: 1.em;
+        }
+       
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ionicons@5.3.0/dist/ionicons.min.css">
 {{!-- <link href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.css' rel='stylesheet'> --}}
 <link href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/all.css' rel='stylesheet'>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
   
    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
@@ -69,31 +107,48 @@
     		<div class="row no-gutters">
     			<div class="col-md-12	featured-top">
     				<div class="row no-gutters">
-	  					<div class=" col-md-4 d-flex align-items-center ">
-	  						<form action="#" class=" request-form ftco-animate glass-effect ">
+	  				<div class="col-md-4 d-flex align-items-center">
+	  						<form action="/findCarByDate" class="request-form ftco-animate bg-primary" method="post">
 		          		<h2>Make your trip</h2>
-			    				
-			    				{{!-- <div class="form-group  px-3 py-0  col-12">
-			    					<label for="" class="label px-0">Drop-off location</label>
-			    					<input style="border-radius: 10px;" id=""  type="text" class="p-1 col-12" placeholder="City, Airport, Station, etc">
+			    				<div class="form-group">
+			    					<label for="" class="label">Pick-up location</label>
+			    					<input type="text" class="form-control" placeholder="City, Airport, Station, etc">
+			    				</div>
+			    				{{!-- <div class="form-group">
+			    					<label for="" class="label">Drop-off location</label>
+			    					<input type="text" class="form-control" placeholder="City, Airport, Station, etc">
 			    				</div> --}}
-			    				<div class="d-flex  px-3  row">
-			    					<div class="form-group  col-12">
-			                <label for="" class="label  text-dark ">Pick-up date</label>
-			                <input style="border-radius: 10px;" id="pickDate"  class="p-2 col-12 border rounded" id="book_pick_date" placeholder="Date">
+			    				{{!-- <div class="d-flex ">
+			    					<div class="form-group mr-2 p-2">
+			                <label for="" class="label">Pick-up date</label>
+			                <input type="text" class="form-control" name="pickDateData" id="pickDate" placeholder="Date">
 			              </div>
-			              <div class="form-group   col-12">
-			                <label for="" class="label text-dark ">Drop-off date</label>
-			                <input style=""   id="dropDate" class="p-2 rounded col-12 border" id="book_off_date" placeholder="Date">
+			              <div class="form-group ml-2">
+			                <label for="" class="label">Drop-off date</label>
+			                <input type="text" class="form-control" name="dropDateData" id="dropDate" placeholder="Date">
 			              </div>
-                           <div id="calendar" class="p-0 m-0" > </div>
+		              </div> --}}
+			    				<div class="d-flex ">
 
-                          <div class="form-group col-12 px-3 py-4">
-		                
-                      <input type="hidden" id="id" value="{{car._id}}" >
-					
-					 <button id="submitButton"  class="col-12 btn btn-success p-2" type="button">Submit</button>
+		              <div class="form-group">
+		                <label for="" class="label">Pick-up time</label>
+		                <input type="time" class="form-control" name="pickDateData" id="pick-up" placeholder="Time">
+		              </div>
+                   <div class="form-group">
+		                <label for="" class="label">Drop-off time</label>
+		                <input type="text" class="form-control"  name="dropDateData" id="drop-off" placeholder="Time">
+		              </div>
+                  </div>
+
+
+			            <div class="form-group">
+			              <button type="submit" id="submitButton" value="Rent A Car Now" class="btn btn-secondary py-3 px-4">Rent A Car Now</button>
+
+			            </div>
+                  
+
 			    			</form>
+
 	  					</div>
                         
 	  				
@@ -174,18 +229,13 @@
                 <div class="image-container position-relative">
                     <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="{{carImage}}">
                     <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0">
-                        <div class="col-2 p-0">
-                            <input type="hidden" class="WhislistId" value="{{_id}}">
-                            <svg class="wishListButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="35" height="35">
-                                <path fill="red" stroke="red" stroke-width="3" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                            </svg>
-                        </div>
+                        
                     </div>
                 </div>
                 <div class="text">
                     <h2 class="mb-0"><a href="carDetails?id={{_id}}">{{carName}}</a></h2>
                     <div class="d-flex mb-3">
-                        <span class="cat">{{carModal}}/{{brandName}}</span>
+                        <span class="cat">{{carModal}}/{{brandName}}</span> 
                         <p class="price ml-auto">${{dayRent}} <span>/day</span></p>
                     </div>
                     <p class="d-flex mb-0 d-block">
@@ -208,7 +258,7 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 
 <script>
@@ -230,8 +280,8 @@
     const calendarEl = document.getElementById('calendar');
 
 submitBtn.addEventListener('click', function() {
-     pickDateData = document.getElementById('pickDate').value;
-     dropDateData = document.getElementById('dropDate').value;
+     pickDateData = document.getElementById('pick-up').value;
+     dropDateData = document.getElementById('drop-off').value;
      carId = document.getElementById('id').value;
                 $('.container .rowcars').empty();
       console.log(pickDateData)
@@ -375,12 +425,7 @@ function submit(){
                                          <div class="image-container position-relative">
                     <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${car.carImage}">
                   <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0">
-                        <div class="col-2 p-0">
-                            <input type="hidden" class="WhislistId" value="${car._id}">
-                            <svg class="wishListButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="35" height="35">
-                                <path fill="red" stroke="red" stroke-width="3" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                            </svg>
-                        </div>
+                      
                     </div>
                 </div>          <div class="text">
                                             <h2 class="mb-0"><a href="car-single.html">${car.carName}</a></h2>
@@ -488,56 +533,26 @@ function searchCar() {
 }
 
 // Get the input fields for start and end dates
-const pickDateInput = document.getElementById('pickDate');
-const dropDateInput = document.getElementById('dropDate');
 
 
-// Add event listeners to open the calendar when the input fields are clicked
-pickDateInput.addEventListener('click', function() {
-    openCalendar(pickDateInput);
-});
-
-dropDateInput.addEventListener('click', function() {
-    openCalendar(dropDateInput);
-});
-
-function openCalendar(inputField) {
-    // Get today's date
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-
-    // Create the FullCalendar instance
-    calendarEl.style.display = 'block'
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        themeSystem: 'bootstrap',
-        initialView: 'dayGridMonth',
-        selectable: true,
-        select: function(info) {
-            // Check if the selected date is today or after today
-            if (info.start >= today) {
-                // Set the value of the input field to the selected date
-                inputField.value = info.startStr;
-            } else {
-                // Show an error message or handle the invalid selection
-                alert('Please select a date today or after today.');
+     flatpickr("#pick-up", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minTime: "08:00",
+            maxTime: "22:00",
+            minDate: "today",
+            onChange: function(selectedDates, dateStr, instance) {
+                document.getElementById("drop-off")._flatpickr.set("minDate", dateStr);
             }
-        },
-        // Set constraints for date selection (today or after today)
-        selectConstraint: {
-            start: todayStr, // Start date must be today or after today
-            end: '2024-12-31' // End date constraint (optional)
-        },
-            headerToolbar: {
-        start: 'title',
-        center: '',
-        end: ' prev,next'
-    },
-
-    });
-
-    // Render the calendar
-    calendar.render();
-}
+        });
+        
+        flatpickr("#drop-off", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minTime: "08:00",
+            maxTime: "22:00",
+            minDate: "today"
+        });
 
 
 window.addEventListener('popstate', function (event) {

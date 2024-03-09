@@ -1,4 +1,4 @@
-
+{{!-- 
 <!DOCTYPE html>
 <html>
 <head>
@@ -204,4 +204,90 @@ function displayErrors(errors) {
 
 
 
+</script> --}}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timepicker</title>
+<style>
+/* CSS styles */
+</style>
+</head>
+<body>
+<div class="container" id="container">
+  <div class="timepicker-container-outer" id="timepicker-container-outer">
+    <div class="timepicker-container-inner" id="timepicker-container-inner">
+      <div class="timeline-container">
+        <div class="current-time" id="current-time">
+          <div class="actual-time" id="actual-time"></div>
+        </div>
+        <div class="timeline" id="timeline"></div>
+        <div class="hours-container" id="hours-container"></div>
+      </div>
+      <div class="display-time" id="display-time"></div>
+      <div class="am-pm-container" id="am-pm-container">
+        <div class="am-pm-button" id="am-button">am</div>
+        <div class="am-pm-button" id="pm-button">pm</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="loading" id="loading">Loading...</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // JavaScript code here
+  var container = document.getElementById('container');
+  var timepickerOuter = document.getElementById('timepicker-container-outer');
+  var timepickerInner = document.getElementById('timepicker-container-inner');
+  var currentTime = document.getElementById('current-time');
+  var actualTime = document.getElementById('actual-time');
+  var timeline = document.getElementById('timeline');
+  var hoursContainer = document.getElementById('hours-container');
+  var displayTime = document.getElementById('display-time');
+  var amButton = document.getElementById('am-button');
+  var pmButton = document.getElementById('pm-button');
+  var loading = document.getElementById('loading');
+  
+  // Define pad2 function
+  function pad2(number) {
+    return (number < 10 ? '0' : '') + number;
+  }
+  
+  // Define getTime function
+  function getTime(currentOffset) {
+    var percentTime = (currentOffset / timeline.offsetWidth) + 0.01;
+    var percentMinutes = ((currentOffset / timeline.offsetWidth) * 12) + 0.01;
+    var minutes = Math.round(percentMinutes % 1) * 30;
+    var hour = Math.floor(percentTime * 12);
+    if (hour === 0) {
+      hour = 12;
+    }
+    return hour + ":" + pad2(minutes);
+  }
+  
+  // Event listeners for mouse and touch events
+  function handleMove(event) {
+    // Handle move logic
+  }
+  
+  function handleUp(event) {
+    // Handle up logic
+  }
+  
+  // Add event listeners
+  timepickerInner.addEventListener('mousedown', handleMove);
+  timepickerInner.addEventListener('touchstart', handleMove);
+  window.addEventListener('mousemove', handleMove);
+  window.addEventListener('touchmove', handleMove);
+  window.addEventListener('mouseup', handleUp);
+  window.addEventListener('touchend', handleUp);
+  
+  // Other JavaScript logic here
+});
 </script>
+</body>
+</html>

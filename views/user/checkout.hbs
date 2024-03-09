@@ -20,8 +20,44 @@
         border-radius: 10px;
         border: 1px solid;
     }
-</style>
+    
+.time-picker {
+  width: 300px;
+  height: 20px;
+  background-color: #f0f0f0;
+  position: relative;
+  cursor: pointer;
+}
 
+.time-handle {
+  width: 20px;
+  height: 20px;
+  background-color: #007bff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+     .flatpickr-calendar {
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        .flatpickr-day {
+            background-color: transparent;
+        }
+        .flatpickr-day.today {
+            background-color: #01d28e;
+        }
+        .flatpickr-month {
+            font-size: 1.em;
+        }
+</style>
+<head>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+</head>
 <section class="ftco-section bg-light col-12 row p-0 p-md-5 m-0 ">
     <div class="container p-0 p-md-5">
         <div class="container p-md-4 p-4 col-md-12 justify-content-center ">
@@ -326,6 +362,8 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js'></script>
 <script type="text/javascript" src="https://checkout.razorpay.com/v1/razorpay.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script>
 
     const razorpay = new Razorpay({
@@ -342,6 +380,25 @@
         document.getElementById('bookingIdElement').textContent = bookingId;
     }
     console.log(sessionStorage)
+
+ flatpickr("#pickDate", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minTime: "08:00",
+            maxTime: "22:00",
+            minDate: "today",
+            onChange: function(selectedDates, dateStr, instance) {
+                document.getElementById("dropDate")._flatpickr.set("minDate", dateStr);
+            }
+        });
+        
+        flatpickr("#dropDate", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minTime: "08:00",
+            maxTime: "22:00",
+            minDate: "today"
+        });
 
     const calendarEl = document.getElementById('calendar');
     const bookingPage = document.getElementById('bookingPage');
@@ -634,54 +691,6 @@ if (parseInt(fullExpiryYear, 10) < currentYear) {
     })
 
 
-    if (pickDateInput || dropDateInput) {
-        // Add event listeners to open the calendar when the input fields are clicked
-        pickDateInput.addEventListener('click', function () {
-            openCalendar(pickDateInput);
-        });
-
-        dropDateInput.addEventListener('click', function () {
-            openCalendar(dropDateInput);
-        });
-    }
-    function openCalendar(inputField) {
-        // Get today's date
-        const today = new Date();
-        const todayStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-
-        // Create the FullCalendar instance
-        calendarEl.style.display = 'block';
-        document.getElementById('text').style.display = 'none';
-
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            themeSystem: 'bootstrap',
-            initialView: 'dayGridMonth',
-            selectable: true,
-            select: function (info) {
-                // Check if the selected date is today or after today
-                if (info.start >= today) {
-                    // Set the value of the input field to the selected date
-                    inputField.value = info.startStr;
-                } else {
-                    // Show an error message or handle the invalid selection
-                    alert('Please select a date today or after today.');
-                }
-            },
-            // Set constraints for date selection (today or after today)
-            selectConstraint: {
-                start: todayStr, // Start date must be today or after today
-                end: '2024-12-31' // End date constraint (optional)
-            },
-            headerToolbar: {
-                start: 'title',
-                center: '',
-                end: ' prev,next'
-            },
-
-        });
-        calendar.render();
-
-    }
 
     window.addEventListener('popstate', function (event) {
         // Check if the popstate event is triggered by navigating back

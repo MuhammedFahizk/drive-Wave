@@ -5,7 +5,44 @@
 .fc-header-toolbar {
     color: red; /* Change 'red' to the color you desire */
 }
+.time-picker {
+  width: 300px;
+  height: 20px;
+  background-color: #f0f0f0;
+  position: relative;
+  cursor: pointer;
+}
+
+.time-handle {
+  width: 20px;
+  height: 20px;
+  background-color: #007bff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+     .flatpickr-calendar {
+            background-color: #f0f0f0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        .flatpickr-day {
+            background-color: transparent;
+        }
+        .flatpickr-day.today {
+            background-color: #01d28e;
+        }
+        .flatpickr-month {
+            font-size: 1.em;
+        }
+       
 </style>
+<head>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+</head>
 <body>
     
 	  
@@ -41,15 +78,15 @@
 	  					<div class="col-md-4 d-flex align-items-center">
 	  						<form action="/findCarByDate" class="request-form ftco-animate bg-primary" method="post">
 		          		<h2>Make your trip</h2>
-			    				{{!-- <div class="form-group">
+			    				<div class="form-group">
 			    					<label for="" class="label">Pick-up location</label>
 			    					<input type="text" class="form-control" placeholder="City, Airport, Station, etc">
-			    				</div> --}}
+			    				</div>
 			    				{{!-- <div class="form-group">
 			    					<label for="" class="label">Drop-off location</label>
 			    					<input type="text" class="form-control" placeholder="City, Airport, Station, etc">
 			    				</div> --}}
-			    				<div class="d-flex py-5">
+			    				{{!-- <div class="d-flex ">
 			    					<div class="form-group mr-2 p-2">
 			                <label for="" class="label">Pick-up date</label>
 			                <input type="text" class="form-control" name="pickDateData" id="pickDate" placeholder="Date">
@@ -58,14 +95,25 @@
 			                <label for="" class="label">Drop-off date</label>
 			                <input type="text" class="form-control" name="dropDateData" id="dropDate" placeholder="Date">
 			              </div>
-		              </div>
-		              {{!-- <div class="form-group">
-		                <label for="" class="label">Pick-up time</label>
-		                <input type="text" class="form-control" id="time_pick" placeholder="Time">
 		              </div> --}}
+			    				<div class="d-flex ">
+
+		              <div class="form-group">
+		                <label for="" class="label">Pick-up time</label>
+		                <input type="time" class="form-control" name="pickDateData" id="pick-up" placeholder="Time">
+		              </div>
+                   <div class="form-group">
+		                <label for="" class="label">Drop-off time</label>
+		                <input type="text" class="form-control"  name="dropDateData" id="drop-off" placeholder="Time">
+		              </div>
+                  </div>
+
+
 			            <div class="form-group">
 			              <button type="submit" id="submitButton" value="Rent A Car Now" class="btn btn-secondary py-3 px-4">Rent A Car Now</button>
+
 			            </div>
+                  
 
 			    			</form>
 
@@ -409,63 +457,27 @@
  
     
   </body>
-      <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <script>
-	    const calendarEl = document.getElementById('calendar');
-const pickDateInput = document.getElementById('pickDate');
-const dropDateInput = document.getElementById('dropDate');
-const servicePage = document.getElementById('servicePage')
-
-
-
-// Add event listeners to open the calendar when the input fields are clicked
-pickDateInput.addEventListener('click', function() {
-    openCalendar(pickDateInput);
-});
-
-dropDateInput.addEventListener('click', function() {
-    openCalendar(dropDateInput);
-});
-
-function openCalendar(inputField) {
-    // Get today's date
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-
-    // Create the FullCalendar instance
-    servicePage.style.display = 'none'
-    calendarEl.style.display = 'block'
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        themeSystem: 'bootstrap',
-        initialView: 'dayGridMonth',
-        selectable: true,
-        select: function(info) {
-            // Check if the selected date is today or after today
-            if (info.start >= today) {
-                // Set the value of the input field to the selected date
-                inputField.value = info.startStr;
-            } else {
-                // Show an error message or handle the invalid selection
-                alert('Please select a date today or after today.');
+        flatpickr("#pick-up", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minTime: "08:00",
+            maxTime: "22:00",
+            minDate: "today",
+            onChange: function(selectedDates, dateStr, instance) {
+                document.getElementById("drop-off")._flatpickr.set("minDate", dateStr);
             }
-        },
-        // Set constraints for date selection (today or after today)
-        selectConstraint: {
-            start: todayStr, // Start date must be today or after today
-            end: '2024-12-31' // End date constraint (optional)
-        },
-            headerToolbar: {
-        start: 'title',
-        center: '',
-        end: ' prev,next'
-    },
+        });
+        
+        flatpickr("#drop-off", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minTime: "08:00",
+            maxTime: "22:00",
+            minDate: "today"
+        });
 
-    });
-
-    // Render the calendar
-    calendar.render();
-}
-
-
+	  
   </script>
