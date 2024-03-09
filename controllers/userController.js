@@ -298,18 +298,21 @@ async function generateOtpEmail(req, res) {
   try {
     const { email } = req.body;
     const otp = generateOtp();
+    console.error(otp, email);
+
     emailOtp[email] = otp;
-    sendAdminOtp(email, otp, (error, info) => {
-      if (error) {
-        console.error(error);
-        return res.status(500).send(error);
-      }
-      console.error(otp, email);
-      return res.status(201).json(email);
-    });
+    // sendAdminOtp(email, otp, (error, info) => {
+    //   if (error) {
+    //     console.error(error);
+    //     return res.status(500).send(error);
+    //   }
+    //   console.error(otp, email);
+    //   return res.status(201).json(email);
+    // });
+    return res.status(201).json(email);
   } catch (error) {
     console.error('Error search car', error);
-    res.status(500).json('Internal Server Error');
+    return res.status(500).json('Internal Server Error');
   }
 }
 const registration = async (req, res) => {
@@ -320,9 +323,6 @@ const registration = async (req, res) => {
       password,
       email,
       phone,
-      houseName,
-      zip,
-      place,
       licenseNumber,
     } = req.body;
     const isValid = emailValidator.validate(email);
@@ -337,11 +337,6 @@ const registration = async (req, res) => {
       email,
       phone,
       licenseNumber,
-      address: {
-        place,
-        zip,
-        houseName,
-      },
       role: 'user',
     });
     await newUser.save();
@@ -369,13 +364,19 @@ const userOtpCheck = async (req, res) => {
       req.session.name = user.name;
       req.session.email = user.email;
       req.session.userId = uuidv4();
-      return res.status(200).redirect('/');
+      return res.status(200).json('ok');
     }
     const error = 'not found user';
   }
   return res.status(404).redirect('/login');
 };
-
+const OtpCheck = async (req, res) => {
+  const { otp, Email } = req.body;
+  if (emailOtp[Email] && emailOtp[Email] === otp) {
+    return res.status(201).json('ok');
+  }
+  return res.status(404).json('Not Match Otp');
+};
 const contactPage = (req, res) => {
   const { name, password } = req.session;
   res.status(200).render('user/contact', { name });
@@ -782,7 +783,7 @@ module.exports = {
   wishListPage,
   userRecoveryMessage,
   carDetailsWhishList,
-  // carBookingPage,
+  OtpCheck,
   bookingCar,
   addDate,
   changeDate,

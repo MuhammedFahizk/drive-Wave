@@ -88,8 +88,8 @@ try {
 
     },
     ownerId: {
-      type: String,
-      required: false,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'vendor',
 
     },
     bookings: [

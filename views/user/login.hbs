@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{!-- <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -125,4 +125,490 @@
 		}
 		
 	})
+</script> --}}
+<style>
+	* {
+	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	color: #100000;
+}
+
+::selection {
+	background: 0;
+}
+
+body {
+	width: 100%;
+	min-height: 560px;
+	height: 100vh;
+	display: grid;
+	place-content: center;
+	background: #d7dad8;
+	overflow-x: hidden;
+}
+
+section {
+	min-width: 350px;
+	min-height:420px;
+	padding: 15px;
+	box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+	border-radius: 10px;
+	background: #f8f8f9;
+	overflow: hidden;
+	position: relative;
+}
+
+#logo {
+	justify-content: center;
+	display: flex;
+	align-items: center;
+	margin: 10px;
+}
+
+nav {
+	margin: 10px;
+	display: flex;
+	justify-content: center;
+}
+
+nav label {
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+nav label:first-child {
+	margin-right: 20px;
+}
+
+form {
+	position: absolute;
+	min-width: 250px;
+	transform: translatex(140%);
+	display: flex;
+	flex-direction: column;
+	transition: 0.3s;
+}
+
+#SignIn:checked ~ section #SignInFormData,
+#SignUp:checked ~ section #SignUpFormData {
+	transform: translatex(15%);
+	    transition: transform 0.7s ease;
+
+}
+
+#SignIn:checked ~ section nav label:first-child,
+#SignUp:checked ~ section nav label:last-child {
+	margin-bottom: -2px;
+	border-bottom: 2px solid #1ed760;
+}
+.form-container {
+    height: 200px; /* Adjust the height as needed */
+    overflow: auto;
+    background-color: #fcfefc00;
+    border: 0px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+}
+.form-container::-webkit-scrollbar{
+	width: 2px;
+        background-color: #080000;
+
+	border-radius: 5px; /* Rounded corners for the scrollbar thumb */
+}
+.form-container::-webkit-scrollbar-thumb {
+	    background-color:#1ed760; /* Color of the scrollbar thumb */
+ /* Color of the scrollbar thumb on hover */
+}
+input,
+button {
+	color: #111;
+	border-radius: 50px;
+	padding: 5px 10px;
+	margin-bottom: 15px;
+	border: none;
+	outline: none;
+	font-size: 16px;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+button {
+	background: #1ed760;
+	text-transform: uppercase;
+	font-weight: bold;
+	color: #fff;
+	cursor: pointer;
+	margin-top: 5px;
+}
+
+form span {
+	margin-left: 20px;
+	display: inline;
+}
+
+form span label {
+	cursor: pointer;
+	font-size: 14px;
+	text-transform: lowercase;
+}
+
+input[type="checkbox"] {
+	cursor: pointer;
+	accent-color: #1ed760; /* #3498db; */
+}
+
+a {
+	font-weight: bold;
+	text-decoration: none;
+	margin-top: 20px;
+	cursor: pointer;
+	text-align: center;
+	opacity: 0.6;
+}
+
+a:hover {
+	opacity: 1;
+}
+
+
+</style>
+{{!--  --}}
+<input type="radio" name="optionScreen" id="SignIn" hidden checked>
+<input type="radio" name="optionScreen" id="SignUp" hidden>
+<section id="firstPage">
+<a href="" id="previousPage">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;"><path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path></svg></a>	
+	<div id="logo">
+		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png" alt="Spotify-Logo" width="50"> --}}
+		<h1>Drive<span style="color: #1ed760;">Wave</span> </h1>
+	</div>
+
+	<nav>
+		<label for="SignIn">Sign In</label>
+		<label for="SignUp">Sign Up</label>
+	</nav>
+     
+	<form action="/userLogin" id="SignInFormData" method="post">
+						<input type="text" name="email" class="email" id="Email" placeholder="E-mail" required>
+						<input type="password" name="password" class="Password" id="Password" placeholder="Password" required>
+		<span>
+			{{!-- <input type="checkbox" id="staySingedIn" checked> --}}
+			{{!-- <label for="staySingedIn">stay Signed In</label> --}}
+		</span>
+{{#if error}}
+  {{error }}
+
+{{/if}}		<button type="submit"  title="Sing In">Sing In</button>
+
+		<a id="forgotPassword">Forgot Your Password?</a>
+		<a id="LoginWithOtp" class="mt-0">Login With OTP?</a>
+
+
+	</form>  
+
+	<form  id="SignUpFormData" class="form-container"  method="post" >
+		<input type="text" name="name" id="name" class="input-text" placeholder="Name" >
+								<input type="text" name="email" class="input-text"  placeholder="E-mail">
+						<input type="number" name="age" class="age"  placeholder="Age" >
+						<input type="phone" name="phone" class="phone"  placeholder="Phone Number" >
+						<input type="text" name="licenseNumber" class="license"  placeholder="License Number" >
+							<input type="text" name="password1" class="input-text" placeholder="Password" >
+							<input type="text" name="password" class="input-text" placeholder="Conform Password" >
+
+		<span>
+			{{!-- <label for="staySingedUp">stay Signed In</label> --}}
+		</span>
+   <p style="padding: 0;" id="error"></p>
+					<input type="checkbox" id="staySingedIn" name="checkbox" checked>
+
+		<button type="submit"  name="register" class="register">Sing Up</button>
+	</form>
+</section>
+
+<section id="secondPage" style="display: none;" >
+	<a href="" id="previousPage">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;"><path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path></svg></a>
+	<div id="logo">
+		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png" alt="Spotify-Logo" width="50"> --}}
+		<h1>Drive<span style="color: #1ed760;">Wave</span> </h1>
+	</div>
+<nav>
+    <label for="SignIn">OTP</label>
+    <label for="SignUp">Sign Up</label>
+</nav>
+	<!-- Inside the secondPage section -->
+
+<form  id="SignInFormData">
+						<input type="text" name="email" class="email" id="email" placeholder="Email Address" required>
+    <!-- Add input field for OTP -->
+    <input type="text" name="otp" class="otp" id="OTP" placeholder="Enter OTP" required>
+    <button type="submit" title="Sign In">Sign In</button>
+</form>
+
+<form  id="SignUpFormData" class="form-container"  method="post" >
+		<input type="text" name="name" id="name" class="input-text" placeholder="Name" >
+								<input type="text" name="email" id="email" class="input-text"  placeholder="E-mail">
+						<input type="number" name="age" class="age" id="age" placeholder="Age" >
+												
+															<input type="phone" name="phone" class="phone" id="phone" placeholder="Phone Number" >
+
+
+						<input type="text" name="licenseNumber" class="license" id="license" placeholder="License Number" >
+
+							<input type="text" name="password1" id="password1" class="input-text" placeholder="Password" >
+							<input type="text" name="password" id="password" class="input-text" placeholder="Conform Password" >
+
+		<span>
+			{{!-- <label for="staySingedUp">stay Signed In</label> --}}
+		</span>
+   <p style="padding: 0;" id="error"></p>
+					<input type="checkbox" id="staySingedIn" name="checkbox" checked>
+
+		<button type="submit"  name="register" class="register">Sing Up</button>
+	</form>
+
+</section>
+
+
+
+<section id="thirdPage" style="display: none;">
+<a href="" id="previousPage">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;"><path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path></svg></a>	
+	<div id="logo">
+		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png" alt="Spotify-Logo" width="50"> --}}
+		<h1>Drive<span style="color: #1ed760;">Wave</span> </h1>
+	</div>
+
+	<nav>
+		<label for="SignIn">Sign In</label>
+		<label for="SignUp">Sign Up</label>
+	</nav>
+     
+	<form  id="SignInFormData" class="emailAndOtp" >
+		
+		<input type="text" name="email" class="email" id="email2" placeholder="Email Address" required>
+    <!-- Add input field for OTP -->
+    <input type="text" name="otp" class="otp" id="OTP2" placeholder="Enter OTP" required>
+	<p id="error"></p>
+	
+	<input type="text" name="password1" class="input-text" placeholder="Password" >
+							<input type="text" name="password" class="input-text" placeholder="Conform Password" >
+	<p id="error"></p>
+
+    <button type="submit" title="Sign In">Sign In</button>
+</form>
+
+
+
+	<form  id="SignUpFormData" class="form-container"  method="post" >
+		<input type="text" name="name" id="name" class="input-text" placeholder="Name" >
+								<input type="text" name="email" class="input-text"  placeholder="E-mail">
+						<input type="number" name="age" class="age"  placeholder="Age" >
+						<input type="phone" name="phone" class="phone"  placeholder="Phone Number" >
+						<input type="text" name="licenseNumber" class="license"  placeholder="License Number" >
+							<input type="text" name="password1" class="input-text" placeholder="Password" >
+							<input type="text" name="password" class="input-text" placeholder="Conform Password" >
+
+		<span>
+			{{!-- <label for="staySingedUp">stay Signed In</label> --}}
+		</span>
+   <p style="padding: 0;" id="error"></p>
+					<input type="checkbox" id="staySingedIn" name="checkbox" checked>
+
+		<button type="submit"  name="register" class="register">Sing Up</button>
+	</form>
+</section>
+
+<script>
+const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+const hint = document.getElementById('hint')
+const licenseRegex = /^[A-Z]{2}-\d{2}\/[A-Z]{3}\/\d{2}\/\d{6}$/;
+const LoginWithOtp = document.getElementById('LoginWithOtp')
+const firstPage = document.getElementById('firstPage')
+const secondPage = document.getElementById('secondPage')
+const previousPage = document.getElementById('previousPage')
+const forgotPassword = document.getElementById('forgotPassword')
+const EmailAndOtp = document.querySelector('#EmailAndOtp')
+
+const thirdPage = document.getElementById('thirdPage')
+
+
+
+previousPage.addEventListener('click', function(e) {
+	e.preventDefault()
+	history.back()
+})
+
+
+
+
+const emailInput = document.getElementById('email');
+const otpInput = document.getElementById('OTP');
+
+const emailInput2 = document.getElementById('email2');
+const otpInput2 = document.getElementById('OTP2');
+const error = document.getElementById('error');
+
+let Email = ''; // Changed Email variable to a string
+emailInput2.addEventListener('keydown', function(event) {
+	console.log('hsddijf')
+    if (event.key === 'Enter') {
+        const email = event.target.value.trim(); // Trim whitespace from email input
+        Email = email; // Store email in the Email variable
+        if (email !== '') {
+            axios.post('/generateOtp', { email })
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error(error); // Handle error
+                });
+        }
+    }
+});
+
+otpInput2.addEventListener('keydown', function(event) {
+
+    const otp = event.target.value;
+    if (otp.length === 6) {
+        axios.post('/OtpUser', { otp, Email })
+            .then(response => {
+				console.log('hai')
+			
+            })
+            .catch(error => {
+				error.innerHTML = 'Not Match Otp'
+                console.error(error);
+            });
+    } else {
+        error.textContent = 'Enter a valid OTP'; // Changed innerHTML to textContent
+    }
+});
+
+emailInput.addEventListener('keydown', function(event) {
+	console.log('hsddijf')
+    if (event.key === 'Enter') {
+        const email = event.target.value.trim(); // Trim whitespace from email input
+        Email = email; // Store email in the Email variable
+        if (email !== '') {
+            axios.post('/generateOtp', { email })
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error(error); // Handle error
+                });
+        }
+    }
+});
+
+otpInput.addEventListener('keydown', function(event) {
+    const otp = event.target.value;
+    if (otp.length === 6) {
+        axios.post('/checkOtpUser', { otp, Email })
+            .then(response => {
+                window.location.href = '/';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    } else {
+        error.textContent = 'Enter a valid OTP'; // Changed innerHTML to textContent
+    }
+});
+
+
+
+LoginWithOtp.addEventListener('click', function ()  {
+	console.log('aisa')
+	
+    firstPage.style.display = 'none';
+    thirdPage.style.display = 'none';
+    secondPage.style.display = 'block';
+});
+forgotPassword.addEventListener('click', function ()  {
+	console.log('aisa')
+    thirdPage.style.display = 'block';
+    firstPage.style.display = 'none';
+    secondPage.style.display = 'none';
+});
+const formDataElement = document.getElementById('SignUpFormData');
+
+formDataElement.addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    const formData = new FormData(event.target);
+
+    const { name, email, password1, password, age,phone, licenseNumber} = Object.fromEntries(formData.entries());
+
+    // Perform form validation here
+    const errors = [];
+
+    if (!name) {
+        errors.push('Name is required');
+    }
+    if (!email) {
+        errors.push('Email is required');
+    }
+	if (!age) {
+        errors.push('Age is require');
+
+    } else if (parseInt(age) < 18) {
+        errors.push('Your Not eligible for register this website');
+
+	}
+    if (!password1 || !password) {
+        errors.push('Both password fields are required');
+    } else if (password1 !== password) {
+        errors.push('Passwords do not match');
+    } else if (!passwordPattern.test(password)) {
+        errors.push('Password must contain at least 8 characters, including one uppercase letter and one special character');
+    }
+	
+		if (licenseNumber) {
+    if (!licenseRegex.test(licenseNumber)) {
+        errors.push('Enter a valid license number');
+    }
+	    const checkbox = formData.get('checkbox');
+    if (!checkbox) {
+        errors.push('You must accept the Terms and Conditions');
+    }
+		}
+
+    // If there are errors, display them and prevent form submission
+    if (errors.length > 0) {
+        displayErrors(errors);
+    } else {
+        // If no errors, submit the form using Axios
+        axios.post('/registration', { name, email, password1, password, age,phone, licenseNumber })
+            .then(response => {
+                console.log('Form submitted successfully');
+                // Handle success response
+				console.log(response)
+				window.location.href = '/'
+            })
+            .catch(error => {
+                console.error('Error submitting form:', error);
+                // Handle error response
+            });
+    }
+});
+function displayErrors(errors) {
+    const errorElement = document.getElementById('error');
+    errorElement.innerHTML = ''; // Clear previous error messages
+
+    if (errors.length > 0) {
+        
+            const errorMessage = document.createElement('p');
+            errorMessage.textContent = errors[0];
+            errorMessage.style.color = 'red'; 
+            errorMessage.style.fontSize = '13px'; 
+            errorElement.appendChild(errorMessage);
+        
+    }
+}
+
+
+
 </script>

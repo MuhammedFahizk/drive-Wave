@@ -17,36 +17,37 @@
             <h3 class="text-center">Sign Up</h3>
           </div>
           <div style="max-height: 400px;overflow-y: auto;" class="card-body">
-            <form action="/vendor/signupVendor" method="post">
+<form id="vendorSignupForm" action="/vendor/signupVendor" method="post">
             {{#if error}}
             <script>
              alert("{{error}}")
             </script>
             {{/if}}
               <div class="form-group">
-                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" >
               </div>
               <div class="form-group">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" >
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" >
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" >
               </div>
               <div class="form-group">
-                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" >
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="bankName" name="bankName" placeholder="Bank Name" required>
+                <input type="text" class="form-control" id="bankName" name="bankName" placeholder="Bank Name" >
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="accountNumber" name="accountNumber" placeholder="Account Number" required>
+                <input type="text" class="form-control" id="accountNumber" name="accountNumber" placeholder="Account Number" >
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="shopName" name="shopName" placeholder="Shop Name" required>
+                <input type="text" class="form-control" id="shopName" name="shopName" placeholder="Shop Name" >
               </div>
+              <p id="error" style="color: red;"></p>
               <button type="submit" class="btn btn-outline-info btn-block">Sign Up</button>
             </form>
              
@@ -57,3 +58,91 @@
   </div>
 </body>
 </html>
+<script>
+ document.getElementById('vendorSignupForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting
+
+    // Perform form validation
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const phone = document.getElementById('phone').value;
+    const bankName = document.getElementById('bankName').value;
+    const accountNumber = document.getElementById('accountNumber').value;
+    const shopName = document.getElementById('shopName').value;
+    const error = document.getElementById('error')
+const pswRegx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const accNo = /^\d{8,16}$/;
+
+    if (!name) {
+      error.innerHTML = 'Please enter your Full Name'
+        return false; // Prevent form submission
+    }
+
+    if (!email) {
+      error.innerHTML = 'Please enter your Email.'
+
+        return false; // Prevent form submission
+    }
+   
+
+    if (!password) {
+      error.innerHTML = 'Please enter a Password.'
+
+        return false; // Prevent form submission
+    }
+if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+    error.innerHTML = "Password is not valid. It must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be at least 8 characters long.";
+    return false;
+}
+   if (!confirmPassword) {
+      error.innerHTML = 'Please confirm your Password.'
+
+        return false; // Prevent form submission
+    }
+
+    if (!phone) {
+      error.innerHTML = 'Please enter your Phone Number.'
+
+        return false; // Prevent form submission
+    }
+    if(!/^\d{10}$/.test(phone)) {
+      error.innerHTML = 'Please enter valid Phone Number.'
+        return false;
+    }
+
+    if (!bankName) {
+      error.innerHTML = 'Please enter your Bank Name.'
+
+        return false; // Prevent form submission
+    }
+
+    if (!accountNumber) {
+      error.innerHTML = 'Please enter your Account Number.'
+
+        return false; // Prevent form submission
+    }
+  if (!accNo.test(accountNumber)) {
+      error.innerHTML = 'Please enter valid Account Number.'
+  return false;
+  }
+    if (!shopName) {
+      error.innerHTML = 'Please enter your Shop Name'
+
+        return false; // Prevent form submission
+    }
+
+    if (password !== confirmPassword) {
+      error.innerHTML = 'Passwords do not match.'
+
+        return false; // Prevent form submission
+    }
+
+    // Additional validation can be added for email format, phone number format, etc.
+
+    // If all validations pass, you can submit the form
+    this.submit();
+});
+
+</script>

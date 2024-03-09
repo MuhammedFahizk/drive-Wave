@@ -64,10 +64,18 @@
 
       </table>
     </div>
-    <div class="car-wrap rounded ftco-animate p-0   row m-4">
-      <div class="col-8 row m-0 px-4">
-        <h3 class=" col-8 mx-4 mt-3 fw-4 fs-4"> Booked Car</h3>
-        <p id="count" class=" col-2 my-3 ml-5">{{count}} Items</p>
+    <div class="car-wrap rounded ftco-animate p-0   row m-md-4">
+      <div style="display: none;" id="rightSide" style="background-color:#2edbcd ;" class="col-md-4 ">
+        <div class="col-12 mt-4">
+          <div class="car-wrap rounded ftco-animate " id="summaryContainer">
+
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-8 row m-0 px-md-4">
+        <h3 class=" col-md-8 mx-4 mt-3 fw-4 fs-4"> Booked Car</h3>
+        <p id="count" class=" col-md-2 my-3 ml-md-5">{{count}} Items</p>
         <div class="col-12 m-0 p-0 " style="overflow-y: auto; height: 450px; overflow-x: hidden;">
           {{#each data}}
 
@@ -113,22 +121,14 @@
           {{/each}}
         </div>
       </div>
-      <div style="display: none;" id="rightSide" style="background-color:#2edbcd ;" class="col-4 ">
-        <div class="col-md-12 mt-4">
-          <div class="car-wrap rounded ftco-animate " id="summaryContainer">
-
-          </div>
-
-        </div>
-      </div>
+      
     </div>
 
   </div>
  
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#orderDetails">
-  Launch demo modal
-</button>
+<input type="hidden" class="btn btn-primary" data-toggle="modal" data-target="#orderDetails">
+
 
 <!-- Modal -->
 <div class="modal fade" id="orderDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

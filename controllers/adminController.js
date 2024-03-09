@@ -15,7 +15,6 @@ const cloudinary = require('../service/cloudnery');
 const { Car } = require('../models/car');
 const { sendAdminOtp, generateOtp, sendmailVendor } = require('../service/nodeMailer');
 const adminService = require('../service/adminService');
-const { error } = require('console');
 
 const emailOtp = {};
 let NotificationCount = 0;
@@ -43,11 +42,10 @@ async function loginOtp(req, res) {
   const { otp } = req.body;
   const { email } = req.session;
   if (emailOtp[email] && emailOtp[email] === otp) {
-    const admin = Car.find({ email });
-    if (admin) {
+    const Admin = admin.find({ email });
+    if (Admin) {
       delete emailOtp[email];
-      const adminId = uuidv4();
-      req.session.adminId = adminId;
+      req.session.adminId = uuidv4();
       res.redirect('/admin/DashboardPage');
     } else {
       res.status(404).redirect('admin/login');
@@ -379,20 +377,22 @@ const disableVendor = async (req, res) => {
     if (!vendor) {
       return res.status(401).send('not find vender');
     }
-    const { email } = vendor;
-    const message = `${vendor.name}Sorry Admin Not Accept Your Vendor Application`;
+
+    const { email, name } = vendor;
+    const message = `${name}, sorry, admin has not accepted your vendor application.`;
     const subject = 'Disable';
-    sendmailVendor(email, message, subject, (error, (info) => {
+    // eslint-disable-next-line consistent-return, no-unused-vars
+    sendmailVendor(email, message, subject, (error, info) => {
       if (error) {
-        return res.status(500).send(error, info);
+        return res.status(500).send(error);
       }
-      return res.status(200).json('Disable the Vendor');
-    }));
-    const result = await Vendor.deleteOne({ _id: id });
-    if (!result) {
+    });
+    const Vendors = await Vendor.deleteOne({ _id: id });
+    if (!Vendors) {
       return res.status(404).json({ error: 'vendor Deleting Error' });
     }
-    return res.status(200).redirect('/admin/notification', { NotificationCount });
+
+    return res.status(200).redirect('/admin/notification');
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ error: 'Internal server error' });

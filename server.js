@@ -55,7 +55,7 @@ app.set('views', './views');
 
 app.use((req, res, next) => {
   res.locals.includeHeaderFooter = req.path.startsWith('/admin') || req.path.startsWith('/Vendor') || req.path.startsWith('/vendor');
-  res.locals.excludeHeaderFooter = req.path.startsWith('/login') || req.path.startsWith('/register');
+  res.locals.excludeHeaderFooter = req.path.startsWith('/login') || req.path.startsWith('/register') || req.path.startsWith('/userLogin');
 
   next();
 });

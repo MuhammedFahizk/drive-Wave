@@ -19,7 +19,9 @@ router.get('/carDetails', userController.carDetailsUser);
 router.post('/searchCar', userController.carSearchByName);
 router.post('/generateOtp', userController.generateOtpEmail);
 router.post('/checkOtpUser', userController.userOtpCheck);
-router.post('registration', userController.registration);
+router.post('/OtpUser', userController.OtpCheck);
+
+router.post('/registration', userController.registration);
 router.get('/contact', userController.contactPage);
 router.post('/Message', userController.userMessageToAdmin);
 router.get('/about', userController.aboutPage);

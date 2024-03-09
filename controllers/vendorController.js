@@ -5,6 +5,9 @@ const { Vendor } = require('../models/users');
 const { admin } = require('../models/users');
 const { Car } = require('../models/car');
 const cloudinary = require('../service/cloudnery');
+const { sendAdminOtp, generateOtp } = require('../service/nodeMailer');
+
+const emailOtp = {};
 
 const loginPage = (req, res) => {
   res.status(200).render('vendor/login');
@@ -17,7 +20,7 @@ async function showVendorDashboard(req, res) {
       const vendor = await Vendor.findOne({ role: 'vendor', email, password });
       if (vendor) {
         if (!vendor.vendorAccessEnabled === true) {
-          res.status(403).render('vendor/login', { error: 'EnterAdmin does not have permission to enable the vendor ' });
+          res.status(403).render('vendor/login', { error: 'Admin does not have permission to enable the vendor ' });
         } else {
           req.session.vendorId = uuidv4();
           req.session.ownerId = vendor._id;
@@ -39,19 +42,53 @@ const signUpPage = (req, res) => {
   res.status(200).render('vendor/signUp');
 };
 
+const getOtp = (req, res) => {
+  res.status(200).render('vendor/otpPage');
+};
+const otpGenerate = (req, res) => {
+  const { email } = req.body;
+  const otp = generateOtp();
+  emailOtp[email] = otp;
+  req.session.email = email;
+
+  sendAdminOtp(email, otp, (error, info) => {
+    if (error) {
+      return res.status(500).send(error, info);
+    }
+    console.error(otp, email);
+    req.session.email = email;
+    return res.status(201).render('vendor/generateOtp', { email });
+  });
+};
+
+async function loginOtp(req, res) {
+  const { otp } = req.body;
+  const { email } = req.session;
+  if (emailOtp[email] && emailOtp[email] === otp) {
+    const vendor = Vendor.find({ email });
+    if (vendor) {
+      delete emailOtp[email];
+      req.session.vendorId = uuidv4();
+      req.session.ownerId = vendor._id;
+      res.status(200).redirect('/vendor/dashboardPage');
+    } else {
+      res.status(404).redirect('admin/login');
+    }
+  }
+}
+
 const signupVendor = async (req, res) => {
   try {
     const { email } = req.body;
-
     const existingVendor = await Vendor.findOne({ email });
     if (existingVendor) {
-      return res.status(409).render('vendor/signUp', { error: 'Email address is already in use' });
+      return res.status(409).render('vendor/signUp', { error: 'Email address is already  use' });
     }
     const newVendor = new Vendor(req.body);
     newVendor.role = 'vendor';
     newVendor.vendorAccessEnabled = false;
     await newVendor.save();
-    return res.status(201).render('vendor/login', { popup: 'Successfully Submit Your Data Access after Enable Admin' }); // Respond with the saved Vendor data
+    return res.status(201).redirect('/vendor/login?popup=Successfully+Submit+Your+Data+Access+after+Enable+Admin');
   } catch (error) {
     console.error('Error creating Vendor:', error);
     return res.status(500).json({ error: 'Server error' });
@@ -250,6 +287,9 @@ const venderRecoveryMessage = async (req, res) => {
 module.exports = {
   loginPage,
   showVendorDashboard,
+  getOtp,
+  otpGenerate,
+  loginOtp,
   showDashboard,
   vendorCarPage,
   addCarVendor,

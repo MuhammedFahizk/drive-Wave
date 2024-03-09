@@ -118,15 +118,12 @@ function handleRowClickVendor(row) {
       document.getElementById('exampleModalLabel').innerText = data.vendorId;
       document.querySelector('#viewVendor .modal-body').innerHTML = `
  <div class="row g-0">
-    <div class="col-md-4">
-      <img src="${data.carImage}" class="img-fluid rounded-start  col-12 mt-4 " style="height:325px;object-fit: cover; width: 100%; " alt="Car Image">
-    </div>
-    <div class="col-md-8">
+   
+    <div class="col-md-12">
       <div class="card-body">
         <h5 class="card-title">${data.name}</h5>
        <ul class="list-group list-group-flush">
                     <li class="list-group-item">Email: ${data.email}</li>
-                    <li class="list-group-item">Age: ${data.age}</li>
                     <li class="list-group-item">ShopName: ${data.shopName}</li>
                     <li class="list-group-item">Phone: ${data.phone}</li>
                     <li class="list-group-item">Account Number: ${data.accountNumber}</li>
