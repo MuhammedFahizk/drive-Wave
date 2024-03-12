@@ -34,6 +34,9 @@ const adminSchema = new mongoose.Schema({
     sender: String,
     createdAt: { type: Date, default: Date.now },
   }],
+  locations: [{
+    type: String,
+  }],
 });
 const VendorSchema = new mongoose.Schema({
   name: {
@@ -88,6 +91,9 @@ const VendorSchema = new mongoose.Schema({
     message: String,
     sender: String,
     createdAt: { type: Date, default: Date.now },
+  }],
+  locations: [{
+    type: String,
   }],
 }, { timestamps: true, timeseries: true });
 const userSchema = new mongoose.Schema({

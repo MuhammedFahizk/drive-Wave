@@ -73,8 +73,12 @@ const showAdminDashboard = async (req, res) => {
 };
 async function showAdminCarPage(req, res) {
   const car = await Car.find();
+  const user = await admin.findOne({ role: 'Admin' });
+  const locations = user.locations.map((locationParts) => locationParts.replace(/\s+/g, '-'));
   const counts = await Car.find().countDocuments();
-  res.render('admin/adminCarPage', { data: car, count: counts, NotificationCount });
+  res.render('admin/adminCarPage', {
+    data: car, count: counts, NotificationCount, user, locations,
+  });
 }
 const logout = (req, res) => {
   if (req.session.adminId) {
@@ -109,6 +113,8 @@ async function addCarAdmin(req, res) {
     features,
     description,
   } = req.body;
+  const locationWithSpaces = location.replace(/-/g, ' ');
+
   if (req.file && req.file.path) {
     const newCar = new Car({
       carName,
@@ -120,7 +126,7 @@ async function addCarAdmin(req, res) {
       carModal,
       licensePlateNumber,
       color,
-      location,
+      location: locationWithSpaces,
       fuelType,
       TransmitionType,
       milage,
@@ -206,6 +212,7 @@ async function getCarDetails(req, res) {
 async function updateCar(req, res) {
   try {
     const { editCarId, imageId, ...updateValues } = req.body;
+    updateValues.location = updateValues.location.replace(/-/g, ' ');
 
     if (!editCarId) {
       return res.status(400).json('Could not get car Id');

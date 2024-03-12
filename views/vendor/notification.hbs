@@ -23,43 +23,43 @@
 		</a>
 		<ul style="padding: 0;" class="side-menu top">
 			<li >
-				<a href="/admin/DashboardPage">
+				<a href="/vendor/DashboardPage">
 					<i class='bx bxs-dashboard' ></i>
 					<span class="text">Dashboard</span>
 				</a>
 			</li>
 			<li >
-				<a href="/admin/CarPage">
+				<a href="/vendor/CarPage">
                     <i class='bx bxs-car' ></i>
 					<span class="text">Cars</span>
 				</a>
 			</li>
 			<li>
-				<a href="/admin/Vendor">
+				<a href="/vendor/Vendor">
 					<i class='bx bxs-user-circle' ></i>
 					<span class="text">Vendors</span>
 				</a>
 			</li>
 			<li>
-				<a href="/admin/users">
+				<a href="/vendor/users">
                     <i class='bx bxs-user-account'></i>
 					<span class="text">Users</span>
 				</a>
 			</li>
 			<li>
-				<a href="/admin/Booking">
+				<a href="/vendor/Booking">
                     <i class='bx bxs-book-bookmark'></i>
 					<span class="text">Booking</span>
 				</a>
 			</li>
 			<li>
-				<a href="/admin/Payment">
+				<a href="/vendor/Payment">
 					<i class='bx bxs-group' ></i>
 					<span class="text">Payment</span>
 				</a>
 			</li>
             <li class="active">
-				<a href="/admin/Notification">
+				<a href="/vendor/Notification">
 				<i class='bx bxs-bell' ></i>
 					<span class="text">Notification</span>
 				</a>
@@ -73,7 +73,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="/admin/adminLogout" class="logout">
+				<a href="/vendor/vendorLogout" class="logout">
 					<i class='bx bxs-log-out-circle' ></i>
 					<span class="text">Logout</span>
 				</a>
@@ -97,7 +97,7 @@
 			</form>
 			<input type="checkbox" id="switch-mode" hidden>
 			<label for="switch-mode" class="switch-mode"></label>
-			<a href="/admin/Notification" class="notification">
+			<a href="/vendor/Notification" class="notification">
 				<i class='bx bxs-bell' ></i>
 				<span class="num">{{count}}</span>
 			</a>
@@ -166,7 +166,7 @@
                     Message To Admin
                 </a>
 				{{this}}
-                    <div style="display:none" id="adminMessage" class="car-wrap rounded ftco-animate ">
+                    <div style="display:none" id="vendorMessage" class="car-wrap rounded ftco-animate ">
                          <form action='/vendor/RecoveryMessage?' id="contactForm" class="bg-light p-5 pb-2 contact-form"  method="post">
               <div class="form-group">
                 <input type="text" name="name" class="form-control" placeholder="Your Name">
@@ -221,7 +221,7 @@
 </html>
 <script>
        const recover = document.getElementById('recover')
-   const adminMessage = document.getElementById('adminMessage')
+   const vendorMessage = document.getElementById('adminMessage')
    recover.addEventListener('click', ()=> {
     adminMessage.style.display = 'block'
    })

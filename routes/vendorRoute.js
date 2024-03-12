@@ -24,5 +24,6 @@ router.get('/carPage/deleteCar', middleware.requireAuth, vendorController.delete
 router.get('/vendorLogout', middleware.requireAuth, vendorController.vendorLogout);
 router.get('/Notification', middleware.requireAuth, vendorController.vendorNotification);
 router.post('/RecoveryMessage', middleware.requireAuth, vendorController.venderRecoveryMessage);
+router.get('/Booking', middleware.requireAuth, vendorController.bookingPage);
 
 module.exports = router;

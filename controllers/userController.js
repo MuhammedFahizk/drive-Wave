@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
@@ -29,12 +30,14 @@ const getHomePage = async (req, res) => {
 
     return res.redirect(`${previous}?carId=${carId}`);
   }
+  const location = await Car.distinct('location').exec();
+
   const car = await userService.FeaturedCar();
   if (!req.session.name) {
-    return res.render('user/index', { car });
+    return res.render('user/index', { car, location });
   }
   const { name } = req.session;
-  return res.render('user/index', { name, car });
+  return res.render('user/index', { name, car, location });
 };
 
 const loginPage = (req, res) => {
@@ -188,13 +191,48 @@ async function deleteUser(req, res) {
 }
 async function showCars(req, res) {
   try {
-    const { name, password } = req.session;
+    const {
+      name, password, pickDate, dropDate, location,
+    } = req.session;
     req.session.bookingId = '';
-    const cars = await Car.find();
-    if (cars) {
-      cars.carImageUrl = encodeURIComponent(cars.carImage);
-      res.render('user/cars', { data: cars, name });
+    let AvailabilityId = [];
+
+    if (pickDate && dropDate) {
+      const pickDateNew = new Date(pickDate);
+      const dropDateNew = new Date(dropDate);
+      const availability = await userService.findCarAvailability(pickDateNew, dropDateNew);
+      AvailabilityId = availability.map((entry) => entry._id);
+      req.session.pickDate = pickDate;
+      req.session.dropDate = dropDate;
+      const model = [
+        {
+          $match: {
+            _id: {
+              $in: AvailabilityId,
+            },
+            location,
+          },
+        },
+      ];
+      const allCollections = await Car.aggregate(model);
+      const locations = await Car.distinct('location').exec();
+      return res.render('user/cars', { data: allCollections, name, locations });
     }
+    if (location) {
+      const cars = await Car.find({ location });
+      const locations = await Car.distinct('location').exec();
+      if (cars) {
+        cars.carImageUrl = encodeURIComponent(cars.carImage);
+        return res.render('user/cars', { data: cars, name, locations });
+      }
+    }
+    const cars = await Car.find();
+    const locations = await Car.distinct('location').exec();
+    if (!cars) {
+      return res.status(400).json('cant get cars');
+    }
+    cars.carImageUrl = encodeURIComponent(cars.carImage);
+    return res.render('user/cars', { data: cars, name, locations });
   } catch (error) {
     console.error('Error deleting user', error);
     res.status(500).json('Internal Server Error');
@@ -206,14 +244,16 @@ async function filterCars(req, res) {
     transmission,
     fuel,
     carCategory,
-    pickDateData,
-    dropDateData,
-  } = req.body;
 
+  } = req.body;
+  let { pickDate, dropDate, location } = req.session;
+  if (!location) {
+    location = await Car.distinct('location').exec();
+  }
   let AvailabilityId = [];
-  if (pickDateData && dropDateData) {
-    const pickDate = new Date(pickDateData);
-    const dropDate = new Date(dropDateData);
+  if (pickDate && dropDate) {
+    pickDate = new Date(pickDate);
+    dropDate = new Date(dropDate);
     const availability = await userService.findCarAvailability(pickDate, dropDate);
     AvailabilityId = availability.map((entry) => entry._id);
     req.session.pickDate = pickDate;
@@ -228,10 +268,10 @@ async function filterCars(req, res) {
           TransmitionType: { $in: transmission },
           fuelType: { $in: fuel },
           carCategory: { $in: carCategory },
+          location,
         },
       },
     ];
-
     const allCollections = await Car.aggregate(model);
 
     return res.status(200).json(allCollections);
@@ -535,31 +575,40 @@ const changeDate = async (req, res) => {
 };
 
 const findCarByDate = async (req, res) => {
-  const { pickDateData, dropDateData } = req.body;
-  let AvailabilityId = [];
+  const { pickDate, dropDate, location } = req.body;
+  if (!pickDate || !dropDate) {
+    if (location) {
+      req.session.location = location;
 
-  if (!pickDateData || !dropDateData) {
+      return res.redirect('/cars');
+    }
     return res.status(401).redirect('/');
   }
-  const pickDate = new Date(pickDateData);
-  const dropDate = new Date(dropDateData);
-  AvailabilityId = await userService.findCarAvailability(pickDate, dropDate);
-  AvailabilityId = AvailabilityId.map((entry) => entry._id);
-  req.session.pickDate = pickDate;
+  // const pickDate = new Date(pickDateData);
+  // const dropDate = new Date(dropDateData);
+  // AvailabilityId = await userService.findCarAvailability(pickDate, dropDate);
+  // AvailabilityId = AvailabilityId.map((entry) => entry._id);
+  // req.session.pickDate = pickDate;
+  // req.session.dropDate = dropDate;
+  // const car = await Car.aggregate([
+  //   {
+  //     $match: {
+  //       _id: {
+  //         $in: AvailabilityId,
+  //       },
+  //       location,
+  //     },
+  //   },
+  // ]);
+  // if (!car) {
+  //   return res.status(401).redirect('/');
+  // }
+  // return res.status(200).render('user/cars', { data: car });
   req.session.dropDate = dropDate;
-  const car = await Car.aggregate([
-    {
-      $match: {
-        _id: {
-          $in: AvailabilityId,
-        },
-      },
-    },
-  ]);
-  if (!car) {
-    return res.status(401).redirect('/');
-  }
-  return res.status(200).render('user/cars', { data: car });
+  req.session.pickDate = pickDate;
+  req.session.location = location;
+
+  return res.redirect('/cars');
 };
 const removeWishlist = async (req, res) => {
   const { id } = req.query;

@@ -42,13 +42,13 @@
 				</a>
 			</li>
 			<li>
-				<a href="/vendorBooking">
+				<a href="/vendor/Booking">
                     <i class='bx bxs-book-bookmark'></i>
 					<span class="text">Booking</span>
 				</a>
 			</li>
 			<li>
-				<a href="/vendorPayment">
+				<a href="/vendor/Payment">
 					<i class='bx bxs-group' ></i>
 					<span class="text">Payment</span>
 				</a>
@@ -172,7 +172,6 @@
   <div class="modal-dialog" style="max-width: 800px; margin-left:370px;color:#3C91E6 ;background-color: #949596b3;"> 
 					<form id="carModalForm" action="/vendor/addCars" method="post" enctype="multipart/form-data">
                
-
                     <div class="modal-content" style="color:#3C91E6 ;background-color: #3c91e605;" >
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add Car</h5>
@@ -242,7 +241,13 @@
                                </div>
                                 <div class="input-group flex-nowrap mt-3">
                             <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-location-plus' ></i></i></span>
-                            <input type="text" class="form-control" id="location" name="location" placeholder="location" aria-label="Username" aria-describedby="addon-wrapping" required>
+                             <select class="form-select ms-2"  name="location" id="location" placeholder="location">
+                                <option selected>Location </option>
+                                {{#each locations}}
+                                                               <option value={{this}}>{{this}}</option>
+                                {{/each}}
+
+                            </select>
                                </div>
 							   <div class="input-group flex-nowrap mt-3">
                            
@@ -383,9 +388,15 @@
                             <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-paint-roll'></i></span>
                             <input type="text" class="form-control" id="color" name="color" placeholder="Color" aria-label="Username" aria-describedby="addon-wrapping" required>
                                </div>
-                                <div class="input-group flex-nowrap mt-3">
-                            <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-edit-location'></i></span>
-                            <input type="text" class="form-control" id="location" name="location" placeholder="location" aria-label="Username" aria-describedby="addon-wrapping" required>
+                                 <div class="input-group flex-nowrap mt-3">
+                            <span class="input-group-text" id="addon-wrapping"><i class='bx bxs-location-plus' ></i></i></span>
+                             <select class="form-select ms-2"  name="location" id="location" placeholder="location">
+                                <option selected>Location </option>
+                                {{#each locations}}
+                                  <option value={{this}}>{{this}}</option>
+                                {{/each}}
+
+                            </select>
                                </div>
 							   <div class="input-group flex-nowrap mt-3">
                            

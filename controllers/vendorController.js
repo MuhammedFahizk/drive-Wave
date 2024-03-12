@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const { v4: uuidv4 } = require('uuid');
-
 const { Vendor } = require('../models/users');
+const { User } = require('../models/users');
 const { admin } = require('../models/users');
 const { Car } = require('../models/car');
 const cloudinary = require('../service/cloudnery');
@@ -100,8 +100,13 @@ async function vendorCarPage(req, res) {
     const { ownerId } = req.session;
     if (ownerId) {
       const cars = await Car.find({ ownerId });
+      const vendor = await Vendor.findById(ownerId);
+      const locations = vendor.locations.map((locationParts) => locationParts.replace(/\s+/g, '-'));
+
       const count = await Car.countDocuments({ ownerId });
-      res.status(200).render('vendor/carPage', { data: cars, count });
+      res.status(200).render('vendor/carPage', {
+        data: cars, count, vendor, locations,
+      });
     } else {
       res.status(500).json({ error: 'not find vendorID' });
     }
@@ -130,6 +135,7 @@ async function addCarVendor(req, res) {
     features,
     description,
   } = req.body;
+  const spaceLocation = location.replace(/-/g, ' ');
   if (req.file && req.file.path) {
     const newCar = new Car({
       carName,
@@ -141,7 +147,7 @@ async function addCarVendor(req, res) {
       carModal,
       licensePlateNumber,
       color,
-      location,
+      location: spaceLocation,
       fuelType,
       TransmitionType,
       milage,
@@ -165,7 +171,7 @@ async function addCarVendor(req, res) {
 async function updateCar(req, res) {
   try {
     const { editCarId, imageId, ...updateValues } = req.body;
-
+    updateValues.location = updateValues.location.replace(/-/g, ' ');
     if (!editCarId) {
       return res.status(400).json({ error: 'Could not get car Id' });
     }
@@ -284,6 +290,46 @@ const venderRecoveryMessage = async (req, res) => {
     return res.status(500).send('An error occurred while processing the recovery message');
   }
 };
+
+const bookingPage = async (req, res) => {
+  try {
+    const { ownerId } = req.session;
+    const userWithBookings = await User.find({}).populate('bookedCar.car');
+    // eslint-disable-next-line consistent-return, array-callback-return
+    const allBookings = userWithBookings.flatMap((user) => user.bookedCar.map((booking) => {
+      if (booking.car.ownerId || booking.car.ownerId === ownerId) {
+        const { pickupDate, returnDate } = booking;
+        const totalDays = Math.ceil(
+          (new Date(returnDate) - new Date(pickupDate)) / (1000 * 60 * 60 * 24),
+        );
+        return {
+          user,
+          userId: user._id,
+          userName: user.name,
+          bookingDetails: {
+            bookingDate: booking.bookingDate ? new Date(booking.bookingDate).toLocaleDateString() : 'N/A',
+            pickupDate: pickupDate ? new Date(pickupDate).toLocaleDateString() : 'N/A',
+            returnDate: returnDate ? new Date(returnDate).toLocaleDateString() : 'N/A',
+            totalDays,
+            totalPrice: booking.totalPrice || 0,
+            status: booking.status || 'N/A',
+            _id: booking._id,
+          },
+          car: booking.car,
+        };
+      }
+    })).filter(Boolean);
+    const bookingsCount = allBookings.length;
+    const confirmedBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'Confirmed').length;
+    const pendingBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'pending').length;
+    return res.status(200).render('vendor/bookingPage', {
+      allBookings, bookingsCount, pendingBookingsCount, confirmedBookingsCount,
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 module.exports = {
   loginPage,
   showVendorDashboard,
@@ -301,4 +347,5 @@ module.exports = {
   vendorLogout,
   vendorNotification,
   venderRecoveryMessage,
+  bookingPage,
 };

@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up Form</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet” href=”//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet” href=”https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <!-- Include your custom stylesheet -->
 </head>
+
 <body>
   <div class="container-fluid">
     <div class="row justify-content-center">
@@ -17,49 +24,108 @@
             <h3 class="text-center">Sign Up</h3>
           </div>
           <div style="max-height: 400px;overflow-y: auto;" class="card-body">
-<form id="vendorSignupForm" action="/vendor/signupVendor" method="post">
-            {{#if error}}
-            <script>
-             alert("{{error}}")
-            </script>
-            {{/if}}
+            <form id="vendorSignUpForm" action="/vendor/signupVendor" method="post">
+              {{#if error}}
+              <script>
+                alert("{{error}}")
+              </script>
+              {{/if}}
               <div class="form-group">
-                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" >
+                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name">
               </div>
               <div class="form-group">
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email" >
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" >
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" >
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                  placeholder="Confirm Password">
               </div>
               <div class="form-group">
-                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" >
+                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number">
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="bankName" name="bankName" placeholder="Bank Name" >
+                <input type="text" class="form-control" id="bankName" name="bankName" placeholder="Bank Name">
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="accountNumber" name="accountNumber" placeholder="Account Number" >
+                <input type="text" class="form-control" id="accountNumber" name="accountNumber"
+                  placeholder="Account Number">
+              </div>
+              <div class="form-group border border-color-success rounded p-2">
+                <h5>Shop Locations</h5>
+
+                <div id="row" class="row p m-1 ">
+                  <input type="text" class="form-control  col-11" id="locations" name="locations" placeholder="Location">
+                  <button class="btn btn-danger col-1 p-1" id="DeleteRow" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                      style="fill: rgba(247, 249, 247, 1);transform: ;msFilter:;">
+                      <path
+                        d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z">
+                      </path>
+                      <path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div id="newInput"></div>
+                <button id="rowAdder" type="button" class=" d-flex my-3 ml-1 btn  btn-success">
+                  ADD <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                      style="fill: rgba(239, 245, 239, 1);transform: ;msFilter:;">
+                      <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
+                    </svg>
+
+                  </div>
+
+                </button>
+
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" id="shopName" name="shopName" placeholder="Shop Name" >
+                <input type="text" class="form-control" id="shopName" name="shopName" placeholder="Shop Name">
+
               </div>
+
               <p id="error" style="color: red;"></p>
               <button type="submit" class="btn btn-outline-info btn-block">Sign Up</button>
             </form>
-             
+
           </div>
         </div>
       </div>
     </div>
   </div>
 </body>
+
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <script>
- document.getElementById('vendorSignupForm').addEventListener('submit', function(event) {
+
+  $('#rowAdder').click(() => {
+    newRowAdd = `
+   <div id="row" class="row p m-1">
+                  <input type="text" class="form-control  col-11" id="locations" name="locations" placeholder="Location">
+                  <button class="btn btn-danger col-1 p-1" id="DeleteRow" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                      style="fill: rgba(247, 249, 247, 1);transform: ;msFilter:;">
+                      <path
+                        d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z">
+                      </path>
+                      <path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+                    </svg>
+                  </button>
+                </div>
+  `
+    $('#newInput').append(newRowAdd)
+
+  });
+  $("body").on("click", "#DeleteRow", function () {
+    $(this).parents("#row").remove();
+  })
+
+
+  document.getElementById('vendorSignUpForm').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the form from submitting
 
     // Perform form validation
@@ -72,77 +138,77 @@
     const accountNumber = document.getElementById('accountNumber').value;
     const shopName = document.getElementById('shopName').value;
     const error = document.getElementById('error')
-const pswRegx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  const accNo = /^\d{8,16}$/;
+    const pswRegx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const accNo = /^\d{8,16}$/;
 
     if (!name) {
       error.innerHTML = 'Please enter your Full Name'
-        return false; // Prevent form submission
+      return false; // Prevent form submission
     }
 
     if (!email) {
       error.innerHTML = 'Please enter your Email.'
 
-        return false; // Prevent form submission
+      return false; // Prevent form submission
     }
-   
+
 
     if (!password) {
       error.innerHTML = 'Please enter a Password.'
 
-        return false; // Prevent form submission
+      return false; // Prevent form submission
     }
-if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
-    error.innerHTML = "Password is not valid. It must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be at least 8 characters long.";
-    return false;
-}
-   if (!confirmPassword) {
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+      error.innerHTML = "Password is not valid. It must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be at least 8 characters long.";
+      return false;
+    }
+    if (!confirmPassword) {
       error.innerHTML = 'Please confirm your Password.'
 
-        return false; // Prevent form submission
+      return false; // Prevent form submission
     }
 
     if (!phone) {
       error.innerHTML = 'Please enter your Phone Number.'
 
-        return false; // Prevent form submission
+      return false; // Prevent form submission
     }
-    if(!/^\d{10}$/.test(phone)) {
+    if (!/^\d{10}$/.test(phone)) {
       error.innerHTML = 'Please enter valid Phone Number.'
-        return false;
+      return false;
     }
 
     if (!bankName) {
       error.innerHTML = 'Please enter your Bank Name.'
 
-        return false; // Prevent form submission
+      return false; // Prevent form submission
     }
 
     if (!accountNumber) {
       error.innerHTML = 'Please enter your Account Number.'
 
-        return false; // Prevent form submission
+      return false; // Prevent form submission
     }
-  if (!accNo.test(accountNumber)) {
+    if (!accNo.test(accountNumber)) {
       error.innerHTML = 'Please enter valid Account Number.'
-  return false;
-  }
+      return false;
+    }
     if (!shopName) {
       error.innerHTML = 'Please enter your Shop Name'
 
-        return false; // Prevent form submission
+      return false; // Prevent form submission
     }
 
     if (password !== confirmPassword) {
       error.innerHTML = 'Passwords do not match.'
 
-        return false; // Prevent form submission
+      return false; // Prevent form submission
     }
 
     // Additional validation can be added for email format, phone number format, etc.
 
     // If all validations pass, you can submit the form
     this.submit();
-});
+  });
 
 </script>
