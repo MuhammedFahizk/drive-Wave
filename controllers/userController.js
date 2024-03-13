@@ -192,9 +192,10 @@ async function deleteUser(req, res) {
 async function showCars(req, res) {
   try {
     const {
-      name, password, pickDate, dropDate, location,
+      name, password, pickDate, dropDate, location, carId,
     } = req.session;
     req.session.bookingId = '';
+
     let AvailabilityId = [];
 
     if (pickDate && dropDate) {
@@ -210,13 +211,18 @@ async function showCars(req, res) {
             _id: {
               $in: AvailabilityId,
             },
-            location,
           },
         },
       ];
-      const allCollections = await Car.aggregate(model);
+      let allCollections = await Car.aggregate(model);
+
+      if (location) {
+        allCollections = allCollections.filter((car) => car.location === location);
+      }
       const locations = await Car.distinct('location').exec();
-      return res.render('user/cars', { data: allCollections, name, locations });
+      return res.render('user/cars', {
+        data: allCollections, name, locations, location, pickDate, dropDate,
+      });
     }
     if (location) {
       const cars = await Car.find({ location });
@@ -226,6 +232,7 @@ async function showCars(req, res) {
         return res.render('user/cars', { data: cars, name, locations });
       }
     }
+
     const cars = await Car.find();
     const locations = await Car.distinct('location').exec();
     if (!cars) {
@@ -790,6 +797,7 @@ const paymentVerification = async (req, res) => {
     const { _id } = req.session;
     await userService.verifyPayment(req.body);
     const updatedUser = await userService.changeStatus(req.body.bookingId, _id, req.body.method);
+    await userService.sendInvoiceEmail(_id, req.body.bookingId); // Changed function name
     req.session.bookingId = '';
     res.status(200).json(updatedUser);
   } catch (error) {

@@ -185,6 +185,10 @@
             <div class="col-md-8 d-flex align-items-center">
               <div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-10 p-3">
                 <ul class="p-0">
+                  <li>
+                <input type="text" id="locationSearch" class="col-12 border-0" placeholder="Search locations">
+
+                  </li>
                   {{#each location}}
                   <li>
                     <span>
@@ -557,8 +561,23 @@
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
+  $(document).ready(function() {
+  $('#locationSearch').on('keyup', function() {
+    var searchTerm = $(this).val().toLowerCase();
+    $('.locationLink').each(function() {
+      var text = $(this).text().toLowerCase();
+      if (text.includes(searchTerm)) {
+        $(this).parent().show();
+      } else {
+        $(this).parent().hide();
+      }
+    });
+  });
+});
+
   const locations = document.getElementById('locations')
   const servicePage = document.getElementById('servicePage')
   const locationButton = document.getElementById('locationButton')

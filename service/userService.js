@@ -7,6 +7,7 @@ const { Car } = require('../models/car'); // Assuming this is the correct path t
 const { ObjectId } = require('mongoose').Types;
 const Razorpay = require('razorpay');
 const { createHmac } = require('crypto');
+const sendMail = require('./nodeMailer');
 
 const { format } = require('date-fns');
 
@@ -152,6 +153,18 @@ const changeStatus = (bookingId, _id, method) => new Promise((resolve, reject) =
     .then((updatedUser) => resolve(updatedUser))
     .catch((error) => reject(error));
 });
+
+const sendInvoiceEmail = async (id, bookingId) => {
+  try {
+    const user = await User.findById(id);
+    const { email } = user;
+    await sendMail.sendMailUser(email, 'Invoice', user, bookingId);
+  } catch (error) {
+    console.error('Error sending invoice email:', error);
+    throw error;
+  }
+};
+
 const FeaturedCar = async () => {
   const mostBookedCar = await Car.aggregate([
     {
@@ -184,5 +197,6 @@ module.exports = {
   razerPayCreation,
   verifyPayment,
   changeStatus,
+  sendInvoiceEmail,
   FeaturedCar,
 };

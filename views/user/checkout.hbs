@@ -13,58 +13,67 @@
         border-radius: 20px;
         border: 1px solid;
         background-color: rgb(228, 228, 228);
-        
+
     }
-    #paymentPage{
-       
+
+    #paymentPage {
+
         border-radius: 10px;
         border: 1px solid;
     }
-    
-.time-picker {
-  width: 300px;
-  height: 20px;
-  background-color: #f0f0f0;
-  position: relative;
-  cursor: pointer;
-}
 
-.time-handle {
-  width: 20px;
-  height: 20px;
-  background-color: #007bff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-  cursor: pointer;
-}
-     .flatpickr-calendar {
-            background-color: #f0f0f0;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-        }
-        .flatpickr-day {
-            background-color: transparent;
-        }
-        .flatpickr-day.today {
-            background-color: #01d28e;
-        }
-        .flatpickr-month {
-            font-size: 1.em;
-        }
-        input {
-  border: 1px solid #ccc;
-  transition: border-color 0.3s; /* Add transition effect for smooth color change */
-}
+    .time-picker {
+        width: 300px;
+        height: 20px;
+        background-color: #f0f0f0;
+        position: relative;
+        cursor: pointer;
+    }
 
-/* Change border color on hover */
-input:hover {
-  border-color: #007bff; /* Change to your desired hover color */
-}
+    .time-handle {
+        width: 20px;
+        height: 20px;
+        background-color: #007bff;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .flatpickr-calendar {
+        background-color: #f0f0f0;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .flatpickr-day {
+        background-color: transparent;
+    }
+
+    .flatpickr-day.today {
+        background-color: #01d28e;
+    }
+
+    .flatpickr-month {
+        font-size: 1.em;
+    }
+
+    input {
+        border: 1px solid #ccc;
+        transition: border-color 0.3s;
+        /* Add transition effect for smooth color change */
+    }
+
+    /* Change border color on hover */
+    input:hover {
+        border-color: #007bff;
+        /* Change to your desired hover color */
+    }
 </style>
+
 <head>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 </head>
 <section class="ftco-section bg-light col-12 row p-0 p-md-5 m-0 ">
@@ -97,7 +106,7 @@ input:hover {
                                 <input class="form-check-input" type="radio" name="paymentOption" id="exampleRadio1"
                                     value="cardPay" checked>
                                 <label class="form-check-label" for="exampleRadio1">
-                                   Card
+                                    Card
                                 </label>
                             </div>
                             <div class="form-check  col-5 ">
@@ -119,18 +128,19 @@ input:hover {
                         </div>
                         <div class="rounded ftco-animate p-md-5 col-12" id="cardPay">
                             <div class="col-12 p-2">
-                                <input  type="text" class="col-12 " name="cardNumber" placeholder="Card Number" required>
+                                <input type="text" class="col-12 " name="cardNumber" placeholder="Card Number" required>
                             </div>
                             <div class="col-12 p-2">
                                 <input type="text" class="col-12" name="cardHolderName" placeholder="Holder Name"
                                     required>
                             </div>
                             <div class="col-12 row mx-0 ">
-                                    <input  style="height: 40px;margin-left:-7px" type="text"  class="col-2 px-3  mt-2  " name="expiryMonth"
-                                        placeholder="MM" required>
-                                    <input style="height: 40px;" type="text"  class="col-2 p-0 mt-2 ml-2 px-3" name="expiryYear"
-                                        placeholder="YY" required>
-                                    <input style="height: 40px;"  type="password" class="col-3 ml-3 mt-2" name="cvv" placeholder="CVV" required>
+                                <input style="height: 40px;margin-left:-7px" type="text" class="col-2 px-3  mt-2  "
+                                    name="expiryMonth" placeholder="MM" required>
+                                <input style="height: 40px;" type="text" class="col-2 p-0 mt-2 ml-2 px-3"
+                                    name="expiryYear" placeholder="YY" required>
+                                <input style="height: 40px;" type="password" class="col-3 ml-3 mt-2" name="cvv"
+                                    placeholder="CVV" required>
                             </div>
                             <div class="col-12 p-2">
                                 <div class="row justify-content-end">
@@ -146,9 +156,24 @@ input:hover {
                             </div>
                         </div>
 
-                        <div class="car-wrap rounded ftco-animate" id="upiPay" style="display:none;">
-                            <h3>UPI Payment</h3>
-                            <p>This is the payment option for UPI payment.</p>
+                        <div class="rounded ftco-animate p-md-5 col-12" id="upiPay" style="display:none;">
+                            <div class="col-12 p-2">
+                                <input type="text" class="col-12 " id="phone" name="phone" placeholder="Phone Number"
+                                    required>
+
+                            </div>
+                            <div class="col-12 p-2">
+                                <input type="text" class="col-12 " id="vpa" name="vpa" placeholder="UPI Id" required>
+                                <p id="error"></p>
+
+                                <input type="hidden" id="bookingId" value="{{bookingId}}">
+
+                            </div>
+                            <div class="col-12 p-2">
+                                <input type="button" class="col-12 btn-primary" id="paymentBtnUpi" name="vpa"
+                                    placeholder="" value="Pay" required>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -241,7 +266,7 @@ input:hover {
                                 placeholder="Place">
                             <input type="text" maxlength="3" class=" col-5 mt-3 " name="zip" value="{{address.zip}}"
                                 placeholder="Zip">
-                            <input  id="bookingPageSubmit" type="button" class="col-12 mt-4 btn btn-primary"
+                            <input id="bookingPageSubmit" type="button" class="col-12 mt-4 btn btn-primary"
                                 value="Booking">
                         </form>
                         <h6 style="display: none;" id="errorMessage" class="mx-4 text-danger">You Already Booked this
@@ -366,7 +391,7 @@ input:hover {
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js'></script>
 <script type="text/javascript" src="https://checkout.razorpay.com/v1/razorpay.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
 
@@ -385,24 +410,24 @@ input:hover {
     }
     console.log(sessionStorage)
 
- flatpickr("#pickDate", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minTime: "08:00",
-            maxTime: "22:00",
-            minDate: "today",
-            onChange: function(selectedDates, dateStr, instance) {
-                document.getElementById("dropDate")._flatpickr.set("minDate", dateStr);
-            }
-        });
-        
-        flatpickr("#dropDate", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minTime: "08:00",
-            maxTime: "22:00",
-            minDate: "today"
-        });
+    flatpickr("#pickDate", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minTime: "08:00",
+        maxTime: "22:00",
+        minDate: "today",
+        onChange: function (selectedDates, dateStr, instance) {
+            document.getElementById("dropDate")._flatpickr.set("minDate", dateStr);
+        }
+    });
+
+    flatpickr("#dropDate", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minTime: "08:00",
+        maxTime: "22:00",
+        minDate: "today"
+    });
 
     const calendarEl = document.getElementById('calendar');
     const bookingPage = document.getElementById('bookingPage');
@@ -497,67 +522,67 @@ input:hover {
             const errorPayment = document.getElementById('errorPayment');
             const bookingId = document.getElementById('bookingId').value;
             cardNumber = cardNumber.replace(/\s/g, '');
-const cardNumberPattern = /^\d{16}$/;
-const cvvPattern = /^\d{3,4}$/;
-const expiryMonthPattern = /^(0[1-9]|1[0-2])$/;
+            const cardNumberPattern = /^\d{16}$/;
+            const cvvPattern = /^\d{3,4}$/;
+            const expiryMonthPattern = /^(0[1-9]|1[0-2])$/;
 
-if (cardNumber === '') {
-    errorPayment.textContent = 'Please enter card number.';
-    return false;
-}
+            if (cardNumber === '') {
+                errorPayment.textContent = 'Please enter card number.';
+                return false;
+            }
 
-if (!cardNumberPattern.test(cardNumber)) {
-    errorPayment.textContent = 'Please enter a valid card number (16 digits).';
-    return false;
-}
+            if (!cardNumberPattern.test(cardNumber)) {
+                errorPayment.textContent = 'Please enter a valid card number (16 digits).';
+                return false;
+            }
 
-if (cardName === '') {
-    errorPayment.textContent = 'Please enter card holder Name';
-    return false;
-}
+            if (cardName === '') {
+                errorPayment.textContent = 'Please enter card holder Name';
+                return false;
+            }
 
-if (cvv === '') {
-    errorPayment.textContent = 'Please enter CVV.';
-    return false;
-}
+            if (cvv === '') {
+                errorPayment.textContent = 'Please enter CVV.';
+                return false;
+            }
 
-if (!cvvPattern.test(cvv)) {
-    errorPayment.textContent = 'Please enter a valid CVV (3 or 4 digits).';
-    return false;
-}
+            if (!cvvPattern.test(cvv)) {
+                errorPayment.textContent = 'Please enter a valid CVV (3 or 4 digits).';
+                return false;
+            }
 
-if (expiryMonth === '') {
-    errorPayment.textContent = 'Please enter expiry month.';
-    return false;
-}
+            if (expiryMonth === '') {
+                errorPayment.textContent = 'Please enter expiry month.';
+                return false;
+            }
 
-if (!expiryMonthPattern.test(expiryMonth)) {
-    errorPayment.textContent = 'Please enter a valid expiry month (01 to 12).';
-    return false;
-}
+            if (!expiryMonthPattern.test(expiryMonth)) {
+                errorPayment.textContent = 'Please enter a valid expiry month (01 to 12).';
+                return false;
+            }
 
-const currentYear = new Date().getFullYear();
-const expiryYearPattern = /^\d{2}$/;
+            const currentYear = new Date().getFullYear();
+            const expiryYearPattern = /^\d{2}$/;
 
-if (expiryYear === '') {
-    errorPayment.textContent = 'Please enter expiry year.';
-    return false;
-}
+            if (expiryYear === '') {
+                errorPayment.textContent = 'Please enter expiry year.';
+                return false;
+            }
 
-if (!expiryYearPattern.test(expiryYear)) {
-    errorPayment.textContent = 'Please enter a valid expiry year.';
-    return false;
-}
+            if (!expiryYearPattern.test(expiryYear)) {
+                errorPayment.textContent = 'Please enter a valid expiry year.';
+                return false;
+            }
 
-// Convert two-digit year to four-digit year
-const parsedExpiryYear = parseInt(expiryYear, 10);
-const fullExpiryYear = currentYear.toString().slice(0, 2) + expiryYear;
+            // Convert two-digit year to four-digit year
+            const parsedExpiryYear = parseInt(expiryYear, 10);
+            const fullExpiryYear = currentYear.toString().slice(0, 2) + expiryYear;
 
-if (parseInt(fullExpiryYear, 10) < currentYear) {
-    errorPayment.textContent = 'Expiry year must be in the future.';
-    return false;
-}
-    errorPayment.textContent = '';
+            if (parseInt(fullExpiryYear, 10) < currentYear) {
+                errorPayment.textContent = 'Expiry year must be in the future.';
+                return false;
+            }
+            errorPayment.textContent = '';
 
 
 
@@ -593,20 +618,88 @@ if (parseInt(fullExpiryYear, 10) < currentYear) {
         }
         )
     }
+    const paymentBtnUpi = document.getElementById('paymentBtnUpi')
+    if (paymentBtnUpi) {
+        paymentBtnUpi.addEventListener('click', (e) => {
+            e.preventDefault()
+            const phone = document.getElementById('phone').value
+            const vpa = document.getElementById('vpa').value
+            const bookingId = document.getElementById('bookingId').value
+            const error = document.getElementById('error')
+            const vpaRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const phoneRegex = /^\d{10}$/;
+            if (phone === '') {
+                error.innerHTML = 'Enter Phone Number'
+                return false
+            }
+            if (!phoneRegex.test(phone)) {
+                error.innerHTML = 'Enter Valid Phone Number'
+                return false
+            }
 
-   const paymentVerification = (resp, bookingId) => {
-    console.log(bookingId);
-    axios.post('/payment/verification', {
-        resp,
-        bookingId,
-        method: 'Card'
-    }).then((response) => {
-        sessionStorage.setItem('formData', '');
+            if (vpa === '') {
+                error.innerHTML = 'Enter Upi Id '
+                return false
+            }
 
-        const bookedCar = response.data.bookedCar[0];
-        console.log(bookedCar);
+            if (vpaRegex.test(vpa)) {
+                error.innerHTML = 'Enter valid  Upi Id '
+                return false
+            }
+            axios.post('orderDetails', { bookingId })
+                .then(response => {
+                    console.log(phone)
+                    console.log(vpa)
 
-        document.querySelector('#paymentSuccess .modal-body').innerHTML = `
+                    console.log(response)
+
+
+                        
+                            const paymentData = {
+                                amount: response.data.thisCar.totalPrice * 100,
+                                email: response.data.user.email, // Assuming email is part of form data
+                                contact: phone, // Assuming phone is part of form data
+                                order_id: response.data.thisCar.payment_id, //and other payment parameters, as usual
+                                method: 'upi',
+                                upi:
+                                {
+                                    vpa: 'gauravkumar@somebank',
+                                    flow: 'collect'
+                                }
+
+                            };
+                            razorpay.createPayment(paymentData)
+                            razorpay.on('payment.success', function (resp) {
+                                console.log(resp)
+                                paymentVerification(resp, response.data.thisCar._id)
+
+                            }); // will pass payment ID, order ID, and Razorpay signature to success handler.
+
+                            razorpay.on('payment.error', function (resp) { alert(resp.error.description);
+                                console.log(resp)
+                             }); // will pass error object to error handler
+                            // get and store data.vpa_token for initiating payment
+                            // you will get data.masked_vpa in this response which you can show the end user to accept payment on this vpa associated app
+                        })
+                       
+                })
+
+
+        };
+    
+    const paymentVerification = (resp, bookingId) => {
+        console.log(bookingId);
+        axios.post('/payment/verification', {
+            resp,
+            bookingId,
+            method: 'Card'
+        }).then((response) => {
+            sessionStorage.setItem('formData', '');
+
+            const bookedCar = response.data.bookedCar[0];
+            console.log(bookedCar);
+
+            document.querySelector('#paymentSuccess .modal-body').innerHTML = `
             <div class="justify-content-center row py-4">
                 <p style="font-size: 35px;" class="text-success">Payment successful!</p>
             </div>
@@ -646,20 +739,20 @@ if (parseInt(fullExpiryYear, 10) < currentYear) {
             </div>
         `;
 
-        $('#paymentSuccess').modal('show');
+            $('#paymentSuccess').modal('show');
 
-        // Event listener for the close button
-        const close = document.getElementById('close');
-        if (close) {
-            close.addEventListener('click', () => {
-                // Redirect to the bookedCars page
-                window.location.href = '/bookedCars';
-            });
-        }
-    }).catch((error) => {
-        console.error(error);
-    });
-};
+            // Event listener for the close button
+            const close = document.getElementById('close');
+            if (close) {
+                close.addEventListener('click', () => {
+                    // Redirect to the bookedCars page
+                    window.location.href = '/bookedCars';
+                });
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    };
 
     document.addEventListener('DOMContentLoaded', function () {
         const submitBtn = document.getElementById('submitButton');
