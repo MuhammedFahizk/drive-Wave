@@ -30,7 +30,11 @@ router.get('/disableVendor', login.requireAuth, adminController.disableVendor);
 router.get('/enableVendor', login.requireAuth, adminController.enableVendor);
 router.get('/Booking', login.requireAuth, adminController.BookingPage);
 router.get('/Payment', login.requireAuth, adminController.payment);
-
+router.post('/changCarStatus', login.requireAuth, adminController.changCarStatus);
+router.get('/service', login.requireAuth, adminController.servicePage);
+router.post('/service', login.requireAuth, upload.single('serviceImage'), login.addImage, adminController.addService);
+router.post('/editService', login.requireAuth, upload.single('serviceImage'), login.addImage, adminController.editService);
+router.delete('/service/:id', login.requireAuth, adminController.deleteService)
 // adminVendor routs
 router.get('/Vendor', login.requireAuth, adminController.vendorPage);
 router.get('/getVendorDetails', login.requireAuth, adminController.vendorDetails);

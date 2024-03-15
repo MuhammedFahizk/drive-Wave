@@ -183,7 +183,12 @@
 								</td> <!-- Call a helper function to format the date -->
 								<td>{{bookingDetails.totalDays}}</td>
 								<td>{{bookingDetails.totalPrice}}</td>
-
+<td>
+								<input type="hidden" class="booking-id" value="{{this.bookingDetails._id}}">
+    <a class="car-status btn btn-outline-primary">
+        {{bookingDetails.carStatus}} 
+    </a>
+								</td>
 								<td>{{car.carName}}</td>
 								<td><button type="button" class="btn btn-warning" data-bs-toggle="modal"
 										data-bs-target="#exampleModal{{@index}}">
@@ -208,6 +213,7 @@
 												<p><strong>Total Days:</strong> {{this.bookingDetails.totalDays}}</p>
 												<p><strong>Total Price:</strong> {{this.bookingDetails.totalPrice}}</p>
 												<p><strong>Payment Status:</strong> {{this.bookingDetails.status}}</p>
+												<p><strong>Car Status:</strong> {{this.bookingDetails.carStatus}}</p>
 
 												<p><strong>Car:</strong> {{this.car.carName}}</p>
 												<!-- Add more details as needed -->
@@ -256,3 +262,20 @@
 </body>
 
 </html>
+<script>
+		document.querySelectorAll('.car-status').forEach(carStatus => {
+    carStatus.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = carStatus.parentElement.querySelector('.booking-id').value;
+        axios.post('/vendor/changCarStatus', {
+            id
+        }).then(res => {
+			window.location.reload()
+            // Handle success if needed
+        }).catch(error => {
+            console.log(error)
+			
+        });
+    });
+});
+</script>

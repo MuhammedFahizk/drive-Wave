@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- My CSS -->
+
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/css/dashboard.css">
+
+    <title>AdminHub</title>
+</head>
+
+<body>
+
+
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="" class="brand">
+            <i class='bx bxs-smile'></i>
+            <span class="text">AdminHub</span>
+        </a>
+        <ul style="padding: 0;"  class="side-menu top">
+            <li>
+                <a href="/admin/DashboardPage">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/CarPage">
+                    <i class='bx bxs-car'></i>
+                    <span class="text">Cars</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/Vendor">
+                    <i class='bx bxs-user-circle'></i>
+                    <span class="text">Vendors</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/users">
+                    <i class='bx bxs-user-account'></i>
+                    <span class="text">Users</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/Booking">
+                    <i class='bx bxs-book-bookmark'></i>
+                    <span class="text">Booking</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/Payment">
+                    <i class='bx bxs-group'></i>
+                    <span class="text">Payment</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="/admin/service">
+                    <i class='bx bxl-kubernetes'></i>
+                    <span class="text">Service</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/Notification">
+                    <i class='bx bxs-bell'></i>
+                    <span class="text">Notification</span>
+                </a>
+            </li>
+        </ul>
+        <ul style="padding: 0;" class="side-menu">
+            <li>
+                <a href="#">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/adminLogout" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+
+
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <a href="#" class="nav-link">Categories</a>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+            <a href="/admin/Notification" class="notification">
+                <i class='bx bxs-bell'></i>
+                <span class="num">{{NotificationCount}}</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="img/people.png">
+            </a>
+        </nav>
+        <!-- NAVBAR -->
+
+        <!-- MAIN -->
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>Dashboard</h1>
+                    <ul class="breadcrumb">
+                        <li>
+                            <a href="#">Dashboard</a>
+                        </li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                        <li>
+                            <a class="active" href="#">Service</a>
+                        </li>
+                    </ul>
+                </div>
+                <button id="openModalButton" class="btn-download" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class='bx bx-plus'></i>
+                    <span class="text">Add Service</span>
+                </button>
+            </div>
+
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Service</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/vendor/service" method="post" enctype="multipart/form-data">
+                                <div class="input-group flex-nowrap mt-3">
+                                    <span class="input-group-text" id="addon-wrapping"></i></span>
+                                    <input type="text" class="form-control" id="ServiceName" name="ServiceName"
+                                        placeholder="Name" aria-label="Username" aria-describedby="addon-wrapping"
+                                        required>
+
+                                </div>
+                                <div class="input-group flex-nowrap mt-3">
+                                    <span class="input-group-text" id="addon-wrapping"><i
+                                            class='bx bxs-bookmarks'></i></span>
+                                    <input type="number" class="form-control" id="charge" name="charge"
+                                        placeholder="Charge" aria-label="Username" aria-describedby="addon-wrapping"
+                                        required>
+
+
+
+                                </div>
+                                <div class="input-group flex-nowrap mt-3">
+                                    <span class="input-group-text" id="addon-wrapping"><i
+                                            class='bx bxs-image-add'></i></span>
+                                    <input type="file" class="form-control" id="serviceImage" name="serviceImage"
+                                        id="imageUpload" aria-describedby="addon-wrapping">
+
+                                </div>
+                                <div class="input-group mt-3">
+                                    <span class="input-group-text">Description</span>
+                                    <textarea class="form-control" id="description" name="description"
+                                        aria-label="With textarea"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <!-- Add any other buttons you need -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="box-info">
+                <li>
+                    <i class='bx bx-rupee'></i> <span class="text">
+                        <h3>{{confirmAmount}}</h3>
+                        <p>Confirm Amount</p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bx-rupee'></i> <span class="text">
+                        <h3>{{pendingAmount}}</h3>
+                        <p>Pending Amount</p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bxs-group'></i>
+
+                    <span class="text">
+                        akjdf
+                        <h3>{{customers}}</h3>
+                        <p>Users</p>
+                    </span>
+                </li>
+            </ul>
+
+
+            <div class="table-data">
+                <div class="order">
+                    <div class="head">
+                        <h3></h3>
+                        <i class='bx bx-search'></i>
+                        <i class='bx bx-filter'></i>
+                    </div>
+                    <div>
+                        <table>
+                            <thead>
+                                <tr style="color: #3C91E6;font-size:x-large;border-bottom">
+                                    <th></th>
+                                    <th>Service Name</th>
+                                    <th>Service Charge</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each service}}
+                                <tr style="border-bottom-width: 1px;border-color:#3C91E6">
+                                    <td>
+                                        <img src="{{this.image}}">
+                                    </td>
+                                    <td>
+                                        {{this.ServiceName}}
+                                    </td>
+                                    <td>{{this.charge}}</td>
+                                    <td><button class="btn btn-outline-primary"
+                                            onclick="handleEditModalOpen('{{this._id}}')">Edit</button></td>
+                                                        <input type="hidden" value="{{this._id}}" name="id" id="id">
+
+                                    <td>
+                                        <button class="btn btn-outline-danger deleteService"
+                                            data-service-id="{{this._id}}">
+                                            Delete
+                                        </button>
+                                    </td>
+
+                                    <div class="modal fade" id="editModal{{this._id}}" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Add Service</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="/vendor/editService" method="post"
+                                                        enctype="multipart/form-data">
+                                                        <div class="input-group flex-nowrap mt-3">
+                                                            <span class="input-group-text"
+                                                                id="addon-wrapping"></i></span>
+                                                            <input type="text" class="form-control" id="ServiceName"
+                                                                name="ServiceName" value="{{this.ServiceName}}"
+                                                                aria-label="Username" aria-describedby="addon-wrapping"
+                                                                required>
+
+                                                        </div>
+                                                        <input type="hidden" value="{{this._id}}" name="id">
+                                                        <div class="input-group flex-nowrap mt-3">
+                                                            <span class="input-group-text" id="addon-wrapping"><i
+                                                                    class='bx bxs-bookmarks'></i></span>
+                                                            <input type="number" class="form-control" id="charge"
+                                                                name="charge" value="{{this.charge}}"
+                                                                placeholder="Charge" aria-label="Username"
+                                                                aria-describedby="addon-wrapping" required>
+
+
+
+                                                        </div>
+                                                        <div class="input-group flex-nowrap mt-3">
+                                                            <span class="input-group-text" id="addon-wrapping"><i
+                                                                    class='bx bxs-image-add'></i></span>
+                                                            <input type="file" class="form-control" id="serviceImage"
+                                                                value="{{this.image}}" name="serviceImage"
+                                                                id="imageUpload" aria-describedby="addon-wrapping">
+
+                                                        </div>
+                                                        <div class="input-group mt-3">
+                                                            <span class="input-group-text">Description</span>
+                                                            <textarea class="form-control" id="description" name="description" aria-label="With textarea">
+  {{this.description}}
+</textarea>
+
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Save
+                                                            changes</button>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <!-- Add any other buttons you need -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                    </div>
+                </div>
+
+                <div class="todo">
+                    <div class="head">
+                        <h3>Customers</h3>
+
+                        {{!-- <i class='bx bx-plus'></i>
+                        <i class='bx bx-filter'></i> --}}
+                    </div>
+                    <ul class="todo-list">
+
+                        <p class="text-right">Total</p>
+                        {{#each customers}}
+                        <li class="completed">
+                            <p>{{this.name}}</p>
+                            <p style="color: rgba(1, 253, 77, 0.97);">{{this.totalPrize}}</p>
+
+
+
+                        </li>
+                        {{/each}}
+
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"
+        integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+</body>
+
+</html>
+<script>
+    function handleEditModalOpen(id) {
+        const modalId = `#editModal${id}`;
+        $(modalId).modal('show');
+    }
+
+// Add event listeners to all delete buttons dynamically
+document.querySelectorAll('.deleteService').forEach(button => {
+    button.addEventListener('click', () => {
+        const serviceId = button.dataset.serviceId;
+
+        axios.delete(`/vendor/service/${serviceId}`)
+            .then(response => {
+                console.log(response);
+                window.location.reload()
+                // Optionally, update the UI or perform other actions after successful deletion
+            })
+            .catch(error => {
+                console.error(error);
+                // Optionally, handle errors if deletion fails
+            });
+    });
+});
+
+</script>

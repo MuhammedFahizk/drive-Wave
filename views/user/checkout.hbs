@@ -149,7 +149,7 @@
                                         <p id="errorPayment"></p>
                                         <button type="button" style="border-radius: 12px;" id="paymentBtn"
                                             class="btn btn-primary py-2 col-12">
-                                            {{amount}} Pay
+                                            {{totalAmount}} Pay
                                         </button>
                                     </div>
                                 </div>
@@ -200,6 +200,24 @@
                         </div>
 
                     </div>
+                    {{#if service}}
+                    <h3 class="p-1">Services</h3>
+                    {{/if}}
+                    {{#each service}}
+                     <div style="border-radius:10px;" class="col-12  bg-light  p-0 m-0 mt-2 row">
+                        <div class="col-3"
+                            style="border-radius:10px;background-image: url({{this.image}}); background-size: cover; background-position: center; height: 100px; width: 100%;">
+
+
+                        </div>
+                        <div class="col-9 p-2">
+                            <h6 class="text-dark">{{ServiceName}}</h6>
+                            <h6 class="text-dark"> <span class="text-primary">Charge </span>{{charge}}</h6>
+
+                           </div> 
+
+                    </div>
+                    {{/each}}
                     <div style="border-radius:10px;" class="col-12  bg-light my-4 px-2 m-0 row">
 
                         {{!-- <div class="col-3"
@@ -221,11 +239,19 @@
                                 </span>
                                 <p class="price ml-md-auto m-0 p-0">{{car.dayRent}} <span></span></p>
                             </div>
+                            
+                            {{#each service}}
+                            <div class="d-flex m-0 mt-0 px-2  ">
+                                <span class="cat">{{this.ServiceName}} Service  </span>
+                                </span>
+                                <p class="price ml-md-auto m-0 p-0">{{this.charge}} <span></span></p>
+                            </div>
+                            {{/each}}
                             <hr class="m-0 p-0">
                             <div class="d-flex m-0 mb-0 px-2">
                                 <span class="cat">Rent Amount </span>
                                 </span>
-                                <p class="price ml-md-auto p-0 m-0">{{amount}} <span></span></p>
+                                <p class="price ml-md-auto p-0 m-0">{{totalAmount}} <span></span></p>
                             </div>
 
 
@@ -277,11 +303,13 @@
             </div>
             <div class=" right col-5  justify-content-center px-4  py-4">
                 <div style="border-radius:10px;" class="col-12  bg-light  p-0 m-0 row">
-                    <div class="col-3"
+                    <a href="/carDetails?id={{car._id}}" class="col-3 p-0 m-0">
+                        <div class="col-12"
                         style="border-radius:10px;background-image: url({{car.carImage}}); background-size: cover; background-position: center; height: 100px; width: 100%;">
 
 
                     </div>
+                    </a>
                     <div class="col-9 p-2">
                         <h6 class="text-dark">{{car.carName}}</h6>
                         {{#if dayDifferenceIn }}
@@ -297,9 +325,22 @@
 
                 </div>
 
+
+
                 <div></div>
                 {{#if dayDifferenceIn }}
+                    <select name="cars" id="cars" class="col-12 mt-4 p-2 btn- btn-outline-primary rounded">
+  <option value="">Add Service</option>
+  {{#each service}}
+    <option value="{{this._id}}" data-image="{{this.image}}" data-description="{{this.description}}" data-charge="{{this.charge}}" class="text-dark bg-light">
+      {{this.ServiceName}}
+    </option>
+  {{/each}}
+</select>
 
+<div id="serviceDetails">
+
+</div>
                 {{else }}
                 <div class="row col-12  m-0 my-4 p-0  car-wrap rounded ftco-animate">
 
@@ -318,7 +359,7 @@
 
                 {{/if}}
 
-                <div id="userDetails" class="car-wrap rounded ftco-animate ">
+                {{!-- <div id="userDetails" class="car-wrap rounded ftco-animate ">
 
                     <div id="text" class="text mt-4">
                         <div class="d-flex mb-1">
@@ -349,8 +390,8 @@
 
                     </div>
 
-                </div>
-                <div class="car-wrap rounded ftco-animate row col-12 m-0 px-4 p-4 justify-content-center ">
+                </div> --}}
+                <div class="car-wrap rounded ftco-animate row col-12 m-0 px-4 p-4 justify-content-center mt-2 ">
 
                     <input type="button" id="changeDate" class="btn btn-outline-info mx-2" value="Change Date">
                     <a type="button" href="/cars" class="btn btn-outline-success mx-2" value="">Change Car</a>
@@ -392,12 +433,49 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js'></script>
 <script type="text/javascript" src="https://checkout.razorpay.com/v1/razorpay.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 <script>
+    const service = []
+$(document).ready(function(){
+  $('#cars').change(function(){
+    // Get the selected option
+    var selectedOptions = $(this).find('option:selected');
+    console.log(selectedOptions)
+    // Iterate over all selected options
+    selectedOptions.each(function() {
+      var serviceName = $(this).text();
+      var serviceImage = $(this).data('image');
+      var serviceId = $(this).val();
+var description = $(this).data('description')
+var charge = $(this).data('charge')
 
-    const razorpay = new Razorpay({
-        key: "rzp_test_4n6m1t1iIOWyRe", // Replace with your Razorpay API key
+
+ selectedOptions.each(function() {
+            service.push($(this).val());
+        });
+
+      
+      // Generate the div for each selected option
+      var divContent = '<div style="border-radius:10px;" class="col-12 bg-light p-0 m-0 mt-2 row">';
+      divContent += '<a href="/carDetails?id=' + serviceId + '" class="col-3 p-0 m-0">';
+      divContent += '<div class="col-12" style="border-radius:10px;background-image: url(' + serviceImage + '); background-size: cover; background-position: center; height: 100px; width: 100%;"></div>';
+      divContent += '</a>';
+      divContent += '<div class="col-9 p-2">';
+      divContent += '<h5 class="text-dark">' + serviceName + '</h5>';
+      divContent += '<h6 class="text-dark">' + description + '</h6>';
+      divContent += '<h6 class="text-dark"> <span class="text-warning ">Service Charge </span> '  + charge + '</h6>';
+
+      divContent += '</div>';
+      divContent += '</div>';
+      
+      // Append the generated div to the container
+      $('#serviceDetails').append(divContent);
     });
+  });
+});
+  
 
     // Use booking ID if available
     const bookingId = sessionStorage.getItem('bookingId');
@@ -428,7 +506,9 @@
         maxTime: "22:00",
         minDate: "today"
     });
-
+  const razorpay = new Razorpay({
+        key: "rzp_test_4n6m1t1iIOWyRe", // Replace with your Razorpay API key
+    });
     const calendarEl = document.getElementById('calendar');
     const bookingPage = document.getElementById('bookingPage');
     const paymentPage = document.getElementById('paymentPage');
@@ -494,7 +574,8 @@
             console.log(formDatas);
 
             e.preventDefault();
-            axios.post('/bookedCar', formDatas)
+            console.log(formDatas)
+            axios.post('/bookedCar', { formDatas, service })
                 .then((response) => {
 
                     console.log('message:', response.data);
@@ -604,6 +685,7 @@
                     'card[expiry_month]': expiryMonth,
                     'card[expiry_year]': expiryYear
                 };
+                console.log(data)
                 console.log(response.data.thisCar._id);
                 razorpay.createPayment(data);
                 razorpay.on('payment.success', function (resp) {
@@ -618,6 +700,7 @@
         }
         )
     }
+    
     const paymentBtnUpi = document.getElementById('paymentBtnUpi')
     if (paymentBtnUpi) {
         paymentBtnUpi.addEventListener('click', (e) => {
@@ -766,7 +849,6 @@
                     return error.innerHTML = 'Enter PickUp Date And Return Date';
                 }
 
-                calendarEl.style.display = 'none';
                 console.log(pickDate);
                 axios.get(`/addDate?pickDate=${pickDate}&&dropDate=${dropDate}&&carId=${carId} `)
                     .then(response => {
@@ -779,15 +861,18 @@
 
                     }).catch(response => {
                         const error = document.getElementById('error')
+                        if ( response.response ) {
                         error.innerHTML = response.response.data.message
-                        console.log(response.response.data.message)
+                        console.log(response)
+
+                        } else {
+                        window.location.href = '/bookingCar';
+                        }
                     });
             });
         }
 
     })
-
-
 
     window.addEventListener('popstate', function (event) {
         // Check if the popstate event is triggered by navigating back

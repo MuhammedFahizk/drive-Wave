@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 const { v4: uuidv4 } = require('uuid');
 const { Vendor } = require('../models/users');
@@ -314,6 +315,7 @@ const bookingPage = async (req, res) => {
             totalPrice: booking.totalPrice || 0,
             status: booking.status || 'N/A',
             _id: booking._id,
+            carStatus: booking.carStatus,
           },
           car: booking.car,
         };
@@ -327,6 +329,142 @@ const bookingPage = async (req, res) => {
     });
   } catch (error) {
     console.error('Error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const changCarStatus = async (req, res) => {
+  // console.log(req.body);
+  const users = await User.find({}).populate('bookedCar.car');
+
+  users.forEach((user) => {
+    user.bookedCar.forEach(async (booking) => {
+      if (booking._id.toString() === req.body.id) {
+        const status = booking.carStatus;
+
+        if (status === 'PickedDate') {
+          booking.carStatus = 'pickedCar';
+        }
+        if (status === 'ReturnDate') {
+          booking.carStatus = 'returnCar';
+        }
+        await user.save();
+      }
+    });
+  });
+  res.status(200).json('ok');
+};
+
+const servicePage = async (req, res) => {
+  const { ownerId } = req.session;
+  const updatedAdmin = await Vendor.findById(ownerId);
+  const { service } = updatedAdmin;
+  return res.status(200).render('vendor/service', { service });
+};
+const addService = async (req, res) => {
+  const { ServiceName, charge, description } = req.body;
+  const { ownerId } = req.session;
+  const vendor = await Vendor.findById(ownerId);
+
+  if (req.file && req.file.path) {
+    if (!vendor) {
+      return res.status(401).json('admin not found');
+    }
+    const newService = {
+      ServiceName,
+      charge,
+      image: req.newPath.url,
+      imageId: req.newPath.id,
+      description,
+    };
+    vendor.service.push(newService);
+  }
+  await vendor.save();
+  const { service } = vendor;
+  return res.status(200).render('vendor/service', { service });
+};
+
+const editService = async (req, res) => {
+  try {
+    const {
+      ServiceName, charge, description, id,
+    } = req.body;
+    const { ownerId } = req.session;
+    // Fetch the admin document and find the index of the service to update
+    const vendor = await Vendor.findById(ownerId);
+    const serviceIndex = vendor.service.findIndex((service) => service._id.toString() === id);
+
+    // Check if the service index is found
+    if (serviceIndex === -1) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+
+    // Construct the update object
+    const updateObject = {
+      $set: {
+        [`service.${serviceIndex}.ServiceName`]: ServiceName,
+        [`service.${serviceIndex}.charge`]: charge,
+        [`service.${serviceIndex}.description`]: description,
+      },
+    };
+
+    // If a new file is uploaded, update image-related fields
+    if (req.file) {
+      // Delete the old image from Cloudinary
+      const publicIdToDelete = vendor.service[serviceIndex].imageId;
+      if (publicIdToDelete) {
+        await cloudinary.deleteImage(publicIdToDelete);
+      }
+      // Update image and imageId fields
+      updateObject.$set[`service.${serviceIndex}.image`] = req.newPath.url;
+      updateObject.$set[`service.${serviceIndex}.imageId`] = req.newPath.id;
+    }
+
+    // Update the service in the database
+    const result = await Vendor.updateOne({ _id: ownerId }, updateObject);
+
+    // Check if the service was updated successfully
+    if (result.nModified === 0) {
+      return res.status(404).json({ error: 'Service not found or not updated' });
+    }
+
+    // Render the admin service page with updated data
+    const updatedAdmin = await Vendor.findById(ownerId);
+    const { service } = updatedAdmin;
+    return res.status(200).render('vendor/service', { service });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const deleteService = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { ownerId } = req.session;
+
+    // Find the admin document containing the service to delete
+    const foundVendor = await Vendor.findOne({ _id: ownerId, 'service._id': id });
+
+    // Check if the admin and service exist
+    if (!foundVendor) {
+      return res.status(404).json({ error: 'Vendor or service not found' });
+    }
+
+    // Delete the image associated with the service from Cloudinary
+    foundVendor.service = foundVendor.service.filter((service) => service._id.toString() !== id);
+
+    // Remove the service from the admin's service array
+    foundVendor.service = foundVendor.service.filter((service) => service._id.toString() !== id);
+
+    // Save the updated admin document
+    await foundVendor.save();
+
+    // Return success response
+    const { service } = foundVendor;
+    return res.status(200).render('vendor/service', { service });
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -348,4 +486,9 @@ module.exports = {
   vendorNotification,
   venderRecoveryMessage,
   bookingPage,
+  changCarStatus,
+  servicePage,
+  addService,
+  editService,
+  deleteService,
 };

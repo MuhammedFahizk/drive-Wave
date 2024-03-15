@@ -183,77 +183,101 @@
                 const summaryContainer = document.getElementById('summaryContainer');
 
                 if (summaryContainer) {
-                    if (res.data.status === 'Confirmed') {
+                    if (res.data.thisBooking.status === 'Confirmed') {
                         console.log(res.data.status);
 
                         summaryContainer.innerHTML = `
                             <div class="image-container position-relative">
-                                <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${res.data.car.carImage}">
+                                <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${res.data.thisBooking.car.carImage}">
                                 <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0"></div>
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="carDetails?id=${res.data.car._id}">${res.data.car.carName}</a></h2>
+                                <h2 class="mb-0"><a href="carDetails?id=${res.data.thisBooking.car._id}">${res.data.thisBooking.car.carName}</a></h2>
                                 <div class="d-flex mb-1">
-                                    <span class="cat">${res.data.car.carModal}/${res.data.car.brandName}</span>
+                                    <span class="cat">${res.data.thisBooking.car.carModal}/${res.data.thisBooking.car.brandName}</span>
                                 </div>
-                                <p class="price m-0 p-0"><span>${res.data.totalPrice}/Rent Amount</span></p>
+                                <p class="price m-0 p-0"><span>${res.data.thisBooking.totalPrice}/Total Amount</span></p>
                                 <p class="d-flex mb-0 d-block">
                                 <button type="text" class="btn btn-primary py-2 ml-1" id="orderBtn"> Details</button>
-                                    <a href="/carDetails?id=${res.data.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
+                                    <a href="/carDetails?id=${res.data.thisBooking.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
                                 </p>
                             </div>`;
                             const orderBtn = document.getElementById('orderBtn');
 orderBtn.addEventListener('click', (e) => {
   // Trigger a click event on the button that launches the modal
+  console.log(res.data);
+
   const modalLauncher = document.querySelector('[data-target="#orderDetails"]');
-  document.querySelector('#orderDetails .modal-body' ).innerHTML = `
-   <div class="justify-content-center row py-3">
-            <div style="align-items: center;" class="col-9">
-                         <div class="d-flex mb-1">
-                            <span class="cat">Payment Type </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">Card<span></span></p>
-                        </div>
-                         <div class="d-flex mb-1">
-                            <span class="cat">Payment Status </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">${res.data.status}<span></span></p>
-                        </div>
-                         <div class="d-flex m-0">
-                            <span class="cat">Days </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">${res.data.totalDays} <span></span></p>
-                      </div>
-                           <div class="d-flex mb-1 mt-1 m-0 ">
-                            <span class="cat text-dark">Amount Payed </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">${res.data.totalPrice} <span></span></p>
-                        </div>
-                         <div class="d-flex mb-0 m-0">
-                            <span class="cat">Transaction Id </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2 m-0">${res.data.payment_id} <span></span></p>
-                        </div>
-                        </div>`
+  const modalBody = document.querySelector('#orderDetails .modal-body');
+  
+  if (!res || !res.data.service) {
+    console.error("Error: res or res.service is undefined or null.");
+    return;
+  }
+
+  modalBody.innerHTML = `
+    <div class="justify-content-center row py-3">
+      <div style="align-items: center;" class="col-9">
+        <div class="d-flex mb-1">
+          <span class="cat">Payment Type </span>
+          <p class="price ml-md-auto ml-2 m-0">Card<span></span></p>
+        </div>
+        <div class="d-flex mb-1">
+          <span class="cat">Payment Status </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.status}<span></span></p>
+        </div>
+        <div class="d-flex m-0">
+          <span class="cat">Days </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.totalDays} <span></span></p>
+        </div>
+        <div class="d-flex mb-1 mt-1 m-0 ">
+          <span class="cat text-dark">Amount Paid </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.totalPrice} <span></span></p>
+        </div>
+        <div class="d-flex mb-0 m-0">
+          <span class="cat">Transaction Id </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.payment_id} <span></span></p>
+        </div>
+        <div class="d-flex mb-0 m-0">
+          <span class="cat">Pick Up Date </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.pickupDate} <span></span></p>
+        </div>
+        <div class="d-flex mb-0 m-0">
+          <span class="cat">Return Date </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.returnDate} <span></span></p>
+        </div>
+        <div class="d-flex mb-0 m-0">
+          <span class="cat text-dark">Services </span>
+        </div>`;
+  
+  // Iterate over each service and dynamically add them to the modal body
+  res.data.service.forEach(service => {
+    modalBody.innerHTML += `
+      <div class="d-flex mb-0 m-0 mx-5">
+        <span class="cat text-dark">${service.ServiceName} </span>
+        <p class="price ml-md-auto ml-2 m-0 text-primary">${service.charge} <span></span></p>
+      </div>`;
+  });
+
   if (modalLauncher) {
     modalLauncher.click();
   }
 });
-                    } else {
+          } else {
                         summaryContainer.innerHTML = `
                             <div class="image-container position-relative">
-                                <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${res.data.car.carImage}">
+                                <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${res.data.thisBooking.car.carImage}">
                                 <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0"></div>
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="carDetails?id=${res.data.car._id}">${res.data.car.carName}</a></h2>
+                                <h2 class="mb-0"><a href="carDetails?id=${res.data.thisBooking.car._id}">${res.data.thisBooking.car.carName}</a></h2>
                                 <div class="d-flex mb-1">
-                                    <span class="cat">${res.data.car.carModal}/${res.data.car.brandName}</span>
+                                    <span class="cat">${res.data.thisBooking.car.carModal}/${res.data.thisBooking.car.brandName}</span>
                                 </div>
-                                <p class="price m-0 p-0"><span>${res.data.totalPrice}/Rent Amount</span></p>
+                                <p class="price m-0 p-0"><span>${res.data.thisBooking.totalPrice}/Rent Amount</span></p>
                                 <p class="d-flex mb-0 d-block">
-                                    <a href="/paymentPage?bookingId=${res.data._id}&&dropDate=${res.data.returnDate}&&pickDate=${res.data.pickupDate}&&totalPrice=${res.data.totalPrice}&&id=${res.data.car._id}" class="btn btn-primary py-2 mr-1">Pay</a> 
-                                    <a href="/carDetails?id=${res.data.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
+                                    <a href="/paymentPage?bookingId=${res.data.thisBooking._id}&&dropDate=${res.data.thisBooking.returnDate}&&pickDate=${res.data.thisBooking.pickupDate}&&totalPrice=${res.data.thisBooking.totalPrice}&&id=${res.data.thisBooking.car._id}" class="btn btn-primary py-2 mr-1">Pay</a> 
+                                    <a href="/carDetails?id=${res.data.thisBooking.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
                                 </p>
                             </div>`;
                     }

@@ -74,7 +74,6 @@ function sendMailUser(email, subject,data, bookingId) {
             console.error('Error sending email:', errors);
             reject(errors);
           } else {
-            console.log('Email sent:', info.response);
             resolve(info);
           }
         });

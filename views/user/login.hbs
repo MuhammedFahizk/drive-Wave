@@ -1,286 +1,168 @@
-{{!-- <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>Form-v10 by Colorlib</title>
-	<!-- Mobile Specific Metas -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<!-- Font-->
-	<link rel="stylesheet" type="text/css" href="css/montserrat-font.css">
-	<link rel="stylesheet" type="text/css" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
-	<!-- Main Style Css -->
-    <link rel="stylesheet" href="css/stylesignUp.css"/>
-</head>
-<body class="form-v10">
-	<div class="page-content">
-		<div class="form-v10-content">
-			<form class="form-detail" action="/userLogin" method="post" id="myform">
-				<div class="form-left">
-					
-				</div>
-				<div class="form-right">
-					<h2>User Login </h2>
-					
-					
-					<div class="form-row">
-						<input type="text" name="email" class="email" id="Email" placeholder="Email" required>
-					</div>
-               <div class="form-row">
-						<input type="password" name="password" class="Password" id="Password" placeholder="Password" required>
-					</div>
-                <div class="form-row">
-{{#if error}}
-  {{error }}
-  <a  style="text-decoration:solid;" href="/register"> Go to registration page</a>
-
-{{/if}}
-			</div>
-
-				
-					<div class="form-row-last">
-						<input type="submit" name="register" class="register" value="Login ">
-					</div>
-               <div class="form-row-last m-0 py-0">
-
-<label class="container py-0 my-0"><p>Loin With otp <a href="#" id="openModal" class="text" data-toggle="modal" data-target="#myModal">Get Otp</a></p></label>
-						</label>
-			   </div>
-               <div class="form-row-last my-0">
-						
-						<label class="container py-0"><p>Don't have an account ? <a href="/register" class="text">Register</a> </p>
-					</div>
-
-				</div>
-			</form>
-		</div>
-	</div>
-	<div class="modal fade" id="myModal">
-  <div class="modal-dialog">
-    
-      <!-- Modal Header -->
-     
-      
-      <!-- Modal Body -->
-		<div  class="form-row ">
-		<div  class="form-v10-content">
-			<form  class="form-detail"  method="post" id="myform">
-					    <div style="background-color: aliceblue;" class="modal-content">
-
-				<div class="form-left m-4">
-
-      <div class="modal-body">
-
-				<div class="form-row ">
-						<input type="text" name="email" class="email" id="email" placeholder="Email Address" required>
-					</div>
-					<div class="form-row ">
-						<input type="text" name="otp" class="name" id="otp" placeholder="Otp" required>
-					</div>
-					<p id="error"></p>
-				</div>
-			</form>
-      </div>
-		</div>
-      
-  </div>
-	</div>
-</div>
-</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
-</html>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script>
-	const emaiInput = document.getElementById('email')
-	const otpInput = document.getElementById('otp')
-	const error = document.getElementById('error')
-    let Email = []
-	emaiInput.addEventListener('keydown', function(event) {
-		    if (event.key === 'Enter') {
-		const email = event.target.value;
-		Email = email
-		if (email.trim() !== '') {
-			axios.post('/generateOtp',{email})
-			.then(response => {
-				console.log(response.data);
-				
-			}).catch(function (error) {
-              console.error(error); // Handle error
-            });
-		}
-		}
-	})
-	otpInput.addEventListener('keydown',function(event) {
-		const otp = event.target.value;
-		if(otp.length=== 6) {
-            axios.post('/checkOtpUser',{otp, Email})
-			.then(response => {
-				
-              window.location.href = '/'
-				
-			}).catch(function(error){
-				console.log(error)
-			})
-		}else {
-          error.innerHTML='enter valid otp'
-		}
-		
-	})
-</script> --}}
 <style>
 	* {
-	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-	color: #100000;
-}
+		font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+		padding: 0;
+		margin: 0;
+		box-sizing: border-box;
+		color: #100000;
+	}
 
-::selection {
-	background: 0;
-}
+	::selection {
+		background: 0;
+	}
 
-body {
-	width: 100%;
-	min-height: 560px;
-	height: 100vh;
-	display: grid;
-	place-content: center;
-	background: #d7dad8;
-	overflow-x: hidden;
-}
+	body {
+		width: 100%;
+		min-height: 560px;
+		height: 100vh;
+		display: grid;
+		place-content: center;
+		background: #d7dad8;
+		overflow-x: hidden;
+	}
 
-section {
-	min-width: 350px;
-	min-height:420px;
-	padding: 15px;
-	box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
-	border-radius: 10px;
-	background: #f8f8f9;
-	overflow: hidden;
-	position: relative;
-}
+	section {
+		min-width: 350px;
+		min-height: 420px;
+		padding: 15px;
+		box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+		border-radius: 10px;
+		background: #f8f8f9;
+		overflow: hidden;
+		position: relative;
+	}
 
-#logo {
-	justify-content: center;
-	display: flex;
-	align-items: center;
-	margin: 10px;
-}
+	#logo {
+		justify-content: center;
+		display: flex;
+		align-items: center;
+		margin: 10px;
+	}
 
-nav {
-	margin: 10px;
-	display: flex;
-	justify-content: center;
-}
+	nav {
+		margin: 10px;
+		display: flex;
+		justify-content: center;
+	}
 
-nav label {
-	text-transform: uppercase;
-	cursor: pointer;
-}
+	nav label {
+		text-transform: uppercase;
+		cursor: pointer;
+	}
 
-nav label:first-child {
-	margin-right: 20px;
-}
+	nav label:first-child {
+		margin-right: 20px;
+	}
 
-form {
-	position: absolute;
-	min-width: 250px;
-	transform: translatex(140%);
-	display: flex;
-	flex-direction: column;
-	transition: 0.3s;
-}
+	form {
+		position: absolute;
+		min-width: 250px;
+		transform: translatex(140%);
+		display: flex;
+		flex-direction: column;
+		transition: 0.3s;
+	}
 
-#SignIn:checked ~ section #SignInFormData,
-#SignUp:checked ~ section #SignUpFormData {
-	transform: translatex(15%);
-	    transition: transform 0.7s ease;
+	#SignIn:checked~section #SignInFormData,
+	#SignUp:checked~section #SignUpFormData {
+		transform: translatex(15%);
+		transition: transform 0.7s ease;
 
-}
+	}
 
-#SignIn:checked ~ section nav label:first-child,
-#SignUp:checked ~ section nav label:last-child {
-	margin-bottom: -2px;
-	border-bottom: 2px solid #1ed760;
-}
-.form-container {
-    height: 200px; /* Adjust the height as needed */
-    overflow: auto;
-    background-color: #fcfefc00;
-    border: 0px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-}
-.form-container::-webkit-scrollbar{
-	width: 2px;
-        background-color: #080000;
+	#SignIn:checked~section nav label:first-child,
+	#SignUp:checked~section nav label:last-child {
+		margin-bottom: -2px;
+		border-bottom: 2px solid #1ed760;
+	}
 
-	border-radius: 5px; /* Rounded corners for the scrollbar thumb */
-}
-.form-container::-webkit-scrollbar-thumb {
-	    background-color:#1ed760; /* Color of the scrollbar thumb */
- /* Color of the scrollbar thumb on hover */
-}
-input,
-button {
-	color: #111;
-	border-radius: 50px;
-	padding: 5px 10px;
-	margin-bottom: 15px;
-	border: none;
-	outline: none;
-	font-size: 16px;
-	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
+	.form-container {
+		height: 200px;
+		/* Adjust the height as needed */
+		overflow: auto;
+		background-color: #fcfefc00;
+		border: 0px solid #ccc;
+		border-radius: 5px;
+		padding: 10px;
+	}
 
-button {
-	background: #1ed760;
-	text-transform: uppercase;
-	font-weight: bold;
-	color: #fff;
-	cursor: pointer;
-	margin-top: 5px;
-}
+	.form-container::-webkit-scrollbar {
+		width: 2px;
+		background-color: #080000;
 
-form span {
-	margin-left: 20px;
-	display: inline;
-}
+		border-radius: 5px;
+		/* Rounded corners for the scrollbar thumb */
+	}
 
-form span label {
-	cursor: pointer;
-	font-size: 14px;
-	text-transform: lowercase;
-}
+	.form-container::-webkit-scrollbar-thumb {
+		background-color: #1ed760;
+		/* Color of the scrollbar thumb */
+		/* Color of the scrollbar thumb on hover */
+	}
 
-input[type="checkbox"] {
-	cursor: pointer;
-	accent-color: #1ed760; /* #3498db; */
-}
+	input,
+	button {
+		color: #111;
+		border-radius: 50px;
+		padding: 5px 10px;
+		margin-bottom: 15px;
+		border: none;
+		outline: none;
+		font-size: 16px;
+		box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+	}
 
-a {
-	font-weight: bold;
-	text-decoration: none;
-	margin-top: 20px;
-	cursor: pointer;
-	text-align: center;
-	opacity: 0.6;
-}
+	button {
+		background: #1ed760;
+		text-transform: uppercase;
+		font-weight: bold;
+		color: #fff;
+		cursor: pointer;
+		margin-top: 5px;
+	}
 
-a:hover {
-	opacity: 1;
-}
+	form span {
+		margin-left: 20px;
+		display: inline;
+	}
 
+	form span label {
+		cursor: pointer;
+		font-size: 14px;
+		text-transform: lowercase;
+	}
 
+	input[type="checkbox"] {
+		cursor: pointer;
+		accent-color: #1ed760;
+		/* #3498db; */
+	}
+
+	a {
+		font-weight: bold;
+		text-decoration: none;
+		margin-top: 20px;
+		cursor: pointer;
+		text-align: center;
+		opacity: 0.6;
+	}
+
+	a:hover {
+		opacity: 1;
+	}
 </style>
-{{!--  --}}
+{{!-- --}}
 <input type="radio" name="optionScreen" id="SignIn" hidden checked>
 <input type="radio" name="optionScreen" id="SignUp" hidden>
 <section id="firstPage">
-<a href="" id="previousPage">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;"><path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path></svg></a>	
+	<a href="" id="previousPage">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+			style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;">
+			<path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path>
+		</svg></a>
 	<div id="logo">
-		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png" alt="Spotify-Logo" width="50"> --}}
+		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png"
+			alt="Spotify-Logo" width="50"> --}}
 		<h1>Drive<span style="color: #1ed760;">Wave</span> </h1>
 	</div>
 
@@ -288,84 +170,88 @@ a:hover {
 		<label for="SignIn">Sign In</label>
 		<label for="SignUp">Sign Up</label>
 	</nav>
-     
+
 	<form action="/userLogin" id="SignInFormData" method="post">
-						<input type="text" name="email" class="email" id="Email" placeholder="E-mail" required>
-						<input type="password" name="password" class="Password" id="Password" placeholder="Password" required>
+		<input type="text" name="email" class="email" id="Email" placeholder="E-mail" required>
+		<input type="password" name="password" class="Password" id="Password" placeholder="Password" required>
 		<span>
 			{{!-- <input type="checkbox" id="staySingedIn" checked> --}}
 			{{!-- <label for="staySingedIn">stay Signed In</label> --}}
 		</span>
-{{#if error}}
-  {{error }}
+		{{#if error}}
+		{{error }}
 
-{{/if}}		<button type="submit"  title="Sing In">Sing In</button>
+		{{/if}} <button type="submit" title="Sing In">Sing In</button>
 
 		<a id="forgotPassword">Forgot Your Password?</a>
 		<a id="LoginWithOtp" class="mt-0">Login With OTP?</a>
 
 
-	</form>  
+	</form>
 
-	<form  id="SignUpFormData" class="form-container"  method="post" >
-		<input type="text" name="name" id="name" class="input-text" placeholder="Name" >
-								<input type="text" name="email" class="input-text"  placeholder="E-mail">
-						<input type="number" name="age" class="age"  placeholder="Age" >
-						<input type="phone" name="phone" class="phone"  placeholder="Phone Number" >
-						<input type="text" name="licenseNumber" class="license"  placeholder="License Number" >
-							<input type="text" name="password1" class="input-text" placeholder="Password" >
-							<input type="text" name="password" class="input-text" placeholder="Conform Password" >
+	<form id="SignUpFormData" class="form-container" method="post">
+		<input type="text" name="name" id="name" class="input-text" placeholder="Name">
+		<input type="text" name="email" class="input-text" placeholder="E-mail">
+		<input type="number" name="age" class="age" placeholder="Age">
+		<input type="phone" name="phone" class="phone" placeholder="Phone Number">
+		<input type="text" name="licenseNumber" class="license" placeholder="License Number">
+		<input type="text" name="password1" class="input-text" placeholder="Password">
+		<input type="text" name="password" class="input-text" placeholder="Conform Password">
 
 		<span>
 			{{!-- <label for="staySingedUp">stay Signed In</label> --}}
 		</span>
-   <p style="padding: 0;" id="error"></p>
-					<input type="checkbox" id="staySingedIn" name="checkbox" checked>
+		<p style="padding: 0;" id="error"></p>
+		<input type="checkbox" id="staySingedIn" name="checkbox" checked>
 
-		<button type="submit"  name="register" class="register">Sing Up</button>
+		<button type="submit" name="register" class="register">Sing Up</button>
 	</form>
 </section>
 
-<section id="secondPage" style="display: none;" >
+<section id="secondPage" style="display: none;">
 	<a href="" id="previousPage">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;"><path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path></svg></a>
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+			style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;">
+			<path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path>
+		</svg></a>
 	<div id="logo">
-		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png" alt="Spotify-Logo" width="50"> --}}
+		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png"
+			alt="Spotify-Logo" width="50"> --}}
 		<h1>Drive<span style="color: #1ed760;">Wave</span> </h1>
 	</div>
-<nav>
-    <label for="SignIn">OTP</label>
-    <label for="SignUp">Sign Up</label>
-</nav>
+	<nav>
+		<label for="SignIn">OTP</label>
+		<label for="SignUp">Sign Up</label>
+	</nav>
 	<!-- Inside the secondPage section -->
 
-<form  id="SignInFormData">
-						<input type="text" name="email" class="email" id="email" placeholder="Email Address" required>
-    <!-- Add input field for OTP -->
-    <input type="text" name="otp" class="otp" id="OTP" placeholder="Enter OTP" required>
-    <button type="submit" title="Sign In">Sign In</button>
-</form>
+	<form id="SignInFormData">
+		<input type="text" name="email" class="email" id="email" placeholder="Email Address" required>
+		<!-- Add input field for OTP -->
+		<input type="text" name="otp" class="otp" id="OTP" placeholder="Enter OTP" required>
+		<button type="submit" title="Sign In">Sign In</button>
+	</form>
 
-<form  id="SignUpFormData" class="form-container"  method="post" >
-		<input type="text" name="name" id="name" class="input-text" placeholder="Name" >
-								<input type="text" name="email" id="email" class="input-text"  placeholder="E-mail">
-						<input type="number" name="age" class="age" id="age" placeholder="Age" >
-												
-															<input type="phone" name="phone" class="phone" id="phone" placeholder="Phone Number" >
+	<form id="SignUpFormData" class="form-container" method="post">
+		<input type="text" name="name" id="name" class="input-text" placeholder="Name">
+		<input type="text" name="email" id="email" class="input-text" placeholder="E-mail">
+		<input type="number" name="age" class="age" id="age" placeholder="Age">
+
+		<input type="phone" name="phone" class="phone" id="phone" placeholder="Phone Number">
 
 
-						<input type="text" name="licenseNumber" class="license" id="license" placeholder="License Number" >
+		<input type="text" name="licenseNumber" class="license" id="license" placeholder="License Number">
 
-							<input type="text" name="password1" id="password1" class="input-text" placeholder="Password" >
-							<input type="text" name="password" id="password" class="input-text" placeholder="Conform Password" >
+		<input type="text" name="password1" id="password1" class="input-text" placeholder="Password">
+		<input type="text" name="password" id="password" class="input-text" placeholder="Conform Password">
 
 		<span>
 			{{!-- <label for="staySingedUp">stay Signed In</label> --}}
 		</span>
-   <p style="padding: 0;" id="error"></p>
-					<input type="checkbox" id="staySingedIn" name="checkbox" checked>
+		<p style="padding: 0;" id="error"></p>
+		<input type="checkbox" id="staySingedIn" name="checkbox" checked>
 
-		<button type="submit"  name="register" class="register">Sing Up</button>
+		<button type="submit" name="register" class="register">Sing Up</button>
 	</form>
 
 </section>
@@ -373,10 +259,14 @@ a:hover {
 
 
 <section id="thirdPage" style="display: none;">
-<a href="" id="previousPage">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;"><path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path></svg></a>	
+	<a href="" id="previousPage">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+			style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;">
+			<path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path>
+		</svg></a>
 	<div id="logo">
-		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png" alt="Spotify-Logo" width="50"> --}}
+		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png"
+			alt="Spotify-Logo" width="50"> --}}
 		<h1>Drive<span style="color: #1ed760;">Wave</span> </h1>
 	</div>
 
@@ -384,231 +274,400 @@ a:hover {
 		<label for="SignIn">Sign In</label>
 		<label for="SignUp">Sign Up</label>
 	</nav>
-     
-	<form  id="SignInFormData" class="emailAndOtp" >
-		
+
+	<form id="SignInFormData" class="emailAndOtp">
+
 		<input type="text" name="email" class="email" id="email2" placeholder="Email Address" required>
-    <!-- Add input field for OTP -->
-    <input type="text" name="otp" class="otp" id="OTP2" placeholder="Enter OTP" required>
-	<p id="error"></p>
-	
-	<input type="text" name="password1" class="input-text" placeholder="Password" >
-							<input type="text" name="password" class="input-text" placeholder="Conform Password" >
-	<p id="error"></p>
+		<!-- Add input field for OTP -->
+		<input type="text" name="otp" class="otp" id="OTP2" placeholder="Enter OTP" required>
+		<p id="error"></p>
 
-    <button type="submit" title="Sign In">Sign In</button>
-</form>
+		<input type="text" name="password1" class="input-text" placeholder="Password">
+		<input type="text" name="password" class="input-text" placeholder="Conform Password">
+		<p id="error"></p>
+
+		<button type="submit" title="Sign In">Sign In</button>
+	</form>
 
 
 
-	<form  id="SignUpFormData" class="form-container"  method="post" >
-		<input type="text" name="name" id="name" class="input-text" placeholder="Name" >
-								<input type="text" name="email" class="input-text"  placeholder="E-mail">
-						<input type="number" name="age" class="age"  placeholder="Age" >
-						<input type="phone" name="phone" class="phone"  placeholder="Phone Number" >
-						<input type="text" name="licenseNumber" class="license"  placeholder="License Number" >
-							<input type="text" name="password1" class="input-text" placeholder="Password" >
-							<input type="text" name="password" class="input-text" placeholder="Conform Password" >
+	<form id="SignUpFormData" class="form-container" method="post">
+		<input type="text" name="name" id="name" class="input-text" placeholder="Name">
+		<input type="text" name="email" class="input-text" placeholder="E-mail">
+		<input type="number" name="age" class="age" placeholder="Age">
+		<input type="phone" name="phone" class="phone" placeholder="Phone Number">
+		<input type="text" name="licenseNumber" class="license" placeholder="License Number">
+		<input type="text" name="password1" class="input-text" placeholder="Password">
+		<input type="text" name="password" class="input-text" placeholder="Conform Password">
 
 		<span>
 			{{!-- <label for="staySingedUp">stay Signed In</label> --}}
 		</span>
-   <p style="padding: 0;" id="error"></p>
-					<input type="checkbox" id="staySingedIn" name="checkbox" checked>
+		<p style="padding: 0;" id="error"></p>
+		<input type="checkbox" id="staySingedIn" name="checkbox" checked>
 
-		<button type="submit"  name="register" class="register">Sing Up</button>
+		<button type="submit" name="register" class="register">Sing Up</button>
 	</form>
 </section>
-
-<script>
-const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-const hint = document.getElementById('hint')
-const licenseRegex = /^[A-Z]{2}-\d{2}\/[A-Z]{3}\/\d{2}\/\d{6}$/;
-const LoginWithOtp = document.getElementById('LoginWithOtp')
-const firstPage = document.getElementById('firstPage')
-const secondPage = document.getElementById('secondPage')
-const previousPage = document.getElementById('previousPage')
-const forgotPassword = document.getElementById('forgotPassword')
-const EmailAndOtp = document.querySelector('#EmailAndOtp')
-
-const thirdPage = document.getElementById('thirdPage')
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-md">
+		<div class="modal-content">
+			<!-- Modal Header -->
 
 
+			<!-- Modal Body -->
+			<div class="modal-body">
+				<a href="" id="previousPage">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+						style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;">
+						<path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z">
+						</path>
+					</svg></a>
+				<div id="logo">
+					{{!-- <img
+						src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png"
+						alt="Spotify-Logo" width="50"> --}}
+					<h1>Drive<span style="color: #1ed760;">Wave</span> </h1>
+					<br>
 
-previousPage.addEventListener('click', function(e) {
-	e.preventDefault()
-	history.back()
-})
+				</div>
+
+				<div class="col-12 row pl-5">
+					<input type="text" name="email" class="email col-10 " id="forEmail" placeholder="E-mail" required>
+					<input style="display: none;" type="text" name="otp" class="otp  col-10" id="forgotOTP"
+						placeholder="Enter OTP" required>
+
+					<a href="#" id="getOtp" class="mt-1">
+						<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 14 24"
+							style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;">
+							<path
+								d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z">
+							</path>
+						</svg>
+					</a>
+					<a style="display: none;" href="#" id="validateOtp" class="  mt-1">
+						<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 14 24"
+							style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;">
+							<path
+								d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z">
+							</path>
+						</svg>
+					</a>
+
+					<input style="display: none;" type="text" name="password1" id="forgotPassword1"
+						class="input-text col-12 " placeholder="Password">
+					<input style="display: none;" type="text" name="password" id="forgotPassword2"
+						class="input-text  col-12" placeholder="Conform Password">
+
+					<span>
+						{{!-- <input type="checkbox" id="staySingedIn" checked> --}}
+						{{!-- <label for="staySingedIn">stay Signed In</label> --}}
+					</span>
+		<p style="padding: 0;" id="error2" class="text-danger"></p>
 
 
+					{{#if error}}
+					{{error }}
+
+					{{/if}}
+					<center> <button style="display: none;" type="submit" title="Sign In" id="submit">Change
+							Password</button>
+					</center>
+				</div>
 
 
-const emailInput = document.getElementById('email');
-const otpInput = document.getElementById('OTP');
+				<!-- Modal Footer -->
 
-const emailInput2 = document.getElementById('email2');
-const otpInput2 = document.getElementById('OTP2');
-const error = document.getElementById('error');
+			</div>
 
-let Email = ''; // Changed Email variable to a string
-emailInput2.addEventListener('keydown', function(event) {
-	console.log('hsddijf')
-    if (event.key === 'Enter') {
-        const email = event.target.value.trim(); // Trim whitespace from email input
-        Email = email; // Store email in the Email variable
-        if (email !== '') {
-            axios.post('/generateOtp', { email })
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error(error); // Handle error
-                });
-        }
-    }
-});
+		</div>
+		<script>
+			const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+			const hint = document.getElementById('hint')
+			const licenseRegex = /^[A-Z]{2}-\d{2}\/[A-Z]{3}\/\d{2}\/\d{6}$/;
+			const LoginWithOtp = document.getElementById('LoginWithOtp')
+			const firstPage = document.getElementById('firstPage')
+			const secondPage = document.getElementById('secondPage')
+			const previousPage = document.getElementById('previousPage')
+			const EmailAndOtp = document.querySelector('#EmailAndOtp')
+					const error2 = document.getElementById('error2')
 
-otpInput2.addEventListener('keydown', function(event) {
 
-    const otp = event.target.value;
-    if (otp.length === 6) {
-        axios.post('/OtpUser', { otp, Email })
-            .then(response => {
-				console.log('hai')
+			const thirdPage = document.getElementById('thirdPage')
+
+			document.addEventListener('DOMContentLoaded', function () {
+				const forgotPasswordLink = document.getElementById('forgotPassword');
+				const getOtp = document.getElementById('getOtp');
+				const validateOtp = document.getElementById('validateOtp');
+
+
+				const ForgotOTP = document.getElementById('forgotOTP')
+				const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+
+
+				forgotPasswordLink.addEventListener('click', function (event) {
+					event.preventDefault();
+					// Open the modal
+					$(forgotPasswordModal).modal('show');
+				});
+
+				getOtp.addEventListener('click', function (event) {
+					event.preventDefault();
+					const email = document.getElementById('forEmail').value;
+					if (email === '' || !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+						// Your code if email is empty or doesn't match the regex
+						error2.innerHTML = 'Enter Valid  Email';
+						return false
+					}
+						error2.innerHTML = '';
+
+
+				axios.post('/generateOtp', { email })
+					.then(response => {
+						// Handle response here, for example, display the ForgotOTP element
+						ForgotOTP.style.display = 'block';
+						getOtp.style.display = 'none'
+						document.getElementById('forEmail').style.display = 'none'
+						validateOtp.style.display = 'block'
+					})
+					.catch(error => {
+						// Handle errors here
+
+						console.error('Error generating OTP:', error);
+					});
+			});
+			validateOtp.addEventListener('click', function (event) {
+				event.preventDefault();
+				const otp = ForgotOTP.value
+				const Email = document.getElementById('forEmail').value;
+
+				axios.post('/OtpUser', { otp, Email })
+					.then(response => {
+						const forgotPassword1 = document.getElementById('forgotPassword1')
+						const forgotPassword2 = document.getElementById('forgotPassword2')
+						const submit = document.getElementById('submit')
+						// Handle response here, for example, display the ForgotOTP element
+						ForgotOTP.style.display = 'none';
+						forgotPassword1.style.display = 'block';
+						forgotPassword2.style.display = 'block';
+						submit.style.display = 'block'
+						validateOtp.style.display = 'none'
+						error2.innerHTML = ''
+
+
+					})
+					.catch(error => {
+						// Handle errors here
+						error2.innerHTML = 'Miss Match Otp'
+						console.error('Error generating OTP:', error);
+					});
+			});
+				submit.addEventListener('click', (e) => {
+					const forgotPassword1 =document.getElementById('forgotPassword1').value
+					const forgotPassword2 =document.getElementById('forgotPassword2').value
+					const email = document.getElementById('forEmail').value;
+
+					e.preventDefault()
+					if (!forgotPassword1 || !forgotPassword2) {
+					error2.innerHTML ='Both password fields are required';
+					return false
+				} else if (forgotPassword1 !== forgotPassword2) {
+					error2.innerHTML = 'Passwords do not match';
+					return false
+
+				} else if (!passwordPattern.test(forgotPassword2)) {
+					
+					error2.innerHTML = 'Password must contain at least 8 characters, including one uppercase letter and one special character';
+					return false
 			
-            })
-            .catch(error => {
-				error.innerHTML = 'Not Match Otp'
-                console.error(error);
-            });
-    } else {
-        error.textContent = 'Enter a valid OTP'; // Changed innerHTML to textContent
-    }
-});
+				}
+				error2.innerHTML = ''
 
-emailInput.addEventListener('keydown', function(event) {
-	console.log('hsddijf')
-    if (event.key === 'Enter') {
-        const email = event.target.value.trim(); // Trim whitespace from email input
-        Email = email; // Store email in the Email variable
-        if (email !== '') {
-            axios.post('/generateOtp', { email })
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error(error); // Handle error
-                });
-        }
-    }
-});
+				axios.post('/forgotPassword', {
+					password : forgotPassword2,
+					email,
+				}).then(response => {
+					console.log(response)
+					window.location.reload()
+				}).catch(err => {
+					console.log(err)
+					window.location.reload()
 
-otpInput.addEventListener('keydown', function(event) {
-    const otp = event.target.value;
-    if (otp.length === 6) {
-        axios.post('/checkOtpUser', { otp, Email })
-            .then(response => {
-                window.location.href = '/';
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    } else {
-        error.textContent = 'Enter a valid OTP'; // Changed innerHTML to textContent
-    }
-});
+				})
+				})
+			});
 
 
 
-LoginWithOtp.addEventListener('click', function ()  {
-	console.log('aisa')
-	
-    firstPage.style.display = 'none';
-    thirdPage.style.display = 'none';
-    secondPage.style.display = 'block';
-});
-forgotPassword.addEventListener('click', function ()  {
-	console.log('aisa')
-    thirdPage.style.display = 'block';
-    firstPage.style.display = 'none';
-    secondPage.style.display = 'none';
-});
-const formDataElement = document.getElementById('SignUpFormData');
-
-formDataElement.addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form submission
-
-    const formData = new FormData(event.target);
-
-    const { name, email, password1, password, age,phone, licenseNumber} = Object.fromEntries(formData.entries());
-
-    // Perform form validation here
-    const errors = [];
-
-    if (!name) {
-        errors.push('Name is required');
-    }
-    if (!email) {
-        errors.push('Email is required');
-    }
-	if (!age) {
-        errors.push('Age is require');
-
-    } else if (parseInt(age) < 18) {
-        errors.push('Your Not eligible for register this website');
-
-	}
-    if (!password1 || !password) {
-        errors.push('Both password fields are required');
-    } else if (password1 !== password) {
-        errors.push('Passwords do not match');
-    } else if (!passwordPattern.test(password)) {
-        errors.push('Password must contain at least 8 characters, including one uppercase letter and one special character');
-    }
-	
-		if (licenseNumber) {
-    if (!licenseRegex.test(licenseNumber)) {
-        errors.push('Enter a valid license number');
-    }
-	    const checkbox = formData.get('checkbox');
-    if (!checkbox) {
-        errors.push('You must accept the Terms and Conditions');
-    }
-		}
-
-    // If there are errors, display them and prevent form submission
-    if (errors.length > 0) {
-        displayErrors(errors);
-    } else {
-        // If no errors, submit the form using Axios
-        axios.post('/registration', { name, email, password1, password, age,phone, licenseNumber })
-            .then(response => {
-                console.log('Form submitted successfully');
-                // Handle success response
-				console.log(response)
-				window.location.href = '/'
-            })
-            .catch(error => {
-                console.error('Error submitting form:', error);
-                // Handle error response
-            });
-    }
-});
-function displayErrors(errors) {
-    const errorElement = document.getElementById('error');
-    errorElement.innerHTML = ''; // Clear previous error messages
-
-    if (errors.length > 0) {
-        
-            const errorMessage = document.createElement('p');
-            errorMessage.textContent = errors[0];
-            errorMessage.style.color = 'red'; 
-            errorMessage.style.fontSize = '13px'; 
-            errorElement.appendChild(errorMessage);
-        
-    }
-}
+			previousPage.addEventListener('click', function (e) {
+				e.preventDefault()
+				history.back()
+			})
+     
 
 
 
-</script>
+			const emailInput = document.getElementById('email');
+			const otpInput = document.getElementById('OTP');
+
+			const emailInput2 = document.getElementById('email2');
+			const otpInput2 = document.getElementById('OTP2');
+			const error = document.getElementById('error');
+
+			let Email = ''; // Changed Email variable to a string
+			emailInput2.addEventListener('keydown', function (event) {
+				console.log('hsddijf')
+				if (event.key === 'Enter') {
+					const email = event.target.value.trim(); // Trim whitespace from email input
+					Email = email; // Store email in the Email variable
+					if (email !== '') {
+						axios.post('/generateOtp', { email })
+							.then(response => {
+								console.log(response.data);
+							})
+							.catch(error => {
+								console.error(error); // Handle error
+							});
+					}
+				}
+			});
+
+			otpInput2.addEventListener('keydown', function (event) {
+
+				const otp = event.target.value;
+				if (otp.length === 6) {
+					axios.post('/OtpUser', { otp, Email })
+						.then(response => {
+							console.log('hai')
+
+						})
+						.catch(error => {
+							error.innerHTML = 'Not Match Otp'
+							console.error(error);
+						});
+				} else {
+					error.textContent = 'Enter a valid OTP'; // Changed innerHTML to textContent
+				}
+			});
+
+			emailInput.addEventListener('keydown', function (event) {
+				console.log('hsddijf')
+				if (event.key === 'Enter') {
+					const email = event.target.value.trim(); // Trim whitespace from email input
+					Email = email; // Store email in the Email variable
+					if (email !== '') {
+						axios.post('/generateOtp', { email })
+							.then(response => {
+								console.log(response.data);
+							})
+							.catch(error => {
+								console.error(error); // Handle error
+							});
+					}
+				}
+			});
+
+			otpInput.addEventListener('keydown', function (event) {
+				const otp = event.target.value;
+				if (otp.length === 6) {
+					axios.post('/checkOtpUser', { otp, Email })
+						.then(response => {
+							window.location.href = '/';
+						})
+						.catch(error => {
+							console.error(error);
+						});
+				} else {
+					error.textContent = 'Enter a valid OTP'; // Changed innerHTML to textContent
+				}
+			});
+
+
+
+			LoginWithOtp.addEventListener('click', function () {
+				console.log('aisa')
+
+				firstPage.style.display = 'none';
+				thirdPage.style.display = 'none';
+				secondPage.style.display = 'block';
+			});
+
+			const formDataElement = document.getElementById('SignUpFormData');
+
+			formDataElement.addEventListener('submit', function (event) {
+				event.preventDefault(); // Prevent form submission
+
+				const formData = new FormData(event.target);
+
+				const { name, email, password1, password, age, phone, licenseNumber } = Object.fromEntries(formData.entries());
+
+				// Perform form validation here
+				const errors = [];
+
+				if (!name) {
+					errors.push('Name is required');
+				}
+				if (!email) {
+					errors.push('Email is required');
+				}
+				if (!age) {
+					errors.push('Age is require');
+
+				} else if (parseInt(age) < 18) {
+					errors.push('Your Not eligible for register this website');
+
+				}
+				if (!password1 || !password) {
+					errors.push('Both password fields are required');
+				} else if (password1 !== password) {
+					errors.push('Passwords do not match');
+				} else if (!passwordPattern.test(password)) {
+					errors.push('Password must contain at least 8 characters, including one uppercase letter and one special character');
+				}
+
+				if (licenseNumber) {
+					if (!licenseRegex.test(licenseNumber)) {
+						errors.push('Enter a valid license number');
+					}
+					const checkbox = formData.get('checkbox');
+					if (!checkbox) {
+						errors.push('You must accept the Terms and Conditions');
+					}
+				}
+
+				// If there are errors, display them and prevent form submission
+				if (errors.length > 0) {
+					displayErrors(errors);
+				} else {
+					// If no errors, submit the form using Axios
+					axios.post('/registration', { name, email, password1, password, age, phone, licenseNumber })
+						.then(response => {
+							console.log('Form submitted successfully');
+							// Handle success response
+							console.log(response)
+							window.location.href = '/'
+						})
+						.catch(error => {
+							console.error('Error submitting form:', error);
+							// Handle error response
+						});
+				}
+			});
+			function displayErrors(errors) {
+				const errorElement = document.getElementById('error');
+				errorElement.innerHTML = ''; // Clear previous error messages
+
+				if (errors.length > 0) {
+
+					const errorMessage = document.createElement('p');
+					errorMessage.textContent = errors[0];
+					errorMessage.style.color = 'red';
+					errorMessage.style.fontSize = '13px';
+					errorElement.appendChild(errorMessage);
+
+				}
+			}
+
+
+
+		</script>

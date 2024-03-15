@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/order */
 /* eslint-disable no-shadow */
@@ -58,9 +59,9 @@ const showAdminDashboard = async (req, res) => {
   const dailyRentalAmount = await adminService.dailyRentalAmount();
   const dailyRentalPending = await adminService.dailyRentalAmountPending();
   let confirmAmount = await adminService.confirmAmount();
-  confirmAmount = confirmAmount[0].totalRentalAmount;
+  confirmAmount = confirmAmount.totalRentalAmount;
   let pendingAmount = await adminService.pendingAmount();
-  pendingAmount = pendingAmount[0].totalRentalAmount;
+  pendingAmount = pendingAmount.totalRentalAmount;
   res.render('admin/index', {
     NotificationCount,
     dailyRents,
@@ -437,7 +438,7 @@ const enableVendor = async (req, res) => {
 const BookingPage = async (req, res) => {
   try {
     const userWithBookings = await User.find({}).populate('bookedCar.car');
-    const allBookings = userWithBookings.flatMap((user) => user.bookedCar.map((booking) => {
+    let allBookings = userWithBookings.flatMap((user) => user.bookedCar.map((booking) => {
       const { pickupDate, returnDate } = booking;
       const totalDays = Math.ceil((new Date(returnDate) - new Date(pickupDate))
       / (1000 * 60 * 60 * 24));
@@ -452,15 +453,17 @@ const BookingPage = async (req, res) => {
           totalDays,
           totalPrice: booking.totalPrice,
           status: booking.status,
+          carStatus: booking.carStatus,
           _id: booking._id,
         },
         car: booking.car,
       };
     }));
+    allBookings = allBookings.filter((booking) => !booking.car.ownerId);
+
     const bookingsCount = allBookings.length;
     const confirmedBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'Confirmed').length;
     const pendingBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'pending').length;
-
     res.status(200).render('admin/bookingPage', {
       allBookings, bookingsCount, pendingBookingsCount, confirmedBookingsCount,
     });
@@ -493,6 +496,138 @@ const payment = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).send('internal server error');
+  }
+};
+
+const changCarStatus = async (req, res) => {
+  // console.log(req.body);
+  const users = await User.find({}).populate('bookedCar.car');
+  users.forEach((user) => {
+    user.bookedCar.forEach(async (booking) => {
+      if (booking._id.toString() === req.body.id) {
+        const status = booking.carStatus;
+        if (status === 'PickedDate') {
+          booking.carStatus = 'pickedCar';
+        }
+        if (status === 'ReturnDate') {
+          booking.carStatus = 'returnCar';
+        }
+        await user.save();
+      }
+    });
+  });
+  res.status(200).json('ok');
+};
+
+const servicePage = async (req, res) => {
+  const Admin = await admin.findOne({ role: 'Admin' });
+  const { service } = Admin;
+  res.status(200).render('admin/service', { service });
+};
+
+const addService = async (req, res) => {
+  const { ServiceName, charge, description } = req.body;
+  const Admin = await admin.findOne({ role: 'Admin' });
+
+  if (req.file && req.file.path) {
+    if (!Admin) {
+      return res.status(401).json('admin not found');
+    }
+    const newService = {
+      ServiceName,
+      charge,
+      image: req.newPath.url,
+      imageId: req.newPath.id,
+      description,
+    };
+    Admin.service.push(newService);
+  }
+  await Admin.save();
+  const { service } = Admin;
+  return res.status(200).render('admin/service', { service });
+};
+
+const editService = async (req, res) => {
+  try {
+    const {
+      ServiceName, charge, description, id,
+    } = req.body;
+
+    // Fetch the admin document and find the index of the service to update
+    const adminDoc = await admin.findOne({ role: 'Admin' });
+    const serviceIndex = adminDoc.service.findIndex((service) => service._id.toString() === id);
+
+    // Check if the service index is found
+    if (serviceIndex === -1) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+
+    // Construct the update object
+    const updateObject = {
+      $set: {
+        [`service.${serviceIndex}.ServiceName`]: ServiceName,
+        [`service.${serviceIndex}.charge`]: charge,
+        [`service.${serviceIndex}.description`]: description,
+      },
+    };
+
+    // If a new file is uploaded, update image-related fields
+    if (req.file) {
+      // Delete the old image from Cloudinary
+      const publicIdToDelete = adminDoc.service[serviceIndex].imageId;
+      if (publicIdToDelete) {
+        await cloudinary.deleteImage(publicIdToDelete);
+      }
+      // Update image and imageId fields
+      updateObject.$set[`service.${serviceIndex}.image`] = req.newPath.url;
+      updateObject.$set[`service.${serviceIndex}.imageId`] = req.newPath.id;
+    }
+
+    // Update the service in the database
+    const result = await admin.updateOne({ role: 'Admin' }, updateObject);
+
+    // Check if the service was updated successfully
+    if (result.nModified === 0) {
+      return res.status(404).json({ error: 'Service not found or not updated' });
+    }
+
+    // Render the admin service page with updated data
+    const updatedAdmin = await admin.findOne({ role: 'Admin' });
+    const { service } = updatedAdmin;
+    return res.status(200).render('admin/service', { service });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const deleteService = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find the admin document containing the service to delete
+    const foundAdmin = await admin.findOne({ role: 'Admin', 'service._id': id });
+
+    // Check if the admin and service exist
+    if (!foundAdmin) {
+      return res.status(404).json({ error: 'Admin or service not found' });
+    }
+
+    // Delete the image associated with the service from Cloudinary
+    foundAdmin.service = foundAdmin.service.filter((service) => service._id.toString() !== id);
+
+    // Remove the service from the admin's service array
+    foundAdmin.service = foundAdmin.service.filter((service) => service._id.toString() !== id);
+
+    // Save the updated admin document
+    await foundAdmin.save();
+
+    // Return success response
+    const { service } = foundAdmin;
+    return res.status(200).render('admin/service', { service });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -638,7 +773,39 @@ const deleteUserData = async (req, res) => {
   }
   return res.status(200).redirect('/admin/Notification');
 };
+async function checkPickUp() {
+  try {
+    const users = await User.find({}).populate('bookedCar.car');
+    users.forEach((user) => {
+      user.bookedCar.forEach(async (booking) => {
+        const currentTime = new Date();
+        const targetTimeDate = new Date(booking.pickupDate);
+        const returnTargetTimeDate = new Date(booking.returnDate);
 
+        if (booking.carStatus === 'Booked' && targetTimeDate <= currentTime) {
+          // eslint-disable-next-line no-param-reassign
+          booking.carStatus = 'PickedDate';
+          try {
+            await user.save();
+          } catch (error) {
+            console.error('Error updating booking:', error);
+          }
+        }
+        if (booking.carStatus === 'PickedDate' && returnTargetTimeDate <= currentTime) {
+          // eslint-disable-next-line no-param-reassign
+          booking.carStatus = 'ReturnDate';
+          try {
+            await user.save();
+          } catch (error) {
+            console.error('Error updating booking:', error);
+          }
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 async function cleanupSoftDeletedData() {
   try {
     const oneMonthAgo = new Date();
@@ -694,7 +861,7 @@ const deleteCancelUser = async (req, res) => {
 };
 // Schedule the cleanup task to run periodically, for example, once a day
 setInterval(cleanupSoftDeletedData, 24 * 60 * 60 * 1000);
-
+setInterval(checkPickUp, 60 * 1000);
 module.exports = {
   showLoginPageAdmin,
   loginOtp,
@@ -717,6 +884,11 @@ module.exports = {
   enableVendor,
   BookingPage,
   payment,
+  changCarStatus,
+  servicePage,
+  addService,
+  editService,
+  deleteService,
   // vendor
   vendorPage,
   vendorDetails,

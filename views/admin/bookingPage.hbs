@@ -62,6 +62,12 @@
 					<span class="text">Payment</span>
 				</a>
 			</li>
+						<li>
+				<a href="/admin/service">
+			<i class='bx bxl-kubernetes'></i>
+					<span class="text">Service</span>
+				</a>
+			</li>
 			<li>
 				<a href="/admin/Notification">
 					<i class='bx bxs-bell'></i>
@@ -69,7 +75,7 @@
 				</a>
 			</li>
 		</ul>
-		<ul style="padding-left: 0;"  class="side-menu">
+		<ul style="padding-left: 0;" class="side-menu">
 			<li>
 				<a href="#">
 					<i class='bx bxs-cog'></i>
@@ -81,7 +87,7 @@
 					<i class='bx bxs-log-out-circle'></i>
 					<span class="text">Logout</span>
 				</a>
-			</li> 
+			</li>
 		</ul>
 	</section>
 
@@ -157,7 +163,7 @@
 			</ul>
 
 
-			
+
 			<div class="table-data">
 				<div class="order">
 					<div class="head">
@@ -172,8 +178,10 @@
 								<th>Date Order</th>
 								<th>Total Date</th>
 								<th>Total Amount</th>
-								<th>Car</th>
 								<th>Status</th>
+
+								<th>Car</th>
+								<th></th>
 
 							</tr>
 						</thead>
@@ -188,6 +196,12 @@
 								</td> <!-- Call a helper function to format the date -->
 								<td>{{bookingDetails.totalDays}}</td>
 								<td>{{bookingDetails.totalPrice}}</td>
+								<td>
+								<input type="hidden" class="booking-id" value="{{this.bookingDetails._id}}">
+    <a class="car-status btn btn-outline-primary">
+        {{bookingDetails.carStatus}} 
+    </a>
+								</td>
 
 								<td>{{car.carName}}</td>
 								<td><button type="button" class="btn btn-warning" data-bs-toggle="modal"
@@ -203,16 +217,18 @@
 										<div class="modal-content">
 
 											<div class="modal-body d-flex flex-column col-12">
-												<p><strong>User Name:</strong> <span
-														class="">{{this.userName}}</span></p>
+												<p><strong>User Name:</strong> <span class="">{{this.userName}}</span>
+												</p>
 												<p><strong>Date:</strong> {{this.bookingDetails.bookingDate}} To
-												
+
 													{{this.bookingDetails.returnDate}}</p>
 												<p><strong>Email:</strong> {{this.user.email}}</p>
 
 												<p><strong>Total Days:</strong> {{this.bookingDetails.totalDays}}</p>
 												<p><strong>Total Price:</strong> {{this.bookingDetails.totalPrice}}</p>
 												<p><strong>Payment Status:</strong> {{this.bookingDetails.status}}</p>
+												<p><strong>Car Status:</strong> {{this.bookingDetails.carStatus}}</p>
+
 
 												<p><strong>Car:</strong> {{this.car.carName}}</p>
 												<!-- Add more details as needed -->
@@ -257,7 +273,28 @@
 		integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-	<script src="/script/script.js"></script>
 </body>
 
 </html>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+	
+
+	document.querySelectorAll('.car-status').forEach(carStatus => {
+    carStatus.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = carStatus.parentElement.querySelector('.booking-id').value;
+        axios.post('/admin/changCarStatus', {
+            id
+        }).then(res => {
+            // Handle success if needed\
+			window.location.reload()
+
+        }).catch(error => {
+            console.log(error)
+        });
+    });
+});
+
+</script>

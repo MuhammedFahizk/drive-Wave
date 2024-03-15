@@ -37,6 +37,15 @@ const adminSchema = new mongoose.Schema({
   locations: [{
     type: String,
   }],
+  service: [
+    {
+      ServiceName: { type: String },
+      charge: { type: Number },
+      image: { type: String },
+      imageId: { type: String },
+      description: { type: String },
+    },
+  ],
 });
 const VendorSchema = new mongoose.Schema({
   name: {
@@ -95,6 +104,15 @@ const VendorSchema = new mongoose.Schema({
   locations: [{
     type: String,
   }],
+  service: [
+    {
+      ServiceName: { type: String },
+      charge: { type: Number },
+      image: { type: String },
+      imageId: { type: String },
+      description: { type: String },
+    },
+  ],
 }, { timestamps: true, timeseries: true });
 const userSchema = new mongoose.Schema({
   name: {
@@ -164,6 +182,19 @@ const userSchema = new mongoose.Schema({
       type: Date,
       required: true,
     },
+    pickUp: {
+      type: Boolean,
+      default: false,
+    },
+    carStatus: {
+      type: String,
+      enum: ['PickedDate', 'ReturnDate', 'Booked', 'pickedCar', 'returnCar'],
+      default: 'Booked',
+    },
+    return: {
+      type: Boolean,
+      default: false,
+    },
     payment_id: {
       type: String,
     },
@@ -184,9 +215,15 @@ const userSchema = new mongoose.Schema({
     },
     status: {
       type: String,
-      enum: ['pending', 'confirmed', 'cancelled'],
+      enum: ['pending', 'Confirmed', 'cancelled'],
       default: 'pending',
     },
+    carRent: {
+      type: Number,
+    },
+    services: [{
+      type: mongoose.Schema.Types.ObjectId,
+    }],
     // Other booking details specific to your application
   }],
 }, { timestamps: true, timeseries: true });

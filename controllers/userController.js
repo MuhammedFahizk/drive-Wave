@@ -11,6 +11,7 @@ const mongoose = require('mongoose');
 
 const { User, admin } = require('../models/users');
 const { Car } = require('../models/car');
+const { Vendor } = require('../models/users');
 
 const { sendAdminOtp, generateOtp, sendMailToAdmin } = require('../service/nodeMailer');
 const userService = require('../service/userService');
@@ -348,14 +349,14 @@ async function generateOtpEmail(req, res) {
     console.error(otp, email);
 
     emailOtp[email] = otp;
-    // sendAdminOtp(email, otp, (error, info) => {
-    //   if (error) {
-    //     console.error(error);
-    //     return res.status(500).send(error);
-    //   }
-    //   console.error(otp, email);
-    //   return res.status(201).json(email);
-    // });
+    sendAdminOtp(email, otp, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).send(error);
+      }
+      console.error(otp, email);
+      return res.status(201).json(email);
+    });
     return res.status(201).json(email);
   } catch (error) {
     console.error('Error search car', error);
@@ -423,6 +424,31 @@ const OtpCheck = async (req, res) => {
     return res.status(201).json('ok');
   }
   return res.status(404).json('Not Match Otp');
+};
+const forgotPassword = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email, role: 'user' });
+    if (!user) {
+      return res.status(401).json('User Not found');
+    }
+    const hashPassword = await bcrypt.hash(password, 10);
+    const { originalUrl } = req.session;
+    req.session.password = hashPassword;
+    req.session.name = user.name;
+    req.session.email = email;
+    req.session.userId = uuidv4();
+    req.session._id = user._id;
+    user.password = hashPassword;
+    await user.save();
+    if (originalUrl) {
+      return res.redirect(`${originalUrl}`);
+    }
+    return res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    // If an error occurs, respond with an error message
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
 };
 const contactPage = (req, res) => {
   const { name, password } = req.session;
@@ -526,18 +552,49 @@ const bookingCar = async (req, res) => {
     req.session.days = dayDifferenceIn;
     req.session.amount = amount;
     if (bookingId) {
+      const user = await User.findOne({ 'bookedCar._id': bookingId }).populate('bookedCar.services');
+      const bookings = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
+      console.log(bookings);
+      const { services } = bookings;
+      let service = null;
+      if (!car.ownerId) {
+        const adminDoc = await admin.findOne({ role: 'Admin' }).populate('service');
+        service = adminDoc.service.filter(
+          (service) => services.includes(service._id),
+        );
+      } else {
+        const vendorDoc = await Vendor.findOne({ _id: car.ownerId }).populate('service');
+        service = vendorDoc.service.filter(
+          (service) => services.includes(service._id),
+        );
+      }
       return res.status(200).render('user/checkOut', {
         car,
         user,
         name,
         amount,
+        totalAmount: bookings.totalPrice,
         address,
         dayDifferenceIn,
         formattedPickDate,
         formattedDropDate,
         payment: 'payment',
         bookingId,
+        service,
       });
+    }
+    let service = [];
+
+    if (!car.ownerId) {
+      const adminData = await admin.findOne({ role: 'Admin' });
+      if (adminData) {
+        service.push(...adminData.service);
+      }
+    } else {
+      const vendorData = await Vendor.findOne({ _id: car.ownerId });
+      if (vendorData) {
+        service.push(...vendorData.service);
+      }
     }
     return res.status(200).render('user/checkOut', {
       car,
@@ -548,6 +605,7 @@ const bookingCar = async (req, res) => {
       dayDifferenceIn,
       formattedPickDate,
       formattedDropDate,
+      service,
     });
   }
   return res.status(200).render('user/checkOut', { car, user, address });
@@ -568,7 +626,7 @@ const addDate = async (req, res) => {
   if (matchingCars.length !== 0) {
     req.session.pickDate = pickDate;
     req.session.dropDate = dropDate;
-    return res.status(200).redirect('/bookingCar');
+    return res.status(200).json('ok');
   }
   // If matchingCars array is not empty, the car is already booked
   return res.status(409).json({ message: 'Car is already booked' });
@@ -670,11 +728,10 @@ const carDetailsWhishList = async (req, res) => {
 };
 // eslint-disable-next-line consistent-return
 const userBookedCar = async (req, res) => {
-  const formData = req.body;
+  const { formData, service } = req.body;
   const {
     _id, carId, pickDate, dropDate, amount, days,
   } = req.session;
-
   const bookingDate = new Date();
 
   const userCheck = await User.findById(_id).populate('bookedCar');
@@ -682,15 +739,42 @@ const userBookedCar = async (req, res) => {
   if (confirmArray.length > 0) {
     return res.status(409).json({ message: 'already booked' });
   }
+
+  let foundServices = null;
+  let ServiceAmount = 0;
+
+  if (service) {
+    const car = await Car.findById(carId);
+    if (!car.ownerId) {
+      const Admin = await admin.findOne({ role: 'Admin' });
+      foundServices = Admin.service.filter(
+        (services) => service.includes(services._id.toString()),
+      );
+      foundServices.forEach((element) => {
+        ServiceAmount += element.charge;
+      });
+    } else {
+      const vendor = await Vendor.findOne({ _id: car.ownerId });
+      foundServices = vendor.service.filter(
+        (services) => service.includes(services._id.toString()),
+      );
+      foundServices.forEach((element) => {
+        ServiceAmount += element.charge;
+      });
+    }
+  }
   const bookingData = {
     car: carId,
     bookingDate,
     pickupDate: pickDate,
     returnDate: dropDate,
-    totalPrice: amount,
+    carRent: amount,
+    totalPrice: amount + ServiceAmount,
     totalDays: days,
     status: 'pending',
+    services: foundServices,
   };
+  console.log('book', bookingData);
   try {
     const user = await User.findByIdAndUpdate(
       _id,
@@ -699,15 +783,10 @@ const userBookedCar = async (req, res) => {
     );
 
     const bookingId = user.bookedCar[user.bookedCar.length - 1]._id;
-    const car = await Car.findByIdAndUpdate(carId, {
-      $addToSet: {
-        bookings: bookingId,
-      },
-    }, {
-      new: true,
-    });
     req.session.bookingId = bookingId;
-    userService.razerPayCreation(bookingId, amount * 100)
+    const total = amount + ServiceAmount;
+    console.log(total);
+    userService.razerPayCreation(bookingId, total * 100)
       .then(async (razerPay) => {
         await User.findOneAndUpdate(
           { _id, 'bookedCar._id': bookingId },
@@ -740,7 +819,6 @@ const bookedCars = async (req, res) => {
       return res.render('user/carsBooked');
     }
     const count = cars.bookedCar.length;
-
     return res.render('user/carsBooked', { data: cars.bookedCar, name, count });
   } catch (error) {
     console.error('Error fetching bookedCar:', error);
@@ -785,10 +863,26 @@ const carDetails = async (req, res) => {
   try {
     const user = await User.findById(_id).populate('bookedCar.car');
     const thisBooking = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
+    const { car } = thisBooking;
 
-    return res.json(thisBooking);
+    const { services } = thisBooking;
+    let service = null;
+    if (!car.ownerId) {
+      const adminDoc = await admin.findOne({ role: 'Admin' }).populate('service');
+      service = adminDoc.service.filter(
+        (service) => services.includes(service._id),
+      );
+    } else {
+      const vendorDoc = await Vendor.findOne({ _id: car.ownerId }).populate('service');
+      service = vendorDoc.service.filter(
+        (service) => services.includes(service._id),
+      );
+    }
+    console.log(service);
+    return res.status(200).json({ thisBooking, service });
   } catch (error) {
-    return res.status(500).json('server error', error);
+    console.error(error);
+    return res.status(500).json(error);
   }
 };
 
@@ -841,6 +935,7 @@ module.exports = {
   userRecoveryMessage,
   carDetailsWhishList,
   OtpCheck,
+  forgotPassword,
   bookingCar,
   addDate,
   changeDate,

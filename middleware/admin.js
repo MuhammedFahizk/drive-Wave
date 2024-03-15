@@ -38,8 +38,25 @@ async function addImage(req, res, next) {
   }
 }
 
+async function serviceImage(req, res, next) {
+  const uploader = async (path) => await cloudinary.uploads(path, 'Service');
+  try {
+    const { file } = req;
+    if (file) {
+      const { path } = file;
+      const newPath = await uploader(path);
+      fs.unlinkSync(path);
+      req.newPath = newPath; // Store newPath in the request object for later use
+    }
+    next(); // Move to the next middleware or route handler
+  } catch (error) {
+    console.error(error);
+    res.status(500).json('error for file uploading');
+  }
+}
 module.exports = {
   loginMiddleWare,
   requireAuth,
   addImage,
+  serviceImage,
 };
