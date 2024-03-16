@@ -16,6 +16,8 @@ router.post('/generateOtp', middleware.loginMiddleWare, vendorController.otpGene
 router.post('/login/otp', middleware.loginMiddleWare, vendorController.loginOtp);
 router.post('/signupVendor', middleware.loginMiddleWare, vendorController.signupVendor);
 router.get('/dashboardPage', middleware.requireAuth, vendorController.showDashboard);
+router.get('/users', middleware.requireAuth, vendorController.UserPage);
+router.get('/Payment', middleware.requireAuth, vendorController.payment);
 router.get('/carPage', middleware.requireAuth, vendorController.vendorCarPage);
 router.post('/addCars', middleware.requireAuth, middleware.requireAuth, upload.single('carImage'), middleware.addImage, vendorController.addCarVendor);
 router.post('/updateCarDetails', middleware.requireAuth, upload.single('carImage'), middleware.addImage, vendorController.updateCar);

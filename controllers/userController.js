@@ -257,7 +257,10 @@ async function filterCars(req, res) {
   let { pickDate, dropDate, location } = req.session;
   if (!location) {
     location = await Car.distinct('location').exec();
+  } else {
+    location = [location];
   }
+
   let AvailabilityId = [];
   if (pickDate && dropDate) {
     pickDate = new Date(pickDate);
@@ -276,7 +279,7 @@ async function filterCars(req, res) {
           TransmitionType: { $in: transmission },
           fuelType: { $in: fuel },
           carCategory: { $in: carCategory },
-          location,
+          location: { $in: location },
         },
       },
     ];
@@ -290,6 +293,7 @@ async function filterCars(req, res) {
         TransmitionType: { $in: transmission },
         fuelType: { $in: fuel },
         carCategory: { $in: carCategory },
+        location: { $in: location },
       },
     },
   ];
@@ -554,7 +558,6 @@ const bookingCar = async (req, res) => {
     if (bookingId) {
       const user = await User.findOne({ 'bookedCar._id': bookingId }).populate('bookedCar.services');
       const bookings = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
-      console.log(bookings);
       const { services } = bookings;
       let service = null;
       if (!car.ownerId) {
@@ -583,7 +586,7 @@ const bookingCar = async (req, res) => {
         service,
       });
     }
-    let service = [];
+    const service = [];
 
     if (!car.ownerId) {
       const adminData = await admin.findOne({ role: 'Admin' });
@@ -644,10 +647,8 @@ const findCarByDate = async (req, res) => {
   if (!pickDate || !dropDate) {
     if (location) {
       req.session.location = location;
-
-      return res.redirect('/cars');
     }
-    return res.status(401).redirect('/');
+    return res.redirect('/cars');
   }
   // const pickDate = new Date(pickDateData);
   // const dropDate = new Date(dropDateData);
@@ -774,7 +775,6 @@ const userBookedCar = async (req, res) => {
     status: 'pending',
     services: foundServices,
   };
-  console.log('book', bookingData);
   try {
     const user = await User.findByIdAndUpdate(
       _id,
@@ -785,7 +785,6 @@ const userBookedCar = async (req, res) => {
     const bookingId = user.bookedCar[user.bookedCar.length - 1]._id;
     req.session.bookingId = bookingId;
     const total = amount + ServiceAmount;
-    console.log(total);
     userService.razerPayCreation(bookingId, total * 100)
       .then(async (razerPay) => {
         await User.findOneAndUpdate(
@@ -878,7 +877,6 @@ const carDetails = async (req, res) => {
         (service) => services.includes(service._id),
       );
     }
-    console.log(service);
     return res.status(200).json({ thisBooking, service });
   } catch (error) {
     console.error(error);

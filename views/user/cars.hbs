@@ -161,7 +161,7 @@
                 <h2>Make your trip</h2>
                 <div class="form-group">
                   <label for="" class="label">Pick-up location</label>
-                  <input type="button" class="form-control" id="locationButton" value="{{location}}">
+                  <input type="button" class="form-control" id="locationButton" value="{{location}} ">
                   <input type="hidden"  name="location" id="selectedLocation" required>
                 </div>
                 {{!-- <div class="form-group">
@@ -206,8 +206,8 @@
 
                 <ul class="p-0">
                   <li>
-                <input type="text" id="locationSearch" class="col-12 border-0" placeholder="Search locations">
-
+                   <input type="text" id="locationSearch" class="col-12 border-0" placeholder="Search locations">
+                
                   </li>
                   {{#each locations}}
                   <li>
@@ -252,7 +252,6 @@
               </div>
 
             </div>
-            <div id="calendar" class="p-0 m-0  ftco-animate col-12 "> </div>
 
           </div>
         </div>
@@ -276,10 +275,10 @@
     						<h2 class="mb-0">  Transmission</a></h2>
               </div>
            <input type="checkbox" id="mannual" name="Manual" class="m-1" value="Manual">
-            <label for="Manual">Manual</label><br>
+            <label for="mannual">Manual</label><br>
             
             <input type="checkbox" id="automatic" name="Automatic" class="m-1" value="Automatic">
-            <label for="Automatic">Automatic</label><br>
+            <label for="automatic">Automatic</label><br>
             </div>
           <div id="engine" class="align-items-left car-wrap rounded ftco-animate my-2 p-2 ml-2">
         
@@ -313,10 +312,13 @@
             <label for="Sports Car">Sports Car</label><br>
             
             <input type="checkbox" id="Hatchbacks" name="Hatchbacks" class="m-1" value="Hatchbacks">
-            <label for="Sedan">Hatchbacks</label><br>
+            <label for="Hatchbacks">Hatchbacks</label><br>
             
             <input type="checkbox" id="Electric" name="Electric" class="m-1" value="Electric">
-            <label for="Sedan">Electric</label><br>
+            <label for="Electric">Electric</label><br>
+           
+            <input type="checkbox" id="All" name="All" class="m-1" value="All">
+            <label for="All">All</label><br>
         </div>
     </aside>
     
@@ -327,7 +329,10 @@
         <div class="col-md-4">
             <div class="car-wrap rounded ftco-animate">
                 <div class="image-container position-relative">
-                    <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="{{carImage}}">
+                  <a href="/carDetails?id={{_id}}">
+                                        <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="{{carImage}}">
+
+                  </a>
                     <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0">
                         
                     </div>
@@ -449,28 +454,48 @@ $('#engine input').on('change', function () {
                 $('.container .rowcars').empty();
             submit()})
 
-            $('#category input').on('change', function () {
-        // Check if the checkbox is checked
+    $('#category input').on('change', function () {
+    if ($(this).val() === 'All') {
         if ($(this).is(':checked')) {
-            if (category.length === 6){
-                category = category.splice()
+            // If "All" checkbox is checked, check all other checkboxes
+            $('#category input:not(:checked)').prop('checked', true);
+            // Clear the category array and add 'All'
+                category = ['MUVs','SUVs','Sedan','Sports Car','Hatchbacks','Electric']
 
+        } else {
+            // If "All" checkbox is unchecked, uncheck all other checkboxes
+            $('#category input:checked').prop('checked', false);
+            // Clear the category array
+            category = [];
+        }
+    } else {
+        // If other checkboxes are changed
+        if ($(this).is(':checked')) {
+            if (category.length === 6) {
+                // Remove 'All' if all checkboxes are already checked
+                const index = category.indexOf('All');
+                if (index !== -1) {
+                    category.splice(index, 1);
+                }
             }
-            // If checked, add its value to the transmission array
+            // If checked, add its value to the category array
             category.push($(this).val());
         } else {
-            // If unchecked, remove its value from the transmission array
+            // If unchecked, remove its value from the category array
             const index = category.indexOf($(this).val());
             if (index !== -1) {
                 category.splice(index, 1);
-
             }
+            // Uncheck the "All" checkbox if any other checkbox is unchecked
+            $('#category input[value="All"]').prop('checked', false);
         }
-        
-        
-                $('.container .rowcars').empty();
-            submit()})
-    
+    }
+
+    // Update the view
+    $('.container .rowcars').empty();
+    submit();
+});
+
 // Event listener for keydown event in the search input field
 // Event listener for keydown event in the search input field
 $('#search').on('keydown', function(event) {
@@ -504,6 +529,7 @@ function submit(){
   if(category.length === 0){
     category = ['MUVs','SUVs','Sedan','Sports Car','Hatchbacks','Electric']
   }
+  
     url = '/filterCars'
     console.log(transmission)
     console.log(engine)

@@ -8,6 +8,7 @@ const { Car } = require('../models/car');
 const cloudinary = require('../service/cloudnery');
 const { sendAdminOtp, generateOtp } = require('../service/nodeMailer');
 
+const vendorService = require('../service/vendorService')
 const emailOtp = {};
 
 const loginPage = (req, res) => {
@@ -468,6 +469,53 @@ const deleteService = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+async function UserPage(req, res) {
+  try {
+    const { ownerId } = req.session;
+    const userWithBookings = await User.find({}).populate('bookedCar.car');
+    // eslint-disable-next-line consistent-return, array-callback-return
+    const allBookings = userWithBookings.flatMap((user) => user.bookedCar.map((booking) => {
+      if (booking.car.ownerId || booking.car.ownerId === ownerId) {
+        return user;
+      }
+    }));
+    const filteredBookings = allBookings.filter((booking) => booking !== undefined);
+
+    // Count the filtered users
+    res.status(200).render('vendor/User', { data: filteredBookings });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+const payment = async (req, res) => {
+  const { ownerId } = req.session;
+  try {
+    const customers = await vendorService.customers(ownerId);
+    const dailyRents = vendorService.dailyRents();
+    const dailyRentalAmount = await vendorService.dailyRentalAmount(ownerId);
+    const dailyRentalPending = await vendorService.dailyRentalAmountPending(ownerId);
+
+    const conformedAmount = dailyRentalAmount
+      .reduce((total, current) => total + current.totalRentalAmount, 0);
+    const pendingAmount = dailyRentalPending
+      .reduce((total, current) => total + current.totalRentalAmount, 0);
+    const CustomersCount = customers.length;
+    return res.status(200).render('vendor/payment', {
+      customers,
+      dailyRents,
+      dailyRentalAmount,
+      conformedAmount,
+      CustomersCount,
+      dailyRentalPending,
+      pendingAmount,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('internal server error');
+  }
+};
 module.exports = {
   loginPage,
   showVendorDashboard,
@@ -491,4 +539,6 @@ module.exports = {
   addService,
   editService,
   deleteService,
+  UserPage,
+  payment,
 };
