@@ -54,7 +54,7 @@ async function loginOtp(req, res) {
   }
 }
 const showAdminDashboard = async (req, res) => {
-  const customers = await User.find().countDocuments();
+  const customers = await User.find({ role: 'User' }).countDocuments();
   const dailyRents = adminService.dailyRents();
   const dailyRentalAmount = await adminService.dailyRentalAmount();
   const dailyRentalPending = await adminService.dailyRentalAmountPending();
@@ -62,6 +62,10 @@ const showAdminDashboard = async (req, res) => {
   confirmAmount = confirmAmount.totalRentalAmount;
   let pendingAmount = await adminService.pendingAmount();
   pendingAmount = pendingAmount.totalRentalAmount;
+  const Admin = await admin.findOne({ role: 'Admin' });
+  const { banner } = Admin;
+  const locations = Admin.locations.map((locationParts) => locationParts.replace(/\s+/g, '-'));
+
   res.render('admin/index', {
     NotificationCount,
     dailyRents,
@@ -70,6 +74,8 @@ const showAdminDashboard = async (req, res) => {
     confirmAmount,
     pendingAmount,
     customers,
+    banner,
+    locations,
   });
 };
 async function showAdminCarPage(req, res) {
@@ -319,25 +325,6 @@ async function alphabeticallySort(req, res) {
       'admin/adminCarPage',
       {
         data: cars, count, search, NotificationCount,
-      },
-    );
-  }
-}
-async function searchByCarName(req, res) {
-  const { search } = req.query;
-  const encodedCategory = req.query.category;
-  const category = decodeURIComponent(encodedCategory).trim();
-  if (category === '') {
-    const cars = await Car.find({ carName: { $regex: new RegExp(search, 'i') } }).sort({ carName: 1 });
-    const count = cars.length;
-    res.status(200).render('admin/adminCarPage', { data: cars, count, search });
-  } else {
-    const cars = await Car.find({ carName: { $regex: new RegExp(search, 'i') }, carCategory: category }).sort({ carName: 1 });
-    const count = cars.length;
-    res.status(200).render(
-      'admin/adminCarPage',
-      {
-        data: cars, count, category, search, NotificationCount,
       },
     );
   }
@@ -617,7 +604,6 @@ const deleteService = async (req, res) => {
     foundAdmin.service = foundAdmin.service.filter((service) => service._id.toString() !== id);
 
     // Remove the service from the admin's service array
-    foundAdmin.service = foundAdmin.service.filter((service) => service._id.toString() !== id);
 
     // Save the updated admin document
     await foundAdmin.save();
@@ -631,6 +617,74 @@ const deleteService = async (req, res) => {
   }
 };
 
+const getBanner = async (req, res) => {
+  try {
+    const { bannerId } = req.params;
+
+    // Assuming you have defined the 'admin' mongoose model
+    const Admin = await admin.findOne({ role: 'Admin' });
+    // Assuming banner is an array of objects and you want to find by bannerId
+    const banner = Admin.banner.find((banner) => banner._id.toString() === bannerId);
+    // Send the banner data as a response
+    res.json(banner);
+  } catch (error) {
+    console.error('Error fetching banner:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const addBanner = async (req, res) => {
+  const { ...data } = req.body;
+  const Admin = await admin.findOne({ role: 'Admin' });
+  if (req.file && req.file.path) {
+    if (!Admin) {
+      return res.status(401).json('admin not found');
+    }
+    const newService = {
+      heading: data.heading,
+      subHeading: data.subHeading,
+      bannerImage: req.newPath.url,
+      imageId: req.newPath.id,
+    };
+    Admin.banner.push(newService);
+    await Admin.save();
+  }
+  return res.status(200).json('ok');
+};
+
+const deleteBanner = async (req, res) => {
+  const { bannerId } = req.params;
+  try {
+    const foundAdmin = await admin.findOne({ role: 'Admin' });
+
+    // Check if the admin and service exist
+    if (!foundAdmin) {
+      return res.status(404).json({ error: 'Admin or service not found' });
+    }
+    let imageId = '';
+    // eslint-disable-next-line no-unused-vars, array-callback-return
+    const Banner = foundAdmin.banner.filter((banner) => {
+      if (banner._id.toString() === bannerId) {
+        imageId = banner.imageId;
+      }
+    });
+    cloudinary.deleteImage(imageId)
+      .then((result) => {
+        console.error('Image deleted:', result);
+      })
+      .catch((error) => {
+        console.error('Error deleting image:', error);
+      });
+    foundAdmin.banner = foundAdmin.banner.filter((banner) => banner._id.toString() !== bannerId);
+
+    await foundAdmin.save();
+
+    return res.status(200).json('success');
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 // vendor page
 async function vendorPage(req, res) {
   const vendors = await Vendor.find({ role: 'vendor', deletedAt: null });
@@ -878,7 +932,6 @@ module.exports = {
   updateCar,
   findCarCategories,
   alphabeticallySort,
-  searchByCarName,
   viewNotificationPage,
   disableVendor,
   enableVendor,
@@ -889,6 +942,9 @@ module.exports = {
   addService,
   editService,
   deleteService,
+  addBanner,
+  getBanner,
+  deleteBanner,
   // vendor
   vendorPage,
   vendorDetails,

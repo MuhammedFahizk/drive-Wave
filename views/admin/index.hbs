@@ -5,6 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 	<!-- My CSS -->
 	<link rel="stylesheet" href="/css/dashboard.css">
 
@@ -112,8 +115,8 @@
 
 		<!-- MAIN -->
 		<main>
-			<div class="head-title">
-				<div class="left">
+			<div class="head-title ">
+				<div class="left ">
 					<h1>Dashboard</h1>
 					<ul class="breadcrumb">
 						<li>
@@ -121,15 +124,89 @@
 						</li>
 						<li><i class='bx bx-chevron-right'></i></li>
 						<li>
-							<a class="active" href="#">Payment</a>
+							<a class="active" href="#"></a>
 						</li>
 					</ul>
 				</div>
-				<a href="#" class="btn-download">
-					<i class='bx bxs-cloud-download'></i>
-					<span class="text">Download PDF</span>
+				<div class="col-5 row">
+
+				<a href="#" class="btn-download col-5">
+					<span type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+						Add Banner
+					</span>
+
 				</a>
+				<a href="#" class="btn-download col-5 mx-3">
+					<span type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightLocation" aria-controls="offcanvasRight">
+						 Locations
+					</span>
+
+				</a>
+				</div>
+
 			</div>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRightLocation" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Location </h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+  <form id="addLocation" method="post" >
+    <div class="mb-3">
+      <label for="BannerName" class="form-label"> Add Location</label>
+      <input type="text" class="form-control" id="location" name="location" aria-describedby="emailHelp" required>
+    </div>
+   
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+   <div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-12 mt-4 p-3">
+
+                <ul class="p-2">
+                  <li>
+                  
+                   <input type="text" id="locationSearch" class="col-12 border-0" placeholder="Search locations">
+                
+                  </li>
+                  {{#each locations}}
+                  <li>
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><circle cx="12" cy="12" r="4"></circle><path d="M13 4.069V2h-2v2.069A8.01 8.01 0 0 0 4.069 11H2v2h2.069A8.008 8.008 0 0 0 11 19.931V22h2v-2.069A8.007 8.007 0 0 0 19.931 13H22v-2h-2.069A8.008 8.008 0 0 0 13 4.069zM12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"></path></svg>
+                    </span>
+                     <a href="#" class="locationLink">{{this}}</a>
+                  {{/each}}
+                </ul>
+              </div>
+</div>
+</div>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Banner </h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+  <form id="bannerForm" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="BannerName" class="form-label">Banner Name</label>
+      <input type="text" class="form-control" id="BannerName" name="BannerName" aria-describedby="emailHelp" required>
+    </div>
+    <div class="mb-3">
+      <label for="image" class="form-label">Image</label>
+      <input type="file" class="form-control" id="bannerImage" name="bannerImage" aria-describedby="emailHelp" required>
+    </div>
+    <div class="mb-3">
+      <label for="heading" class="form-label">Heading</label>
+      <input type="text" class="form-control" id="heading" name="heading" aria-describedby="emailHelp" required>
+      <div class="text-danger" id="headingError" ></div>
+    </div>
+    <div class="mb-3">
+      <label for="subHeading" class="form-label">Sub Heading</label>
+      <input type="text" class="form-control" id="subHeading" name="subHeading" aria-describedby="emailHelp" required>
+      <p class="text-danger" id="subHeadingError"></p>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+</div>
 
 			<ul class="box-info">
 				<li>
@@ -169,39 +246,85 @@
 				</div>
 				<div class="todo">
 					<div class="head">
-						<h3>Customers</h3>
+						<h3>Banners</h3>
 
 						{{!-- <i class='bx bx-plus'></i>
 						<i class='bx bx-filter'></i> --}}
 					</div>
-					<ul class="todo-list">
+					<ul class="todo-list row col-12" id="bannerList">
+  {{#each banner}}
+  <div class="col-12 row m-0 d-flex">
 
-						<p class="text-right">Total</p>
-						{{#each customers}}
-						<li class="completed">
-							<p>{{this.name}}</p>
-							<p style="color: rgba(1, 253, 77, 0.97);">{{this.totalPrize}}</p>
+  <li class="completed row col-10 m-0 " data-banner-id="{{this.id}}">
+    <p class="col-12">{{this.heading}}</p>
+	
+  </li>
+  <div class="col-2 m-0">
+	  <input type="hidden" value="{{this.imageId}}" id="imageId" name="imageId">
+  <input type="hidden" value="{{this._id}}" id="bannerId" name="bannerId">
+	<button type='button'  id="deleteBanner">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="red">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="SVGRepo_iconCarrier">
+            <path d="M3 6.98996C8.81444 4.87965 15.1856 4.87965 21 6.98996" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8.00977 5.71997C8.00977 4.6591 8.43119 3.64175 9.18134 2.8916C9.93148 2.14146 10.9489 1.71997 12.0098 1.71997C13.0706 1.71997 14.0881 2.14146 14.8382 2.8916C15.5883 3.64175 16.0098 4.6591 16.0098 5.71997" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 13V18" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19 9.98999L18.33 17.99C18.2225 19.071 17.7225 20.0751 16.9246 20.8123C16.1266 21.5494 15.0861 21.9684 14 21.99H10C8.91389 21.9684 7.87336 21.5494 7.07541 20.8123C6.27745 20.0751 5.77745 19.071 5.67001 17.99L5 9.98999" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+    </svg>
+</button>
 
+</div>
+  </div>
 
+  {{/each}}
+</ul>
 
-						</li>
-						{{/each}}
+<div class="modal fade" id="bannerModal" tabindex="-1" aria-labelledby="bannerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bannerModalLabel">Banner Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Banner details will be displayed here -->
+      </div>
+    </div>
+  </div>
+</div><div class="modal fade" id="bannerModal" tabindex="-1" aria-labelledby="bannerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bannerModalLabel">Banner Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Banner details will be displayed here -->
+      </div>
+    </div>
+  </div>
+</div>
 
-					</ul>
 				</div>
 			</div>
 		</main>
-
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"
 		integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+  integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-	<script src="/script/script.js"></script>
 </body>
 
 </html>
@@ -248,6 +371,127 @@
     }
 });
 
+$(document).ready(function() {
+  $('#locationSearch').on('keyup', function() {
+    var searchTerm = $(this).val().toLowerCase();
+    $('.locationLink').each(function() {
+      var text = $(this).text().toLowerCase();
+      if (text.includes(searchTerm)) {
+        $(this).parent().show();
+      } else {
+        $(this).parent().hide();
+      }
+    });
+  });
+});
+const bannerForm = document.getElementById('bannerForm');
 
+bannerForm.addEventListener('submit', function(e)  {
+  e.preventDefault(); // Prevent the default form submission
+  
+  const heading = document.getElementById("heading").value;
+  const bannerName = document.getElementById("BannerName").value;
+  const bannerImage = document.getElementById("bannerImage").files[0]; // Get the file object
+  const subHeading = document.getElementById("subHeading").value;
+  const headingWords = heading.trim().split(/\s+/).length;
+  const subHeadingWords = subHeading.trim().split(/\s+/).length;
+  const headingError=  document.getElementById("headingError")
+  const subHeadingError=  document.getElementById("subHeadingError")
+
+  
+  // Validate heading
+   if (headingWords > 10) {
+    headingError.innerHTML = "Maximum 10 words allowed.";
+    return false;
+  } else {
+    headingError.innerHTML = "";
+  }
+  
+  // Validate sub heading
+ if (subHeadingWords > 20) {
+    subHeadingError.innerHTML = "Maximum 20 words allowed.";
+    return false;
+  } else {
+    subHeadingError.innerHTML = "";
+  }
+  
+  // Create FormData object to handle file upload
+  const formData = new FormData();
+  formData.append('bannerName', bannerName);
+  formData.append('heading', heading);
+  formData.append('subHeading', subHeading);
+  formData.append('bannerImage', bannerImage);
+  
+  // Your axios POST request goes here
+  // Make sure you have axios imported
+  
+  axios.post('/admin/banner', formData)
+    .then(res => {
+      console.log(res);
+      console.log('Success');
+	  window.location.reload()
+    })
+    .catch(err => {
+      console.error('Error:', err);
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const bannerList = document.getElementById("bannerList");
+
+    bannerList.addEventListener("click", function (event) {
+      const li = event.target.closest("li");
+      if (li && li.classList.contains("completed")) {
+        const bannerId = li.dataset.bannerId;
+        axios.get(`/admin/banner/${bannerId}`)
+          .then(function (response) {
+            const bannerDetails = response.data;
+            const modalBody = document.getElementById("modalBody");
+            modalBody.innerHTML = `
+			<div class="banner-container">
+				      <img src="${bannerDetails.bannerImage}" class="img-fluid rounded-start  col-12 mt-4 " style="height:325px;object-fit: cover; width: 100%; " alt="Car Image">
+
+  <p>Heading : ${bannerDetails.heading}</p>
+  <p> Sub Heading :${bannerDetails.subHeading}</p>
+
+
+	
+</div>`; // Adjust according to your banner response structure
+            $('#bannerModal').modal('show'); // Show the modal
+          })
+          .catch(function (error) {
+            console.error("Error fetching banner details:", error);
+          });
+      }
+    });
+  });
+
+ const deleteBanner = document.getElementById('deleteBanner');
+deleteBanner.addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the default behavior of the button
+
+
+        const bannerId = document.getElementById('bannerId').value;
+        const imageId = document.getElementById('imageId').value;
+		console.log(bannerId, imageId)
+        console.log(bannerId, imageId);
+
+        axios.post(`/admin/bannerDelete/${bannerId}`, {
+            imageId: imageId // Send imageId in the request body
+        })
+        .then(response => {
+            console.log('Banner deleted successfully:', response.data);
+            // Handle successful response
+            // You might want to update the UI or take other actions here
+			window.location.reload()
+        })
+        .catch(error => {
+            console.error('Error deleting banner:', error);
+            // Handle errors
+            // You might want to display an error message or take other actions here
+        });
+   
+});
 
 </script>

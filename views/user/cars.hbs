@@ -1,113 +1,116 @@
 {{!-- <style>
-
-
-
-    .image-container {
+  .image-container {
     position: relative;
-}
+  }
 
-.hover-icon {
+  .hover-icon {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0; /* Initially hidden */
+    opacity: 0;
+    /* Initially hidden */
     transition: opacity 0.3s ease;
-}
+  }
 
-.image-container:hover .hover-icon {
-    opacity: 1; /* Show icon on hover */
-}
-.heart {
-        width: 100px;
-        height: 100px;
-        position: relative;
-    }
+  .image-container:hover .hover-icon {
+    opacity: 1;
+    /* Show icon on hover */
+  }
 
-    
-.hover-icon {
+  .heart {
+    width: 100px;
+    height: 100px;
     position: relative;
-}
+  }
 
-.hover-icon .col-2 {
+
+  .hover-icon {
+    position: relative;
+  }
+
+  .hover-icon .col-2 {
     position: absolute;
     top: -150px;
     right: -115px;
-}
-#calendar {
-    width: 300px; /* Adjust the width as needed */
-    height: 300px; /* Adjust the height as needed */
-    overflow: hidden; 
-    display: none;/* Hide overflow if necessary */
-}
+  }
 
-
-
-
-
-
+  #calendar {
+    width: 300px;
+    /* Adjust the width as needed */
+    height: 300px;
+    /* Adjust the height as needed */
+    overflow: hidden;
+    display: none;
+    /* Hide overflow if necessary */
+  }
 </style> --}}
 
 <style>
-    
-.time-picker {
-  width: 300px;
-  height: 20px;
-  background-color: #f0f0f0;
-  position: relative;
-  cursor: pointer;
-}
-
-.time-handle {
-  width: 20px;
-  height: 20px;
-  background-color: #007bff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-  cursor: pointer;
-}
-     .flatpickr-calendar {
-            background-color: #f0f0f0;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-        }
-        .flatpickr-day {
-            background-color: transparent;
-        }
-        .flatpickr-day.today {
-            background-color: #01d28e;
-        }
-        .flatpickr-month {
-            font-size: 1.em;
-        }
-       
-        #locations {
-    display: none;
-    overflow-x:hidden;
-    overflow-y: scroll;
-    height:400px;
+  .time-picker {
+    width: 300px;
+    height: 20px;
+    background-color: #f0f0f0;
+    position: relative;
+    cursor: pointer;
   }
 
-#locations ul {
-  list-style: none;
-  padding: 0;
-}
+  .time-handle {
+    width: 20px;
+    height: 20px;
+    background-color: #007bff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    cursor: pointer;
+  }
 
-#locations ul li {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 5px;
-  border-radius: 5px;
-}
+  .flatpickr-calendar {
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+  }
 
-#locations ul li a {
-  text-decoration: none;
-  color: black;
-  font-size: larger;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
+  .flatpickr-day {
+    background-color: transparent;
+  }
+
+  .flatpickr-day.today {
+    background-color: #01d28e;
+  }
+
+  .flatpickr-month {
+    font-size: 1.em;
+  }
+
+  #locations {
+    display: none;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 400px;
+  }
+
+  #locations ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  #locations ul li {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+  }
+
+
+  #locations ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: larger;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
   ::-webkit-scrollbar {
     width: 10px;
     /* Width of the scrollbar */
@@ -134,422 +137,499 @@
   }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ionicons@5.3.0/dist/ionicons.min.css">
-{{!-- <link href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.css' rel='stylesheet'> --}}
+{{!--
+<link href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.css' rel='stylesheet'> --}}
 <link href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/all.css' rel='stylesheet'>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-  
-   <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
-          <div class="col-md-9 ftco-animate pb-5">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Cars <i class="ion-ios-arrow-forward"></i></span></p>
-            <h1 class="mb-3 bread">Choose Your Car</h1>
-          </div>
-        </div>
+
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');"
+  data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+      <div class="col-md-9 ftco-animate pb-5">
+        <p class="breadcrumbs"><span class="mr-2"><a href="/">Home <i class="ion-ios-arrow-forward"></i></a></span>
+          <span>Cars <i class="ion-ios-arrow-forward"></i></span></p>
+        <h1 class="mb-3 bread">Choose Your Car</h1>
       </div>
-    </section>
-		
-   <section style="color: black;" class="ftco-section ftco-no-pt bg-light">
-    <div class="container">
-      <div class="row no-gutters">
-        <div class="col-md-12	featured-top">
-          <div class="row no-gutters">
-            <div class="col-md-4 d-flex align-items-center">
-              <form action="/findCarByDate" class="request-form ftco-animate bg-primary" method="post">
-                <h2>Make your trip</h2>
-                <div class="form-group">
-                  <label for="" class="label">Pick-up location</label>
-                  <input type="button" class="form-control" id="locationButton" value="{{location}} ">
-                  <input type="hidden"  name="location" id="selectedLocation" required>
-                </div>
-                {{!-- <div class="form-group">
-                  <label for="" class="label">Drop-off location</label>
-                  <input type="text" class="form-control" placeholder="City, Airport, Station, etc">
-                </div> --}}
-                {{!-- <div class="d-flex ">
-                  <div class="form-group mr-2 p-2">
-                    <label for="" class="label">Pick-up date</label>
-                    <input type="text" class="form-control" name="pickDateData" id="pickDate" placeholder="Date">
-                  </div>
-                  <div class="form-group ml-2">
-                    <label for="" class="label">Drop-off date</label>
-                    <input type="text" class="form-control" name="dropDateData" id="dropDate" placeholder="Date">
-                  </div>
-                </div> --}}
-                <div class="d-flex ">
+    </div>
+  </div>
+</section>
 
-                  <div class="form-group">
-                    <label for="" class="label">Pick-up time</label>
-                    <input type="text" class="form-control" name="pickDate" id="pick-up" placeholder="Time" value="{{pickDate}}"  required>
-                  </div>
-                  <div class="form-group">
-                    <label for="" class="label">Drop-off time</label>
-                    <input type="text" class="form-control" name="dropDate" id="drop-off" placeholder="Time" value="{{dropDate}}" required>
-                  </div>
-                </div>
+<section style="color: black;" class="ftco-section ftco-no-pt bg-light">
+  <div class="container">
+    <div class="row no-gutters">
+      <div class="col-md-12	featured-top">
+        <div class="row no-gutters">
+          <div class="col-md-4 d-flex align-items-center">
+            <form action="/findCarByDate" class="request-form ftco-animate bg-primary" method="post">
+              <h2>Make your trip</h2>
+              <div class="form-group">
+                <label for="" class="label">Pick-up location</label>
+                <input type="button" class="form-control" id="locationButton" value="{{location}} ">
 
+                <input type="hidden" name="location" id="selectedLocation" required>
+              </div>
+              {{!-- <div class="form-group">
+                <label for="" class="label">Drop-off location</label>
+                <input type="text" class="form-control" placeholder="City, Airport, Station, etc">
+              </div> --}}
+              {{!-- <div class="d-flex ">
+                <div class="form-group mr-2 p-2">
+                  <label for="" class="label">Pick-up date</label>
+                  <input type="text" class="form-control" name="pickDateData" id="pickDate" placeholder="Date">
+                </div>
+                <div class="form-group ml-2">
+                  <label for="" class="label">Drop-off date</label>
+                  <input type="text" class="form-control" name="dropDateData" id="dropDate" placeholder="Date">
+                </div>
+              </div> --}}
+              <div class="d-flex ">
 
                 <div class="form-group">
-                  <button type="submit" id="submitButton" value="Rent A Car Now"
-                    class="btn btn-secondary py-3 px-4">Rent A Car Now</button>
-
+                  <label for="" class="label">Pick-up time</label>
+                  <input type="text" class="form-control" name="pickDate" id="pick-up" placeholder="Time"
+                    value="{{pickDate}}" required>
                 </div>
+                <div class="form-group">
+                  <label for="" class="label">Drop-off time</label>
+                  <input type="text" class="form-control" name="dropDate" id="drop-off" placeholder="Time"
+                    value="{{dropDate}}" required>
+                </div>
+              </div>
 
 
-              </form>
+              <div class="form-group">
+                <button type="submit" id="submitButton" value="Rent A Car Now" class="btn btn-secondary py-3 px-4">Rent
+                  A Car Now</button>
 
-            </div>
-            <div class="col-md-8 d-flex align-items-center">
-              <div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-10 p-3">
+              </div>
 
-                <ul class="p-0">
-                  <li>
-                   <input type="text" id="locationSearch" class="col-12 border-0" placeholder="Search locations">
-                
-                  </li>
-                  {{#each locations}}
-                  <li>
-                    <span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><circle cx="12" cy="12" r="4"></circle><path d="M13 4.069V2h-2v2.069A8.01 8.01 0 0 0 4.069 11H2v2h2.069A8.008 8.008 0 0 0 11 19.931V22h2v-2.069A8.007 8.007 0 0 0 19.931 13H22v-2h-2.069A8.008 8.008 0 0 0 13 4.069zM12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"></path></svg>
-                    </span>
-      <a href="#" class="locationLink">{{this}}</a>
+
+            </form>
+
+          </div>
+          <div class="col-md-8 d-flex align-items-center">
+            <div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-10 p-3">
+
+              <ul class="p-0">
+                <li>
+
+                  <input type="text" id="locationSearch" class="col-12 border-0" placeholder="Search locations">
+
+                </li>
+                {{#each locations}}
+                <li>
+                  <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                      style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                      <circle cx="12" cy="12" r="4"></circle>
+                      <path
+                        d="M13 4.069V2h-2v2.069A8.01 8.01 0 0 0 4.069 11H2v2h2.069A8.008 8.008 0 0 0 11 19.931V22h2v-2.069A8.007 8.007 0 0 0 19.931 13H22v-2h-2.069A8.008 8.008 0 0 0 13 4.069zM12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z">
+                      </path>
+                    </svg>
+                  </span>
+                  <a href="#" class="locationLink">{{this}}</a>
                   {{/each}}
-                </ul>
-              </div>
-              <div id="servicePage" class=" services-wrap rounded-right w-100">
-                <h3 class="heading-section mb-4">Better Way to Rent Your Perfect Cars</h3>
-                <div class="row d-flex mb-4">
-                  <div class="col-md-4 d-flex align-self-stretch ftco-animate">
-                    <div class="services w-100 text-center">
-                      <div class="icon d-flex align-items-center justify-content-center"><span
-                          class="flaticon-route"></span></div>
-                      <div class="text w-100">
-                        <h3 class="heading mb-2">Choose Your Pickup Location</h3>
-                      </div>
+              </ul>
+            </div>
+            <div id="servicePage" class=" services-wrap rounded-right w-100">
+              <h3 class="heading-section mb-4">Better Way to Rent Your Perfect Cars</h3>
+              <div class="row d-flex mb-4">
+                <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                  <div class="services w-100 text-center">
+                    <div class="icon d-flex align-items-center justify-content-center"><span
+                        class="flaticon-route"></span></div>
+                    <div class="text w-100">
+                      <h3 class="heading mb-2">Choose Your Pickup Location</h3>
                     </div>
                   </div>
-                  <div class="col-md-4 d-flex align-self-stretch ftco-animate">
-                    <div class="services w-100 text-center">
-                      <div class="icon d-flex align-items-center justify-content-center"><span
-                          class="flaticon-handshake"></span></div>
-                      <div class="text w-100">
-                        <h3 class="heading mb-2">Select the Best Deal</h3>
-                      </div>
+                </div>
+                <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                  <div class="services w-100 text-center">
+                    <div class="icon d-flex align-items-center justify-content-center"><span
+                        class="flaticon-handshake"></span></div>
+                    <div class="text w-100">
+                      <h3 class="heading mb-2">Select the Best Deal</h3>
                     </div>
                   </div>
-                  <div class="col-md-4 d-flex align-self-stretch ftco-animate">
-                    <div class="services w-100 text-center">
-                      <div class="icon d-flex align-items-center justify-content-center"><span
-                          class="flaticon-rent"></span></div>
-                      <div class="text w-100">
-                        <h3 class="heading mb-2">Reserve Your Rental Car</h3>
-                      </div>
+                </div>
+                <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                  <div class="services w-100 text-center">
+                    <div class="icon d-flex align-items-center justify-content-center"><span
+                        class="flaticon-rent"></span></div>
+                    <div class="text w-100">
+                      <h3 class="heading mb-2">Reserve Your Rental Car</h3>
                     </div>
                   </div>
                 </div>
               </div>
-
             </div>
 
           </div>
+
         </div>
       </div>
-  </section>
-
-    
-
-<section class="ftco-section bg-light col-12 row m-0 pt-0 mt-0">
-  <aside class="col-md-12">
-<div class="col-12 p-2 ftco-section car-wrap rounded ftco-animate  ml-2   ">
-   <input class="col-12 p-2" style="border: 0;"  id="search"  type="search" name="serch" placeholder="Search . . .">
-</div>
-</aside>
- <aside class="col-md-2">
-        <!-- Sidebar Content -->
-        <div id="transmission" class="align-items-left car-wrap rounded ftco-animate my-0 p-2 ml-2">
-         
-           <div class="text p-1">
-
-    						<h2 class="mb-0">  Transmission</a></h2>
-              </div>
-           <input type="checkbox" id="mannual" name="Manual" class="m-1" value="Manual">
-            <label for="mannual">Manual</label><br>
-            
-            <input type="checkbox" id="automatic" name="Automatic" class="m-1" value="Automatic">
-            <label for="automatic">Automatic</label><br>
-            </div>
-          <div id="engine" class="align-items-left car-wrap rounded ftco-animate my-2 p-2 ml-2">
-        
-        <div class="text p-1">
-
-    						<h2 class="mb-0"><a > Engine Type</a></h2>
-              </div>
-         <input type="checkbox" id="Petrol" name="Petrol" class="m-1" value="Petrol">
-            <label for="Petrol">Petrol</label><br>
-            
-            <input type="checkbox" id="Diesel" name="Diesel" class="m-1 " value="Diesel">
-            <label for="Diesel">Diesel</label><br>
-
-            </div>
-        </div>
-          <div id="category" class="align-items-left car-wrap rounded my-2 ftco-animate p-2 ml-2">
-    					<div class="text p-1">
-
-    						<h2 class="mb-0"><a >Category</a></h2>
-              </div>
-              <input type="checkbox" id="MUVs" name="MUVs" class="m-1" value="MUVs">
-            <label for="MUVs">MUVs</label><br>
-            
-            <input type="checkbox" id="SUVs" name="SUVs" class="m-1 " value="SUVs">
-            <label for="SUVs">SUVs</label><br>
-
-            <input type="checkbox" id="Sedan" name="Sedan" class="m-1" value="Sedan">
-            <label for="Sedan">Sedan</label><br>
-
-            <input type="checkbox" id="Sports Car" name="Sports Car" class="m-1" value="Sports Car">
-            <label for="Sports Car">Sports Car</label><br>
-            
-            <input type="checkbox" id="Hatchbacks" name="Hatchbacks" class="m-1" value="Hatchbacks">
-            <label for="Hatchbacks">Hatchbacks</label><br>
-            
-            <input type="checkbox" id="Electric" name="Electric" class="m-1" value="Electric">
-            <label for="Electric">Electric</label><br>
-           
-            <input type="checkbox" id="All" name="All" class="m-1" value="All">
-            <label for="All">All</label><br>
-        </div>
-    </aside>
-    
-  
-    <div class="container col-md-10 align-item-center">
-                        <div class="rowcars row">
-    {{#each data}}
-        <div class="col-md-4">
-            <div class="car-wrap rounded ftco-animate">
-                <div class="image-container position-relative">
-                  <a href="/carDetails?id={{_id}}">
-                                        <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="{{carImage}}">
-
-                  </a>
-                    <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0">
-                        
-                    </div>
-                </div>
-                <div class="text">
-                    <h2 class="mb-0"><a href="carDetails?id={{_id}}">{{carName}}</a></h2>
-                    <div class="d-flex mb-3">
-                        <span class="cat">{{carModal}}/{{brandName}}</span> 
-                        <p class="price ml-auto">${{dayRent}} <span>/day</span></p>
-                    </div>
-                    <p class="d-flex mb-0 d-block">
-                         <a href="/bookingCar?carId={{_id}}" class="btn btn-primary py-2 mr-1">Book now</a> 
-                        <a href="/carDetails?id={{_id}}" class="btn btn-secondary py-2 ml-1">Details</a>   </p>
-                </div>
-            </div>
-        </div>
-    {{/each}}
-</div>
-
-{{login}}
-            
-
-      
-           
-        
     </div>
 </section>
 
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+<section class="ftco-section bg-light col-12 row m-0 pt-0 mt-0">
+  <div class="col-12 p-0 pl-3 py-4  ftco-section  rounded mb-2  ml-2     pr-4">
+    <input type="text" id="carSearch" class="col-12 border-0 p-3 mb-2" placeholder="Search Cars ...">
+  </div>
+  <aside class="col-md-12">
+
+
+  </aside>
+  <aside class="col-md-2">
+    <!-- Sidebar Content -->
+    <div id="transmission" class="align-items-left car-wrap rounded ftco-animate my-0 p-2 ml-2">
+
+      <div class="text p-1">
+
+        <h2 class="mb-0"> Transmission</h2>
+      </div>
+      <input type="checkbox" id="mannual" name="Manual" class="m-1" value="Manual">
+      <label for="mannual">Manual</label><br>
+
+      <input type="checkbox" id="automatic" name="Automatic" class="m-1" value="Automatic">
+      <label for="automatic">Automatic</label><br>
+    </div>
+    <div id="engine" class="align-items-left car-wrap rounded ftco-animate my-2 p-2 ml-2">
+
+      <div class="text p-1">
+
+        <h2 class="mb-0"> Engine Type</h2>
+      </div>
+      <input type="checkbox" id="Petrol" name="Petrol" class="m-1" value="Petrol">
+      <label for="Petrol">Petrol</label><br>
+
+      <input type="checkbox" id="Diesel" name="Diesel" class="m-1 " value="Diesel">
+      <label for="Diesel">Diesel</label><br>
+
+    </div>
+    </div>
+    <div id="category" class="align-items-left car-wrap rounded my-2 ftco-animate p-2 ml-2">
+      <div class="text p-1">
+
+        <h2 class="mb-0">Category</h2>
+      </div>
+      <input type="checkbox" id="MUVs" name="MUVs" class="m-1" value="MUVs">
+      <label for="MUVs">MUVs</label><br>
+
+      <input type="checkbox" id="SUVs" name="SUVs" class="m-1 " value="SUVs">
+      <label for="SUVs">SUVs</label><br>
+
+      <input type="checkbox" id="Sedan" name="Sedan" class="m-1" value="Sedan">
+      <label for="Sedan">Sedan</label><br>
+
+      <input type="checkbox" id="Sports Car" name="Sports Car" class="m-1" value="Sports Car">
+      <label for="Sports Car">Sports Car</label><br>
+
+      <input type="checkbox" id="Hatchbacks" name="Hatchbacks" class="m-1" value="Hatchbacks">
+      <label for="Hatchbacks">Hatchbacks</label><br>
+
+      <input type="checkbox" id="Electric" name="Electric" class="m-1" value="Electric">
+      <label for="Electric">Electric</label><br>
+
+      <input type="checkbox" id="All" name="All" class="m-1" value="All">
+      <label for="All">All</label><br>
+    </div>
+  </aside>
+
+
+  <div class="container col-md-10 align-item-center">
+
+    <div class="rowcars row">
+
+      {{#if data}}
+
+      <div id="noCarsMessage" style="display: none;" class="col-12">
+        <div class="justify-content-center">
+          <div class="d-flex justify-content-center align-items-center">
+            <img src="images/bg_vector.png" style="object-fit: fill;" class="image-fluid mt-0"
+              alt="Your image alt text">
+          </div>
+          <h2 class="text-center fs-4  mb-0 pb-0"> There is no Vehicles available </h2>
+
+
+
+        </div>
+      </div>
+
+
+
+      {{#each data}}
+      <div class="col-md-4">
+        <div class="car-wrap rounded ftco-animate searchCars">
+          <div class="image-container position-relative">
+            <a href="/carDetails?id={{_id}}">
+              <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image"
+                class="img rounded d-flex align-items-end" src="{{carImage}}">
+
+            </a>
+            <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0">
+
+            </div>
+          </div>
+          <div class="text">
+            <h2 class="mb-0"><a href="carDetails?id={{_id}}">{{carName}}</a></h2>
+            <div class="d-flex mb-3">
+              <span class="cat">{{carModal}}/{{brandName}}</span>
+              <p class="price ml-auto">${{dayRent}} <span>/day</span></p>
+            </div>
+            <p class="d-flex mb-0 d-block">
+              <a href="/bookingCar?carId={{_id}}" class="btn btn-primary py-2 mr-1">Book now</a>
+              <a href="/carDetails?id={{_id}}" class="btn btn-secondary py-2 ml-1">Details</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      {{else}}
+      <div class="col-12 d-flex justify-content-center  ">
+        <div class="justify-content-center">
+          <div class="d-flex justify-content-center align-items-center">
+            <img src="images/bg_vector.png" style="object-fit: fill;" class="image-fluid mt-0"
+              alt="Your image alt text">
+          </div>
+          <h2 class="text-center fs-4  mb-0 pb-0"> There is no Vehicles available </h2>
+
+
+
+        </div>
+
+      </div>
+
+      {{/if}}
+    </div>
+
+    {{login}}
+
+
+
+
+
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 
 <script>
-    // jQuery
-$(document).ready(function() {
-  $('#locationSearch').on('keyup', function() {
-    var searchTerm = $(this).val().toLowerCase();
-    $('.locationLink').each(function() {
-      var text = $(this).text().toLowerCase();
-      if (text.includes(searchTerm)) {
-        $(this).parent().show();
+  // jQuery
+  $(document).ready(function () {
+    $('#locationSearch').on('keyup', function () {
+      var searchTerm = $(this).val().toLowerCase();
+      $('.locationLink').each(function () {
+        var text = $(this).text().toLowerCase();
+        if (text.includes(searchTerm)) {
+          $(this).parent().show();
+        } else {
+          $(this).parent().hide();
+        }
+      });
+    });
+  });
+  $(document).ready(function () {
+    $('#carSearch').on('keyup', function () {
+      var searchTerm = $(this).val().toLowerCase();
+      var carsFound = false; // Variable to track if any cars are found
+
+      $('.searchCars').each(function () {
+        var text = $(this).find('h2 a').text().toLowerCase();
+        if (text.includes(searchTerm)) {
+          $(this).parent().show(); // Show the parent container
+          carsFound = true; // At least one car is found
+        } else {
+          $(this).parent().hide(); // Hide the parent container
+        }
+      });
+
+      // Show/hide "No cars found" message based on whether any cars are found
+      if (!carsFound) {
+        $('#noCarsMessage').show();
       } else {
-        $(this).parent().hide();
+        $('#noCarsMessage').hide();
       }
     });
   });
-});
-
-    let transmission = [];
-    let engine = []
-    let category = []
-    let searchText = ''
-
-    let locationData = ''
-     let pickTimeData= ''
-     let carId = ''
 
 
-     const submitBtn = document.getElementById('submitButton');
-   
-    const calendarEl = document.getElementById('calendar');
+  let transmission = [];
+  let engine = []
+  let category = []
 
-submitBtn.addEventListener('click', function() {
-     
-     carId = document.getElementById('id').value;
-                $('.container .rowcars').empty();
-
-      submit()
+  let locationData = ''
+  let pickTimeData = ''
+  let carId = ''
 
 
+  const submitBtn = document.getElementById('submitButton');
 
-});
+  const calendarEl = document.getElementById('calendar');
+
+  submitBtn.addEventListener('click', function () {
+
+    carId = document.getElementById('id').value;
+    $('.container .rowcars').empty();
+
+    submit()
 
 
 
-       $('#transmission input').on('change', function () {
-        // Check if the checkbox is checked
-        if ($(this).is(':checked')) {
-             if (transmission.length === 2){
-                transmission = transmission.splice()
+  });
 
-            }
-            // If checked, add its value to the transmission array
-            transmission.push($(this).val());
-        } else {
-       
-            // If unchecked, remove its value from the transmission array
-            const index = transmission.indexOf($(this).val());
-            if (index !== -1) {
-                transmission.splice(index, 1);
 
-            }
-        }
-        
-                $('.container .rowcars').empty();
 
-            submit()})
-            
-$('#engine input').on('change', function () {
-        // Check if the checkbox is checked
-        if ($(this).is(':checked')) {
-            if (engine.length === 2){
-                engine = engine.splice()
+  $('#transmission input').on('change', function () {
+    // Check if the checkbox is checked
+    if ($(this).is(':checked')) {
+      if (transmission.length === 2) {
+        transmission = transmission.splice()
 
-            }
-            // If checked, add its value to the transmission array
-            engine.push($(this).val());
-        } else {
-            // If unchecked, remove its value from the transmission array
-            const index = engine.indexOf($(this).val());
-            if (index !== -1) {
-                engine.splice(index, 1);
-
-            }
-        }
-        
-        
-                $('.container .rowcars').empty();
-            submit()})
-
-    $('#category input').on('change', function () {
-    if ($(this).val() === 'All') {
-        if ($(this).is(':checked')) {
-            // If "All" checkbox is checked, check all other checkboxes
-            $('#category input:not(:checked)').prop('checked', true);
-            // Clear the category array and add 'All'
-                category = ['MUVs','SUVs','Sedan','Sports Car','Hatchbacks','Electric']
-
-        } else {
-            // If "All" checkbox is unchecked, uncheck all other checkboxes
-            $('#category input:checked').prop('checked', false);
-            // Clear the category array
-            category = [];
-        }
+      }
+      // If checked, add its value to the transmission array
+      transmission.push($(this).val());
     } else {
-        // If other checkboxes are changed
-        if ($(this).is(':checked')) {
-            if (category.length === 6) {
-                // Remove 'All' if all checkboxes are already checked
-                const index = category.indexOf('All');
-                if (index !== -1) {
-                    category.splice(index, 1);
-                }
-            }
-            // If checked, add its value to the category array
-            category.push($(this).val());
-        } else {
-            // If unchecked, remove its value from the category array
-            const index = category.indexOf($(this).val());
-            if (index !== -1) {
-                category.splice(index, 1);
-            }
-            // Uncheck the "All" checkbox if any other checkbox is unchecked
-            $('#category input[value="All"]').prop('checked', false);
+
+      // If unchecked, remove its value from the transmission array
+      const index = transmission.indexOf($(this).val());
+      if (index !== -1) {
+        transmission.splice(index, 1);
+
+      }
+    }
+
+    $('.container .rowcars').empty();
+
+    submit()
+  })
+
+  $('#engine input').on('change', function () {
+    // Check if the checkbox is checked
+    if ($(this).is(':checked')) {
+      if (engine.length === 2) {
+        engine = engine.splice()
+
+      }
+      // If checked, add its value to the transmission array
+      engine.push($(this).val());
+    } else {
+      // If unchecked, remove its value from the transmission array
+      const index = engine.indexOf($(this).val());
+      if (index !== -1) {
+        engine.splice(index, 1);
+
+      }
+    }
+
+
+    $('.container .rowcars').empty();
+    submit()
+  })
+
+  $('#category input').on('change', function () {
+    if ($(this).val() === 'All') {
+      if ($(this).is(':checked')) {
+        // If "All" checkbox is checked, check all other checkboxes
+        $('#category input:not(:checked)').prop('checked', true);
+        // Clear the category array and add 'All'
+        category = ['MUVs', 'SUVs', 'Sedan', 'Sports Car', 'Hatchbacks', 'Electric']
+
+      } else {
+        // If "All" checkbox is unchecked, uncheck all other checkboxes
+        $('#category input:checked').prop('checked', false);
+        // Clear the category array
+        category = [];
+      }
+    } else {
+      // If other checkboxes are changed
+      if ($(this).is(':checked')) {
+        if (category.length === 6) {
+          // Remove 'All' if all checkboxes are already checked
+          category = category.splice()
         }
+        // If checked, add its value to the category array
+        category.push($(this).val());
+      } else {
+        // If unchecked, remove its value from the category array
+        const index = category.indexOf($(this).val());
+        if (index !== -1) {
+          category.splice(index, 1);
+        }
+        // Uncheck the "All" checkbox if any other checkbox is unchecked
+        $('#category input[value="All"]').prop('checked', false);
+      }
     }
 
     // Update the view
     $('.container .rowcars').empty();
     submit();
-});
+  });
 
-// Event listener for keydown event in the search input field
-// Event listener for keydown event in the search input field
-$('#search').on('keydown', function(event) {
+  // Event listener for keydown event in the search input field
+  // Event listener for keydown event in the search input field
+  $('#search').on('keydown', function (event) {
     // Check if the Enter key is pressed (keyCode 13)
     if (event.keyCode === 13) {
-        // Get the value entered in the search input field
-         searchText = $(this).val();
+      // Get the value entered in the search input field
+      searchText = $(this).val();
 
-        // Log the search text to the console for testing
-        console.log("Search text:", searchText);
-          searchCar()
-                $('.container .rowcars').empty();
+      // Log the search text to the console for testing
+      console.log("Search text:", searchText);
+      searchCar()
+      $('.container .rowcars').empty();
 
-        // Clear the input field after logging the search text (optional)
-        $(this).val('');
+      // Clear the input field after logging the search text (optional)
+      $(this).val('');
     }
-});
+  });
 
 
 
 
-          
 
-function submit(){
-  if(transmission.length === 0){
-    transmission=['Manual','Automatic']
-  }
-  if(engine.length === 0){
-    engine = ['Petrol','Diesel']
-  }
-  if(category.length === 0){
-    category = ['MUVs','SUVs','Sedan','Sports Car','Hatchbacks','Electric']
-  }
-  
+
+  function submit() {
+    if (transmission.length === 0) {
+      transmission = ['Manual', 'Automatic']
+    }
+    if (engine.length === 0) {
+      engine = ['Petrol', 'Diesel']
+    }
+    if (category.length === 0) {
+      category = ['MUVs', 'SUVs', 'Sedan', 'Sports Car', 'Hatchbacks', 'Electric']
+    }
+
     url = '/filterCars'
     console.log(transmission)
     console.log(engine)
     console.log(category)
 
 
-    axios.post(url,{ transmission:transmission, fuel:engine, carCategory:category  })
-     
-    .then(response => {
-      const cars = response.data;
+    axios.post(url, { transmission: transmission, fuel: engine, carCategory: category })
 
-                    if (cars.length === 0) {
-                        // Handle case where no cars match the criteria
-                    } else {
-                        cars.forEach(car => {
-                            const carHtml = `
+      .then(response => {
+        const cars = response.data;
+
+        if (cars.length === 0) {
+          // Handle case where no cars match the criteria
+        } else {
+          cars.forEach(car => {
+            const carHtml = `
                                 <div class="col-md-4">
-                                    <div class="car-wrap rounded ">
+                                    <div class="car-wrap rounded searchCars">
                                          <div class="image-container position-relative">
+                  <a href="/carDetails?id=${car._id}">
+
                     <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${car.carImage}">
+                </a>
                   <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0">
                       
                     </div>
@@ -567,88 +647,54 @@ function submit(){
                                         </div>
                                     </div>
                                 </div>
-                            `;
-                            $('.container .rowcars').append(carHtml);
-                        });
+                                <div id="noCarsMessage" style="display: none;" class="col-12">
+                             <div class="justify-content-center">
+          <div class="d-flex justify-content-center align-items-center">
+    <img src="images/bg_vector.png" style="object-fit: fill;" class="image-fluid mt-0" alt="Your image alt text">
+</div>
+        <h2 class="text-center fs-4  mb-0 pb-0"> There is no Vehicles available </h2>
 
-                    }
-                })
-    
-    .catch(error => {
-      console.log(error)
-    })
+
+
+        </div>
+                          </div>
+                            `;
+            $('.container .rowcars').append(carHtml);
+          });
+
+        }
+      })
+
+      .catch(error => {
+        console.log(error)
+      })
   }
 
- // Function to attach wishlist button event listeners
+  // Function to attach wishlist button event listeners
 
-// Your searchCar function
-function searchCar() {
-    axios.post('/searchCar', { searchText })
-        .then(response => {
-            const cars = response.data;
+  // Your searchCar function
 
-            if (cars.length === 0) {
-                // Handle case where no cars match the criteria
-            } else {
-                cars.forEach(car => {
-                     const carHtml = `
-                                <div class="col-md-4">
-                                    <div class="car-wrap rounded ">
-                                         <div class="image-container position-relative">
-                    <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${car.carImage}">
-                  <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0">
-                       
-                    </div>
-                </div>          <div class="text">
-                                            <h2 class="mb-0"><a href="car-single.html">${car.carName}</a></h2>
-                                            <div class="d-flex mb-3">
-                                                <span class="cat">${car.carModal}/${car.brandName}</span>
-                                                <p class="price ml-auto">${car.dayRent} <span>/day</span></p>
-                                            </div>
-                                            <p class="d-flex mb-0 d-block">
-                                                    </p>
-                                                                                                    <a href="/bookingCar?carId=${car._id}" class="btn btn-primary py-2 mr-1">Book now</a>
-                                                <a href="/carDetails?id=${car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
-                                            </p>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                       
-                    $('.container .rowcars').append(carHtml);
-                });
-
-                // Reattach wishlist button event listeners after adding new elements
-                attachWishlistEventListeners();
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
-
-// Get the input fields for start and end dates
-const locations = document.getElementById('locations')
+  // Get the input fields for start and end dates
+  const locations = document.getElementById('locations')
   const servicePage = document.getElementById('servicePage')
   const locationButton = document.getElementById('locationButton')
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
 
-     document.querySelectorAll('.locationLink').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const selectedLocation = this.textContent.trim();
-      document.getElementById('selectedLocation').value = selectedLocation;
-      console.log("Selected location:", selectedLocation);
-      document.getElementById('locationButton').value = selectedLocation;
+    document.querySelectorAll('.locationLink').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const selectedLocation = this.textContent.trim();
+        document.getElementById('selectedLocation').value = selectedLocation;
+        console.log("Selected location:", selectedLocation);
+        document.getElementById('locationButton').value = selectedLocation;
 
-      console.log("Selected location:", selectedLocation);
-          servicePage.style.display = 'block';
-    locations.style.display = 'none';
-    
+        console.log("Selected location:", selectedLocation);
+        servicePage.style.display = 'block';
+        locations.style.display = 'none';
+
+      });
     });
-  });
-   })
+  })
   locationButton.addEventListener('click', function (e) {
     e.preventDefault();
     servicePage.style.display = 'none';
@@ -656,48 +702,45 @@ const locations = document.getElementById('locations')
   });
 
 
-     flatpickr("#pick-up", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minTime: "08:00",
-            maxTime: "22:00",
-            minDate: "today",
-            onChange: function(selectedDates, dateStr, instance) {
-                document.getElementById("drop-off")._flatpickr.set("minDate", dateStr);
-            }
-        });
-        
-        flatpickr("#drop-off", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minTime: "08:00",
-            maxTime: "22:00",
-            minDate: "today"
-        });
+  flatpickr("#pick-up", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+    minTime: "08:00",
+    maxTime: "22:00",
+    minDate: "today",
+    onChange: function (selectedDates, dateStr, instance) {
+      document.getElementById("drop-off")._flatpickr.set("minDate", dateStr);
+    }
+  });
+
+  flatpickr("#drop-off", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+    minTime: "08:00",
+    maxTime: "22:00",
+    minDate: "today"
+  });
 
 
-window.addEventListener('popstate', function (event) {
-        // Check if the popstate event is triggered by navigating back
-        if (event.state && event.state.pageReload) {
-            // Reload the page
-            location.reload();
+  window.addEventListener('popstate', function (event) {
+    // Check if the popstate event is triggered by navigating back
+    if (event.state && event.state.pageReload) {
+      // Reload the page
+      location.reload();
 
-        }
-    });
+    }
+  });
 
-    // Push a state into history to trigger popstate event when navigating back
-    history.pushState({ pageReload: true }, '');
-    
-          
+  // Push a state into history to trigger popstate event when navigating back
+  history.pushState({ pageReload: true }, '');
 
-   
-   
- 
 
-    // Add event listeners to checkboxes
- 
-    
+
+
+
+
+
+  // Add event listeners to checkboxes
+
+
 </script>
-
-       
-

@@ -65,6 +65,8 @@
       </table>
     </div>
     <div class="car-wrap rounded ftco-animate p-0   row m-md-4">
+         {{#if data}}
+
       <div style="display: none;" id="rightSide" style="background-color:#2edbcd ;" class="col-md-4 ">
         <div class="col-12 mt-4">
           <div class="car-wrap rounded ftco-animate " id="summaryContainer">
@@ -119,7 +121,17 @@
 
 
           {{/each}}
+         
         </div>
+          {{else}}
+      <div class="col-12 d-flex justify-content-center  ">
+        <div class="justify-content-center">
+        <h2 class="text-center fs-4">Your Booking Is Empty</h2>
+        <p class="text-center p-0 m-0">Looks like you have not added anything to your <span><a href="/cars">Booking</a></span>. Go</p>
+        <p class="text-center p-0 m-0">ahead and explore top category's</p>
+        </div>
+      </div>
+    {{/if}}
       </div>
       
     </div>

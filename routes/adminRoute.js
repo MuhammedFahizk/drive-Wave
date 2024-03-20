@@ -24,7 +24,6 @@ router.get('/carPage/deleteCar', login.requireAuth, adminController.deleteCar);
 router.post('/updateCarDetails', login.requireAuth, upload.single('carImage'), login.addImage, adminController.updateCar);
 router.get('/carPage/findCarCategories', login.requireAuth, adminController.findCarCategories);
 router.get('/alphabeticallySort', login.requireAuth, adminController.alphabeticallySort);
-router.get('/searchByCarName', login.requireAuth, adminController.searchByCarName);
 router.get('/notification', login.requireAuth, adminController.viewNotificationPage)
 router.get('/disableVendor', login.requireAuth, adminController.disableVendor);
 router.get('/enableVendor', login.requireAuth, adminController.enableVendor);
@@ -35,6 +34,10 @@ router.get('/service', login.requireAuth, adminController.servicePage);
 router.post('/service', login.requireAuth, upload.single('serviceImage'), login.addImage, adminController.addService);
 router.post('/editService', login.requireAuth, upload.single('serviceImage'), login.addImage, adminController.editService);
 router.delete('/service/:id', login.requireAuth, adminController.deleteService)
+router.post('/banner', login.requireAuth, upload.single('bannerImage'), login.addImage, adminController.addBanner)
+router.get('/banner/:bannerId', login.requireAuth, adminController.getBanner)
+router.post('/bannerDelete/:bannerId', login.requireAuth, adminController.deleteBanner)
+
 // adminVendor routs
 router.get('/Vendor', login.requireAuth, adminController.vendorPage);
 router.get('/getVendorDetails', login.requireAuth, adminController.vendorDetails);

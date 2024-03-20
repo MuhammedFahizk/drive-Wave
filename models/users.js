@@ -46,6 +46,15 @@ const adminSchema = new mongoose.Schema({
       description: { type: String },
     },
   ],
+  banner: [
+    {
+      BannerName: { type: String },
+      bannerImage: { type: String },
+      imageId: { type: String },
+      heading: { type: String },
+      subHeading: { type: String },
+    },
+  ],
 });
 const VendorSchema = new mongoose.Schema({
   name: {

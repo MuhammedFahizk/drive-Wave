@@ -34,11 +34,15 @@ const getHomePage = async (req, res) => {
   const location = await Car.distinct('location').exec();
 
   const car = await userService.FeaturedCar();
+  const Admin = await admin.findOne({ role: 'Admin' });
+  const { banner } = Admin;
   if (!req.session.name) {
-    return res.render('user/index', { car, location });
+    return res.render('user/index', { car, location, banner });
   }
   const { name } = req.session;
-  return res.render('user/index', { name, car, location });
+  return res.render('user/index', {
+    name, car, location, banner,
+  });
 };
 
 const loginPage = (req, res) => {
