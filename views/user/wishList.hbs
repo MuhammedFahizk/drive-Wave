@@ -1,0 +1,195 @@
+<style>
+  ::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+  }
+
+  /* Change scrollbar thumb */
+  ::-webkit-scrollbar-thumb {
+    background-color: #64d3ca;
+    /* Color of the thumb */
+    border-radius: 10px;
+    /* Rounded corners of the thumb */
+  }
+
+  /* Change scrollbar track */
+  ::-webkit-scrollbar-track {
+    background-color: #faf3f3;
+    /* Color of the track */
+  }
+
+  /* Change scrollbar corner */
+  ::-webkit-scrollbar-corner {
+    background-color: #fff;
+    /* Color of the corner */
+  }
+</style>
+<section style="background-color: #f9fafa;" class="ftco-section ftco-car-details col-md-12 px-md-3 py-4">
+  <div class="container p-md-4 p-4 my-4 col-md-12">
+   
+    <div class="car-wrap rounded ftco-animate p-5   row m-4 justify-content-center">
+      <div class="col-8 row m-0 px-4">
+        <h3 class=" col-8 mx-4 mt-3 fw-4 fs-4"> Booked Car</h3>
+        <p id="count" class=" col-2 my-3 ml-5">{{count}} Items</p>
+        <div class="col-12 m-0 p-0 " style="overflow-y: auto; height: 450px; overflow-x: hidden;">
+          {{#each data}}
+          <div class="rowClick  m-2  p-0 row col-12 car-wrap rounded ftco-animate " data-car-id="{{this._id}}"
+            type="button" style="background-color: #fff;">
+            <div class="col-2 p-0 m-0">
+              <img src="{{this.carImage}}" alt="Car Image"
+                class="img-thumbnail img rounded d-flex align-items-end p-0 car-image "
+                style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;">
+            </div>
+            <div class="col-4">
+              <h6 class="my-3">{{this.carName}}</h6>
+              <h6 class="my-3">{{this.carModal}}</h6>
+
+            </div>
+            <div class="col-2">
+              <h6 class="mt-5">{{this.dayRent}} Rs</h6>
+
+            </div>
+            <div class="col-2 mt-4">
+              <h6 class="mt-4">{{this.status}}</h6>
+            </div>
+
+            <div class="col-2">
+              <button class="btn  remove-whislist pt-4" data-car-id="{{this._id}} ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                  style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                  <path
+                    d="M16 2H8C4.691 2 2 4.691 2 8v13a1 1 0 0 0 1 1h13c3.309 0 6-2.691 6-6V8c0-3.309-2.691-6-6-6zm4 14c0 2.206-1.794 4-4 4H4V8c0-2.206 1.794-4 4-4h8c2.206 0 4 1.794 4 4v8z">
+                  </path>
+                  <path
+                    d="M15.292 7.295 12 10.587 8.708 7.295 7.294 8.709l3.292 3.292-3.292 3.292 1.414 1.414L12 13.415l3.292 3.292 1.414-1.414-3.292-3.292 3.292-3.292z">
+                  </path>
+                </svg>
+              </button>
+
+
+            </div>
+
+          </div>
+
+
+          {{/each}}
+        </div>
+      </div>
+      <div style="display: none;" id="rightSide" style="background-color:#2edbcd ;" class="col-4 ">
+        <div class="col-md-12 mt-4">
+          <div class="car-wrap rounded ftco-animate " id="summaryContainer">
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Event listener for "Remove Booking" buttons
+    document.querySelectorAll('.remove-whislist').forEach(button => {
+      button.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent the default action of the button
+
+        const carId = button.dataset.carId; // Get the car ID from the data attribute
+
+        // Send a request to remove the booking
+        axios.get(`/wishlist/remove?id=${carId}`)
+          .then(response => {
+            console.log('Booking removed:', response.data);
+            // Remove the booking element from the DOM
+            const count = document.getElementById('count')
+            let value = parseInt(count.textContent)
+            value--;
+            count.innerHTML = `${value} Items`
+            button.closest('.rowClick').remove();
+          })
+          .catch(error => {
+            console.error('Error removing booking:', error);
+          });
+      });
+    });
+  });
+  const rowClickElements = document.querySelectorAll('.rowClick');
+
+  rowClickElements.forEach((rowClick) => {
+    rowClick.addEventListener('click', (e) => {
+      e.preventDefault();
+      const rightSide = document.getElementById('rightSide');
+      rightSide.style.display = 'block';
+      const carId = rowClick.getAttribute('data-car-id');
+      console.log(carId)
+
+      axios.get(`/wishlist/details?id=${carId}`)
+        .then(res => {
+          console.log(res);
+          const summaryContainer = document.getElementById('summaryContainer');
+
+          if (summaryContainer) {
+            console.log(res);
+
+            summaryContainer.innerHTML = `
+                            ${res.data.carName}
+                             <div class="image-container position-relative">
+            <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${res.data.carImage}">
+            <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0"></div>
+        </div>
+        <div class="text">
+            <div class="d-flex mb-1">
+                <span class="cat">${res.data.carModal}/${res.data.brandName}</span>
+            </div>
+            <p class="price m-0 p-0"><span>${res.data.dayRent}/Rent Amount</span></p>
+            <p class="d-flex mb-0 d-block">
+               <a href="/bookingCar?carId=${res.data._id}" class="btn btn-primary py-2 mr-1">Book now</a>
+
+                <a href="/carDetails?id=${res.data._id}" class="btn btn-secondary py-2 ml-1">Details</a>
+            </p>
+        </div>`;
+
+          } else {
+            console.error('Summary container not found in the DOM');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
+  });
+
+
+  document.querySelectorAll('.payment-page').forEach(button => {
+    button.addEventListener('click', () => {
+      const row = button.closest('tr');
+      const bookingId = row.querySelector('.booking-id').value;
+      const pickDate = row.querySelector('.pick-date').value;
+      const dropDate = row.querySelector('.drop-date').value;
+      const id = row.querySelector('.car-id').value;
+
+      axios.post('/paymentPage', { bookingId, pickDate, dropDate, id })
+        .then(resolve => {
+          window.location.href = '/bookingCar';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+  });
+
+  // Use event delegation to handle clicks on dynamically added buttons
+
+
+  window.addEventListener('popstate', function (event) {
+    // Check if the popstate event is triggered by navigating back
+    if (event.state && event.state.pageReload) {
+      // Reload the page
+      location.reload();
+    }
+  });
+
+  // Push a state into history to trigger popstate event when navigating back
+  history.pushState({ pageReload: true }, '');
+</script>

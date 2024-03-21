@@ -157,7 +157,7 @@ const userSchema = new mongoose.Schema({
     require: false,
     type: Date,
   },
-  address: [{
+  address: {
     place: {
       type: String,
       require: false,
@@ -171,7 +171,6 @@ const userSchema = new mongoose.Schema({
       require: false,
     },
   },
-  ],
   whishList: [
     {
       type: mongoose.Schema.Types.ObjectId,

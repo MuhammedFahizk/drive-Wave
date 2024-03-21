@@ -1,3 +1,5 @@
+/* eslint-disable import/order */
+/* eslint-disable no-underscore-dangle */
 const { User } = require('../models/users');
 const { ObjectId } = require('mongoose').Types;
 
@@ -12,11 +14,11 @@ const customers = async (ownerId) => {
           localField: 'bookedCar.car',
           foreignField: '_id',
           as: 'carsData',
-        }
+        },
       },
       {
         $addFields: {
-          ownerIdInCarsData: { $arrayElemAt: ['$carsData.ownerId', 0] }
+          ownerIdInCarsData: { $arrayElemAt: ['$carsData.ownerId', 0] },
         },
       },
       {
@@ -40,14 +42,12 @@ const customers = async (ownerId) => {
       },
     ]);
 
-    console.log(customer);
     return customer;
   } catch (error) {
     console.error('Error in aggregation:', error);
     return [];
   }
 };
-
 
 const dailyRents = () => {
   const today = new Date(); // Get current date
@@ -66,7 +66,7 @@ const dailyRents = () => {
 
   return last7DaysNames;
 };
-const dailyRentalAmount = async ( ownerId) => {
+const dailyRentalAmount = async (ownerId) => {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
@@ -96,7 +96,7 @@ const dailyRentalAmount = async ( ownerId) => {
       $match: {
         'bookedCar.bookingDate': { $gte: sevenDaysAgo, $lte: startOfToday },
         'bookedCar.status': 'Confirmed',
-        'carDetails.ownerId': new ObjectId(ownerId)
+        'carDetails.ownerId': new ObjectId(ownerId),
       },
     },
     {

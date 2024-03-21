@@ -92,6 +92,15 @@ try {
       ref: 'vendor',
 
     },
+    rate: {
+      rate: { type: Number },
+    },
+    rating: [
+      {
+        description: { type: String },
+        rate: { type: Number },
+      },
+    ],
     bookings: [
       {
         type: mongoose.Schema.Types.ObjectId,

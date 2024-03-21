@@ -189,7 +189,7 @@
                         <div class="col-9 p-2">
                             <h6 class="text-dark">{{car.carName}}</h6>
                             {{#if dayDifferenceIn }}
-                            <h6 class="text-dark">{{formattedDropDate}} to {{formattedPickDate}}</h6>
+                            <h6 class="text-dark">{{formattedPickDate}} TO {{formattedDropDate}}  </h6>
                             <h6 class="text-dark">{{dayDifferenceIn}} / Days</h6>
                             {{else}}
                             <div class="col-12 justify-content-center">
@@ -286,14 +286,14 @@
                                 placeholder="Email Address" required>
                             <input type="text" class="col-12 mt-3 " value="{{user.phone}}" name="phone"
                                 placeholder="Phone Number" required>
-                            <input class=" col-12 mt-3" name="houseName" value="{{address.houseName}}"
+                            <input class=" col-12 mt-3" name="houseName" value="{{user.address.houseName}}"
                                 placeholder="House Name">
-                            <input type="text" class="  col-5 mt-3 " name="place" value="{{address.place}}"
-                                placeholder="Place">
-                            <input type="text" maxlength="3" class=" col-5 mt-3 " name="zip" value="{{address.zip}}"
-                                placeholder="Zip">
+                            <input type="text" class="  col-5 mt-3 " name="place" value="{{user.address.place}}" 
+                                placeholder="Place" required>
+                            <input type="text" maxlength="6" class=" col-5 mt-3 " name="zip" value="{{user.address.zip}}"
+                                placeholder="Zip" required>
                             <input id="bookingPageSubmit" type="button" class="col-12 mt-4 btn btn-primary"
-                                value="Booking">
+                                value="Booking" >
                         </form>
                         <h6 style="display: none;" id="errorMessage" class="mx-4 text-danger">You Already Booked this
                             Car. <a style="text-decoration: solid;" href="/bookedCars"> Go To Bookings </a> </h6>
@@ -313,7 +313,7 @@
                     <div class="col-9 p-2">
                         <h6 class="text-dark">{{car.carName}}</h6>
                         {{#if dayDifferenceIn }}
-                        <h6 class="text-dark">{{formattedDropDate}} to {{formattedPickDate}}</h6>
+                            <h6 class="text-dark">{{formattedPickDate}} TO {{formattedDropDate}}  </h6>
                         <h6 class="text-dark">{{dayDifferenceIn}} / Days</h6>
                         {{else}}
                         <div class="col-12 justify-content-center">
@@ -506,7 +506,7 @@ var charge = $(this).data('charge')
         maxTime: "22:00",
         minDate: "today"
     });
-    
+
   const razorpay = new Razorpay({
         key: "rzp_test_4n6m1t1iIOWyRe", // Replace with your Razorpay API key
     });

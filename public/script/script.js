@@ -210,12 +210,7 @@ function handleRowClickUser(row) {
 
       document.getElementById('exampleModalLabel').innerText = data.userId;
 
-      // Build address HTML
-      const addressHTML = data.address.map(addr => `
-        <li class="list-group-item">
-          Address: <br>  House Name :${addr.houseName}<br>Place: ${addr.place}<br>Zip Code: ${addr.zip}
-        </li>
-      `).join('');
+      
 
       document.querySelector('#viewUsers .modal-body').innerHTML = `
         <div class="row g-0 p-2">
@@ -228,8 +223,9 @@ function handleRowClickUser(row) {
                 <li class="list-group-item">Age: ${data.age}</li>
                 <li class="list-group-item">Phone: ${data.phone}</li>
                 <li class="list-group-item">License Number: ${data.licenseNumber}</li>
-                ${addressHTML}
-                <li class="list-group-item">Join Date: ${data.createdAt}</li>
+                <li class="list-group-item">
+                Address: <br>  House Name :${data.address.houseName}<br>Place: ${data.address.place}<br>Zip Code: ${data.address.zip}
+              </li>                <li class="list-group-item">Join Date: ${data.createdAt}</li>
                 <li class="list-group-item">Update Date: ${data.updatedAt}</li>
               </ul> 
               <div class="card-footer d-flex justify-content-center">

@@ -548,7 +548,6 @@ const bookingCar = async (req, res) => {
   req.session.carId = carId;
   const car = await Car.findById(carId);
   const user = await User.findById(_id);
-  const address = user.address[0];
   if (!car || !user) {
     return res.status(402).json('not find car or user');
   }
@@ -581,7 +580,6 @@ const bookingCar = async (req, res) => {
         name,
         amount,
         totalAmount: bookings.totalPrice,
-        address,
         dayDifferenceIn,
         formattedPickDate,
         formattedDropDate,
@@ -608,14 +606,13 @@ const bookingCar = async (req, res) => {
       user,
       name,
       amount,
-      address,
       dayDifferenceIn,
       formattedPickDate,
       formattedDropDate,
       service,
     });
   }
-  return res.status(200).render('user/checkOut', { car, user, address });
+  return res.status(200).render('user/checkOut', { car, user });
 };
 const addDate = async (req, res) => {
   const { pickDate, dropDate } = req.query;
@@ -733,10 +730,18 @@ const carDetailsWhishList = async (req, res) => {
 };
 // eslint-disable-next-line consistent-return
 const userBookedCar = async (req, res) => {
-  const { formData, service } = req.body;
+  const { formDatas, service } = req.body;
+  const { place, zip, houseName } = formDatas;
+
   const {
     _id, carId, pickDate, dropDate, amount, days,
   } = req.session;
+  const user = await User.findByIdAndUpdate(_id, {
+    address: { place, zip, houseName },
+  }, { new: true });
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
   const bookingDate = new Date();
 
   const userCheck = await User.findById(_id).populate('bookedCar');
@@ -797,7 +802,7 @@ const userBookedCar = async (req, res) => {
         );
 
         // Rest of your code...
-        return res.status(200).json({ razerPay, formData });
+        return res.status(200).json({ razerPay, formDatas });
       })
       .catch((error) => {
         // Handle any errors that occur during order creation
@@ -892,13 +897,12 @@ const paymentVerification = async (req, res) => {
   try {
     const { _id } = req.session;
     await userService.verifyPayment(req.body);
-    const user = await User.findById(_id);
     const updatedUser = await userService.changeStatus(req.body.bookingId, _id, req.body.method);
-    const html = res.render('ConfirmationEmail', user);
+    await userService.sendInvoiceEmail(_id, req.body.bookingId); // Changed function name
     req.session.bookingId = '';
     req.session.pickDate = '';
     req.session.dropDate = '';
-    await userService.sendInvoiceEmail(_id, req.body.bookingId, html); // Changed function name
+    res.status(200).json(updatedUser);
   } catch (error) {
     console.error('Payment verification failed:', error);
     res.status(500).json({ error: 'Payment verification failed' });

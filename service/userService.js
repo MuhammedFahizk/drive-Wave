@@ -154,11 +154,11 @@ const changeStatus = (bookingId, _id, method) => new Promise((resolve, reject) =
     .catch((error) => reject(error));
 });
 
-const sendInvoiceEmail = async (id, html) => {
+const sendInvoiceEmail = async (id, bookingId) => {
   try {
     const user = await User.findById(id);
     const { email } = user;
-    await sendMail.sendMailUser(email, 'Invoice', html);
+    await sendMail.sendMailUser(email, 'Invoice', user, bookingId);
   } catch (error) {
     console.error('Error sending invoice email:', error);
     throw error;

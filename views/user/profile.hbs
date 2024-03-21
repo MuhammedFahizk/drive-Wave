@@ -62,17 +62,17 @@
                            <div class="d-flex mb-1">
                             <span class="cat">Place </span>
                             </span>
-                            <p class="price ml-md-auto ml-2">{{address.place}} <span></span></p>
+                            <p class="price ml-md-auto ml-2">{{data.address.place}} <span></span></p>
                           </div>
                           <div class="d-flex mb-1">
                             <span class="cat">zip </span>
                             </span>
-                            <p class="price ml-md-auto ml-2">{{address.zip}} <span></span></p>
+                            <p class="price ml-md-auto ml-2">{{data.address.zip}} <span></span></p>
                           </div>
                           <div class="d-flex mb-1">
                             <span class="cat">House Name </span>
                             </span>
-                            <p class="price ml-md-auto ml-2">{{address.houseName}} <span></span></p>
+                            <p class="price ml-md-auto ml-2">{{data.address.houseName}} <span></span></p>
                           </div>
                         {{#if message}}
                         <div class="d-flex m-4">
@@ -146,15 +146,15 @@
           </div>
           <div class="form-group row justify-content-center">
             <div class="col-md-6">
-              <input type="text" class="form-control" name="place" value="{{address.place}}" placeholder="{{address.place}}">
+              <input type="text" class="form-control" name="place" value="{{data.address.place}}" placeholder="Place">
             </div>
             <div class="col-md-6">
-              <input type="text" class="form-control" name="zip" value="{{address.zip}}" placeholder="{{address.zip}}">
+              <input type="text" class="form-control" name="zip" value="{{data.address.zip}}" placeholder="Zip">
             </div>
           </div>
           <div class="form-group row justify-content-center">
             <div class="col-md-6">
-              <input type="text" class="form-control" name="houseName" value="{{address.houseName}}" placeholder="{{address.houseName}}">
+              <input type="text" class="form-control" name="houseName" value="{{data.address.houseName}}" placeholder="House Name">
             </div>
             <div class="col-md-6">
               <input type="text" class="form-control" name="licenseNumber" value="{{data.licenseNumber}}" placeholder="{{data.licenseNumber}}">
