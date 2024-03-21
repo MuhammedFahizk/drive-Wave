@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-sequences */
 /* eslint-disable comma-spacing */
-const handlebars = require('handlebars');
-const fs = require('fs');
+// const handlebars = require('handlebars');
+// const fs = require('fs');
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -47,36 +47,21 @@ function sendmailVendor(email, message, subjects, callback) {
   transporter.sendMail(mailOption, callback);
 }
 
-function sendMailUser(email, subject,data, bookingId) {
+function sendMailUser(email, subject, html) {
   return new Promise((resolve, reject) => {
-    // Read the Handlebars template file
-    fs.readFile('views/ConfirmationEmail.hbs', 'utf8', (error, templateSource) => {
-      if (error) {
-        console.error('Error reading email template:', error);
-        reject(error);
+    const mailOption = {
+      from: 'fahizk100@gmail.com',
+      to: email,
+      subject,
+      html, // Use rendered HTML template
+    };
+
+    transporter.sendMail(mailOption, (errors, info) => {
+      if (errors) {
+        console.error('Error sending email:', errors);
+        reject(errors);
       } else {
-        // Compile the Handlebars template
-        const template = handlebars.compile(templateSource);
-
-        // Render the template with data (if needed)
-        const html = template(data);
-
-        const mailOption = {
-          from: 'fahizk100@gmail.com',
-          to: email,
-          subject,
-          html, // Use rendered HTML template
-        };
-
-        // Send the email
-        transporter.sendMail(mailOption, (errors, info) => {
-          if (errors) {
-            console.error('Error sending email:', errors);
-            reject(errors);
-          } else {
-            resolve(info);
-          }
-        });
+        resolve(info);
       }
     });
   });

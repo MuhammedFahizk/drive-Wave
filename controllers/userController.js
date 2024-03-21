@@ -892,10 +892,13 @@ const paymentVerification = async (req, res) => {
   try {
     const { _id } = req.session;
     await userService.verifyPayment(req.body);
+    const user = await User.findById(_id);
     const updatedUser = await userService.changeStatus(req.body.bookingId, _id, req.body.method);
-    await userService.sendInvoiceEmail(_id, req.body.bookingId); // Changed function name
+    const html = res.render('ConfirmationEmail', user);
     req.session.bookingId = '';
-    res.status(200).json(updatedUser);
+    req.session.pickDate = '';
+    req.session.dropDate = '';
+    await userService.sendInvoiceEmail(_id, req.body.bookingId, html); // Changed function name
   } catch (error) {
     console.error('Payment verification failed:', error);
     res.status(500).json({ error: 'Payment verification failed' });
