@@ -209,9 +209,6 @@ function handleRowClickUser(row) {
       console.log(response);
 
       document.getElementById('exampleModalLabel').innerText = data.userId;
-
-      
-
       document.querySelector('#viewUsers .modal-body').innerHTML = `
         <div class="row g-0 p-2">
         
@@ -223,16 +220,21 @@ function handleRowClickUser(row) {
                 <li class="list-group-item">Age: ${data.age}</li>
                 <li class="list-group-item">Phone: ${data.phone}</li>
                 <li class="list-group-item">License Number: ${data.licenseNumber}</li>
-                <li class="list-group-item">
-                Address: <br>  House Name :${data.address.houseName}<br>Place: ${data.address.place}<br>Zip Code: ${data.address.zip}
-              </li>                <li class="list-group-item">Join Date: ${data.createdAt}</li>
+                ${data.address ? `
+                  <li class="list-group-item">
+                    Address: <br>  
+                    House Name: ${data.address.houseName}<br>
+                    Place: ${data.address.place}<br>
+                    Zip Code: ${data.address.zip}
+                  </li>` : ''}
+                <li class="list-group-item">Join Date: ${data.createdAt}</li>
                 <li class="list-group-item">Update Date: ${data.updatedAt}</li>
               </ul> 
               <div class="card-footer d-flex justify-content-center">
-              <form action="#" class="deleteForm">
-              <input type="hidden" name="deleteUserId" value="${data._id}">
-              <button type="submit" class="btn btn-danger me-4 mt-4 deleteButton">Delete</button>
-              </form>
+                <form action="#" class="deleteForm">
+                  <input type="hidden" name="deleteUserId" value="${data._id}">
+                  <button type="submit" class="btn btn-danger me-4 mt-4 deleteButton">Delete</button>
+                </form>
               </div>
             </div>
           </div>
@@ -259,6 +261,7 @@ function handleRowClickUser(row) {
     })
     .catch(error => console.error('Error:', error));
 }
+
 
 function handleEditClick(button) {
   const carId = button.getAttribute('data-carEId');

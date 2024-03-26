@@ -1,10 +1,5 @@
-/* eslint-disable no-console */
-/* eslint-disable no-unused-vars */
-/* eslint-disable import/order */
-/* eslint-disable import/no-useless-path-segments */
-/* eslint-disable no-return-await */
-const cloudinary = require('../service/cloudnery');
 const fs = require('fs');
+const cloudinary = require('../service/cloudnery');
 
 const loginMiddleWare = (req, res, next) => {
   if (req.session.adminId) {
@@ -22,7 +17,7 @@ const requireAuth = (req, res, next) => {
 };
 
 async function addImage(req, res, next) {
-  const uploader = async (path) => await cloudinary.uploads(path, 'carImages');
+  const uploader = async (path) => cloudinary.uploads(path, 'carImages');
   try {
     const { file } = req;
     if (file) {
@@ -39,7 +34,7 @@ async function addImage(req, res, next) {
 }
 
 async function serviceImage(req, res, next) {
-  const uploader = async (path) => await cloudinary.uploads(path, 'Service');
+  const uploader = async (path) => cloudinary.uploads(path, 'Service');
   try {
     const { file } = req;
     if (file) {

@@ -1,128 +1,79 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const mongoose = require('mongoose');
-// eslint-disable-next-line no-unused-vars
-const { Car } = require('./car');
 
-const adminSchema = new mongoose.Schema({
-
+const ownerSchema = new mongoose.Schema({
+  // Common Fields
+  name: {
+    type: String,
+    required: true,
+  },
+  age: {
+    type: Number,
+    required: false,
+  },
   email: {
     type: String,
+    required: true,
     unique: true,
-    require: true,
+  },
+  phone: {
+    type: Number,
+    required: false,
+  },
+  role: {
+    type: String,
+    required: true,
+    enum: ['Vendor', 'Admin'],
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
-  role: {
-    require: true,
-    type: String,
-  },
+  // Vendor-specific Fields
+  shopName: String,
+  bankName: String,
+  vendorAccessEnabled: Boolean,
+  accountNumber: Number,
+  image: String,
+  // Admin-specific Fields
   notifications: [{
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'dealers',
     },
-    venderId: {
+    vendorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'vendor',
     },
-    notificationsId: {
+    notificationId: {
       type: mongoose.Schema.Types.ObjectId,
     },
     message: String,
     sender: String,
     createdAt: { type: Date, default: Date.now },
   }],
-  locations: [{
-    type: String,
+  banner: [{
+    bannerName: String,
+    bannerImage: String,
+    imageId: String,
+    heading: String,
+    subHeading: String,
   }],
-  service: [
-    {
-      ServiceName: { type: String },
-      charge: { type: Number },
-      image: { type: String },
-      imageId: { type: String },
-      description: { type: String },
-    },
-  ],
-  banner: [
-    {
-      BannerName: { type: String },
-      bannerImage: { type: String },
-      imageId: { type: String },
-      heading: { type: String },
-      subHeading: { type: String },
-    },
-  ],
-});
-const VendorSchema = new mongoose.Schema({
-  name: {
-    require: true,
-    type: String,
-  },
-  age: {
-    require: true,
-    type: Number,
-  },
-  email: {
-    require: true,
-    type: String,
-  },
-  shopName: {
-    require: true,
-    type: String,
-  },
-  phone: {
-    require: true,
-    type: Number,
-  },
-  role: {
-    require: true,
-    type: String,
-  },
-  bankName: {
-    require: true,
-    type: String,
-  },
-  vendorAccessEnabled: {
-    require: true,
-    type: Boolean,
-  },
-  accountNumber: {
-    require: true,
-    type: Number,
-  },
-  password: {
-    require: true,
-    type: String,
-  },
-  image: {
-    require: true,
-    type: String,
-  },
+  // Common Fields Continued
   deletedAt: {
-    require: false,
     type: Date,
+    default: null,
   },
-  notifications: [{
-    message: String,
-    sender: String,
-    createdAt: { type: Date, default: Date.now },
+  // Address Information
+  locations: [String],
+  // Service Details
+  service: [{
+    serviceName: String,
+    charge: Number,
+    image: String,
+    imageId: String,
+    description: String,
   }],
-  locations: [{
-    type: String,
-  }],
-  service: [
-    {
-      ServiceName: { type: String },
-      charge: { type: Number },
-      image: { type: String },
-      imageId: { type: String },
-      description: { type: String },
-    },
-  ],
 }, { timestamps: true, timeseries: true });
+
 const userSchema = new mongoose.Schema({
   name: {
     require: true,
@@ -236,8 +187,8 @@ const userSchema = new mongoose.Schema({
   }],
 }, { timestamps: true, timeseries: true });
 
-const Vendor = mongoose.model('vendor', VendorSchema, 'users');
-const admin = mongoose.model('User', adminSchema);
-const User = mongoose.model('dealers', userSchema, 'users');
+// const Vendor = mongoose.model('Vendor', VendorSchema);
+const admin = mongoose.model('Owners', ownerSchema, 'Owners');
+const User = mongoose.model('dealers', userSchema);
 
-module.exports = { admin, Vendor, User };
+module.exports = { admin, User };

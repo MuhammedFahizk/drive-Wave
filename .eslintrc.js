@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 module.exports = {
   env: {
     browser: true,
@@ -14,6 +13,9 @@ module.exports = {
       files: [
         '.eslintrc.{js,cjs}',
       ],
+      rules: {
+        'linebreak-style': ['error', 'unix'],
+      },
       parserOptions: {
         sourceType: 'script',
       },
@@ -25,5 +27,16 @@ module.exports = {
   rules: {
     'linebreak-style': ['error', 'windows'],
     'no-console': ['error', { allow: ['warn', 'error'] }],
+    'no-underscore-dangle': 'off',
+
+    'import/order': ['error', {
+      pathGroups: [
+        {
+          pattern: '~/**',
+          group: 'external',
+        },
+      ],
+    }],
+
   },
 };

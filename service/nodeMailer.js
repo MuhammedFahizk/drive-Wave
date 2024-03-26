@@ -17,15 +17,22 @@ function generateOtp() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-function sendAdminOtp(email, otp, callback) {
-  const mailOption = {
-    from: 'fahizk100@gmail.com',
-    to: email,
-    subject: 'your OTP for Login',
-    text: `your Otp is :${otp}`,
-  };
-  // eslint-disable-next-line no-unused-expressions
-  transporter.sendMail(mailOption,callback);
+function sendAdminOtp(email, otp) {
+  return new Promise((resolve, reject) => {
+    const mailOption = {
+      from: 'fahizk100@gmail.com',
+      to: 'fahizk100@gmail.com',
+      subject: 'Your OTP for Login',
+      text: `Your OTP is: ${otp}`,
+    };
+    transporter.sendMail(mailOption, (error, info) => {
+      if (error) {
+        reject(error); // Reject with error if email sending fails
+      } else {
+        resolve(info); // Resolve with info if email sending is successful
+      }
+    });
+  });
 }
 function sendMailToAdmin(email, message,subjects, callback) {
   const mailOption = {

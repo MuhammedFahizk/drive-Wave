@@ -1,123 +1,50 @@
-/* eslint-disable consistent-return */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-shadow */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable import/order */
-/* eslint-disable no-unused-vars */
 const bcrypt = require('bcrypt');
-const emailValidator = require('email-validator');
-const { differenceInDays, differenceInMonths, differenceInYears } = require('date-fns');
-const mongoose = require('mongoose');
-
-const { User, admin } = require('../models/users');
-const { Car } = require('../models/car');
-const { Vendor } = require('../models/users');
-
-const { sendAdminOtp, generateOtp, sendMailToAdmin } = require('../service/nodeMailer');
-const userService = require('../service/userService');
 const { v4: uuidv4 } = require('uuid');
-const { log } = require('handlebars');
+const helper = require('../helpers/userHelper');
 
-const getHomePage = async (req, res) => {
-  const { previous } = req.session;
-  if (previous) {
-    if (!previous) {
-      return res.status(200).redirect('/');
+async function getHomePage(req, res) {
+  try {
+    let { name } = req.session;
+    const data = await helper.homePageHelper(req);
+    if (!name) {
+      name = data.name;
     }
-    const { carId, dropDate, pickDate } = req.session;
-    if (pickDate) {
-      return res.redirect(`${previous}?carId=${carId}&&pickDate=${pickDate}&&dropDate=${dropDate}`);
+    if (name) {
+      res.render('user/index', {
+        car: data.car, location: data.location, banner: data.banner, name: data.name,
+      });
+    } else {
+      res.render('user/index', { car: data.car, location: data.location, banner: data.banner });
     }
-
-    return res.redirect(`${previous}?carId=${carId}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
   }
-  const location = await Car.distinct('location').exec();
-
-  const car = await userService.FeaturedCar();
-  const Admin = await admin.findOne({ role: 'Admin' });
-  const { banner } = Admin;
-  if (!req.session.name) {
-    return res.render('user/index', { car, location, banner });
-  }
-  const { name } = req.session;
-  return res.render('user/index', {
-    name, car, location, banner,
-  });
-};
-
+}
 const loginPage = (req, res) => {
   res.render('user/login');
 };
 
-function register(req, res) {
-  res.render('user/signUp');
-}
-
-const userLogin = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email && !password) {
-    return res.status(400).render('user/login', { error: 'Missing user name or password' });
-  }
+async function userLogin(req, res) {
   try {
-    const user = await User.findOne({ role: 'user', email });
-
-    if (!user) {
-      return res.status(404).render('user/login', { error: 'User name or password is invalid' });
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      return res.status(404).render('user/login', { error: ' password is invalid' });
-    }
-    const hashPassword = await bcrypt.hash(password, 10);
-    const { originalUrl } = req.session;
-    req.session.password = hashPassword;
-    req.session.name = user.name;
-    req.session.email = email;
-    req.session.userId = uuidv4();
-    req.session._id = user._id;
-
-    // Avoid storing password in session
-    // req.session.password = password;
-    if (originalUrl) {
-      return res.redirect(`${originalUrl}`);
-    }
-    return res.redirect('/');
+    const redirectUrl = await helper.userLoginHelper(req);
+    res.redirect(redirectUrl);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Server Error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
-};
+}
 
 async function profilePage(req, res) {
   try {
-    if (req.session) {
-      const { name, password } = req.session;
-      const user = await User.findOne({ name });
-
-      if (user) {
-        // Compare hashed password
-        const psw = password.toString();
-        const passwordMatch = bcrypt.compare(psw, user.password);
-        if (passwordMatch) {
-          const address = user.address[0];
-          if (user.deletedAt) {
-            res.status(200).render('user/profile', {
-              data: user, name, address, message: `${name} your account is Permanently Deleted `,
-            });
-          }
-          res.status(200).render('user/profile', { data: user, name, address });
-        } else {
-          res.status(404).render('user/login', { error: 'User name or password is invalid' });
-        }
-      }
-    } else {
-      res.status(400).redirect('/');
-    }
+    const userProfileData = await helper.renderProfilePag(req);
+    res.status(200).render('user/profile', userProfileData);
   } catch (error) {
-    res.status(500).json({ error: 'server Error', details: error });
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 async function logoutUser(req, res) {
   try {
     if (req.session.userId) {
@@ -147,7 +74,8 @@ async function updateUser(req, res) {
       place,
       licenseNumber,
     } = req.body;
-    const updateValues = ({
+
+    const updateValues = {
       name,
       age,
       password,
@@ -159,329 +87,209 @@ async function updateUser(req, res) {
         houseName,
       },
       phone,
-    });
-    if (editId && updateValues) {
-      const update = await User.findByIdAndUpdate(
-        editId,
-        { $set: updateValues },
-        { $new: true },
-      );
-      req.session.name = name;
-      res.status(200).redirect('/profile');
+    };
+
+    if (!editId || !updateValues) {
+      throw new Error('Invalid parameters');
     }
-  } catch {
-    res.status(500).json({ error: 'server Error' });
+
+    const updatedUser = await helper.updateUserHelper(editId, updateValues);
+    if (!updatedUser) {
+      return res.status(400).redirect('/');
+    }
+    req.session.name = name;
+    return res.status(200).redirect('/profile');
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Server Error' });
   }
 }
 async function deleteUser(req, res) {
   const { deleteId } = req.query;
   try {
-    if (deleteId) {
-      const deleteUserById = await User.findByIdAndDelete(deleteId);
-      if (deleteUserById) {
-        req.session.userId = '';
-        req.session.name = '';
-        req.session.password = '';
-        res.status(200).redirect('/');
-      } else {
-        res.status(404).json('User not found');
-      }
-    } else {
-      res.status(400).json('Missing deleteId parameter');
+    if (!deleteId) {
+      return res.status(400).json('Missing deleteId parameter');
     }
+
+    const deleteUserById = await helper.deleteUserByIdHelper(deleteId);
+    if (!deleteUserById) {
+      return res.status(404).json('User not found');
+    }
+
+    req.session.userId = '';
+    req.session.name = '';
+    req.session.password = '';
+    return res.status(200).redirect('/');
   } catch (error) {
     console.error('Error deleting user', error);
-    res.status(500).json('Internal Server Error');
+    return res.status(500).json('Internal Server Error');
   }
 }
 async function showCars(req, res) {
   try {
     const {
-      name, password, pickDate, dropDate, location, carId,
+      name, pickDate, dropDate, location,
     } = req.session;
     req.session.bookingId = '';
 
-    let AvailabilityId = [];
+    let allCollections = [];
+    let locations = [];
 
     if (pickDate && dropDate) {
-      const pickDateNew = new Date(pickDate);
-      const dropDateNew = new Date(dropDate);
-      const availability = await userService.findCarAvailability(pickDateNew, dropDateNew);
-      AvailabilityId = availability.map((entry) => entry._id);
       req.session.pickDate = pickDate;
       req.session.dropDate = dropDate;
-      const model = [
-        {
-          $match: {
-            _id: {
-              $in: AvailabilityId,
-            },
-          },
-        },
-      ];
-      let allCollections = await Car.aggregate(model);
 
-      if (location) {
-        allCollections = allCollections.filter((car) => car.location === location);
-      }
-      const locations = await Car.distinct('location').exec();
-      return res.render('user/cars', {
-        data: allCollections, name, locations, location, pickDate, dropDate,
-      });
-    }
-    if (location) {
-      const cars = await Car.find({ location });
-      const locations = await Car.distinct('location').exec();
-      if (cars) {
-        cars.carImageUrl = encodeURIComponent(cars.carImage);
-        return res.render('user/cars', { data: cars, name, locations });
-      }
+      const { allCollections: specifiedCarsData, locations: specifiedLocations } = await helper
+        .specifiedCars(pickDate, dropDate, location);
+      allCollections = specifiedCarsData;
+      locations = specifiedLocations;
+    } else if (location) {
+      const { cars, locations: allLocations } = await helper.allCarsHelper(location);
+      allCollections = cars;
+      locations = allLocations;
+    } else {
+      const { cars, locations: allLocations } = await helper.allCarsHelper();
+      allCollections = cars;
+      locations = allLocations;
     }
 
-    const cars = await Car.find();
-    const locations = await Car.distinct('location').exec();
-    if (!cars) {
-      return res.status(400).json('cant get cars');
-    }
-    cars.carImageUrl = encodeURIComponent(cars.carImage);
-    return res.render('user/cars', { data: cars, name, locations });
+    res.render('user/cars', {
+      data: allCollections,
+      name,
+      locations,
+      location,
+      pickDate,
+      dropDate,
+    });
   } catch (error) {
-    console.error('Error deleting user', error);
+    console.error('Error showing cars:', error);
     res.status(500).json('Internal Server Error');
   }
 }
 
 async function filterCars(req, res) {
-  const {
-    transmission,
-    fuel,
-    carCategory,
+  try {
+    const { transmission, fuel, carCategory } = req.body;
+    const { location, pickDate, dropDate } = req.session;
 
-  } = req.body;
-  let { pickDate, dropDate, location } = req.session;
-  if (!location) {
-    location = await Car.distinct('location').exec();
-  } else {
-    location = [location];
+    const allCollections = await
+    helper.filterCars(transmission, fuel, carCategory, location, pickDate, dropDate);
+
+    res.status(200).json(allCollections);
+  } catch (error) {
+    console.error('Error filtering cars:', error);
+    res.status(500).json('Internal Server Error');
   }
-
-  let AvailabilityId = [];
-  if (pickDate && dropDate) {
-    pickDate = new Date(pickDate);
-    dropDate = new Date(dropDate);
-    const availability = await userService.findCarAvailability(pickDate, dropDate);
-    AvailabilityId = availability.map((entry) => entry._id);
-    req.session.pickDate = pickDate;
-    req.session.dropDate = dropDate;
-
-    const model = [
-      {
-        $match: {
-          _id: {
-            $in: AvailabilityId,
-          },
-          TransmitionType: { $in: transmission },
-          fuelType: { $in: fuel },
-          carCategory: { $in: carCategory },
-          location: { $in: location },
-        },
-      },
-    ];
-    const allCollections = await Car.aggregate(model);
-
-    return res.status(200).json(allCollections);
-  }
-  const model = [
-    {
-      $match: {
-        TransmitionType: { $in: transmission },
-        fuelType: { $in: fuel },
-        carCategory: { $in: carCategory },
-        location: { $in: location },
-      },
-    },
-  ];
-
-  const allCollections = await Car.aggregate(model);
-
-  return res.status(200).json(allCollections);
 }
-
 async function carDetailsUser(req, res) {
-  const { name, password } = req.session;
   try {
+    const { name } = req.session;
     const { id } = req.query;
-    const cars = await Car.findById(id);
-    const { fuelType, carCategory } = cars;
-    let carData = await Car.aggregate([
-      {
-        $match:
-          {
-            $or:
-             [
-               { carCategory },
-               { fuelType },
-             ],
-          },
-      },
-      {
-        $limit: 7,
-      },
-    ]);
-    carData = carData.filter((car) => car._id.toString() !== id);
-    res.status(200).render('user/carDetails', { car: cars, data: carData, name });
-  } catch (error) {
-    console.error('Error Details User', error);
-    res.status(500).json('Internal Server Error');
-  }
-}
+    const { car, data } = await helper.carDetailsUserHelper(id, name);
 
-async function carSearchByName(req, res) {
-  try {
-    const { searchText } = req.body;
-    if (searchText) {
-      const car = await Car.find({ carName: { $regex: new RegExp(searchText, 'i') } });
-      res.status(200).json(car);
-    }
+    res.status(200).render('user/carDetails', { car, data, name });
   } catch (error) {
-    console.error('Error search car', error);
+    console.error('Error Details User:', error);
     res.status(500).json('Internal Server Error');
   }
 }
-const emailOtp = {};
 
 async function generateOtpEmail(req, res) {
   try {
     const { email } = req.body;
-    const otp = generateOtp();
-    console.error(otp, email);
 
-    emailOtp[email] = otp;
-    sendAdminOtp(email, otp, (error, info) => {
-      if (error) {
-        console.error(error);
-        return res.status(500).send(error);
-      }
-      console.error(otp, email);
-      return res.status(201).json(email);
-    });
-    return res.status(201).json(email);
+    const generatedEmail = await helper.generateOtpEmailHelper(email);
+
+    res.status(201).json(generatedEmail);
   } catch (error) {
-    console.error('Error search car', error);
-    return res.status(500).json('Internal Server Error');
+    console.error('Error generating OTP email:', error);
+    res.status(500).json('Internal Server Error');
   }
 }
-const registration = async (req, res) => {
+
+async function registration(req, res) {
   try {
-    const {
-      name,
-      age,
-      password,
-      email,
-      phone,
-      licenseNumber,
-    } = req.body;
-    const isValid = emailValidator.validate(email);
-    if (!isValid) {
-      return res.status(400).json({ error: 'Invalid email format' });
-    }
-    const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      name,
-      age,
-      password: hashPassword,
-      email,
-      phone,
-      licenseNumber,
-      role: 'user',
-    });
-    await newUser.save();
-    req.session.name = name;
-    req.session.password = hashPassword;
-    req.session._id = newUser._id;
-    req.session.userId = uuidv4();
-    return res.status(200).json('ok');
+    const userData = req.body;
+    const sessionData = await helper.registrationHelper(userData);
+
+    // Store session data if necessary
+    req.session.name = sessionData.name;
+    req.session.password = sessionData.password;
+    req.session._id = sessionData._id;
+    req.session.userId = sessionData.userId;
+
+    res.status(200).json('ok');
   } catch (error) {
-    return res.status(500).json({ error: 'server Error', details: error });
+    res.status(500).json({ error: 'Server Error', details: error });
   }
-};
+}
 
-const userOtpCheck = async (req, res) => {
-  const { otp, Email } = req.body;
-  if (emailOtp[Email] && emailOtp[Email] === otp) {
-    const user = await User.findOne({ role: 'user', email: Email });
-    if (user) {
-      delete emailOtp[Email];
-      const { password } = user;
-      const psw = password.toString();
-      const hashPassword = bcrypt.hash(psw, 10);
+async function userOtpCheck(req, res) {
+  try {
+    const { otp, Email } = req.body;
+    console.error(Email);
 
-      req.session.password = hashPassword;
-      req.session.name = user.name;
-      req.session.email = user.email;
-      req.session.userId = uuidv4();
-      return res.status(200).json('ok');
-    }
-    const error = 'not found user';
+    const result = await helper.userOtpCheckHelper(otp, Email);
+
+    req.session.password = result.hashPassword;
+    req.session.name = result.user.name;
+    req.session.email = result.user.email;
+    req.session.userId = result.userId;
+    res.status(200).json('ok');
+  } catch (error) {
+    console.error('Error checking OTP for user:', error);
+    res.status(404).redirect('/login');
   }
-  return res.status(404).redirect('/login');
-};
-const OtpCheck = async (req, res) => {
-  const { otp, Email } = req.body;
-  if (emailOtp[Email] && emailOtp[Email] === otp) {
-    return res.status(201).json('ok');
+}
+
+async function OtpCheck(req, res) {
+  try {
+    const { otp, Email } = req.body;
+    const result = await helper.otpCheckHelper(otp, Email);
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(404).json(error);
   }
-  return res.status(404).json('Not Match Otp');
-};
-const forgotPassword = async (req, res) => {
+}
+async function forgotPassword(req, res) {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email, role: 'user' });
-    if (!user) {
-      return res.status(401).json('User Not found');
-    }
-    const hashPassword = await bcrypt.hash(password, 10);
-    const { originalUrl } = req.session;
-    req.session.password = hashPassword;
-    req.session.name = user.name;
+    const user = await helper.forgotPasswordHelper(email, password);
+
+    // Assuming session data is stored in the controller
+    req.session.password = await bcrypt.hash(password, 10);
     req.session.email = email;
     req.session.userId = uuidv4();
     req.session._id = user._id;
-    user.password = hashPassword;
-    await user.save();
+    req.session.name = user.name;
+
+    // Add other session data if necessary
+
+    const { originalUrl } = req.session;
     if (originalUrl) {
-      return res.redirect(`${originalUrl}`);
+      res.redirect(originalUrl);
+    } else {
+      res.status(200).json('Password updated successfully');
     }
-    return res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {
-    // If an error occurs, respond with an error message
-    return res.status(500).json({ message: 'Internal server error', error: error.message });
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
-};
+}
+
 const contactPage = (req, res) => {
-  const { name, password } = req.session;
+  const { name } = req.session;
   res.status(200).render('user/contact', { name });
 };
 
 async function userMessageToAdmin(req, res) {
   try {
-    const {
-      name,
-      email,
-      subject,
-      message,
-    } = req.body;
-    if (email) {
-      sendMailToAdmin(email, message, subject, (error, info) => {
-        if (error) {
-          console.error(error);
-          return res.status(500).send(error);
-        }
-        return res.status(201).json('Success fully send message');
-      });
-    }
+    const { email, subject, message } = req.body;
+
+    const result = await helper.userMessageToAdminHelper(email, message, subject);
+    res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ error: 'server Error', details: error });
+    console.error('Error sending message to admin:', error);
+    res.status(500).json({ error: 'Server Error', details: error });
   }
 }
 
@@ -490,154 +298,39 @@ const aboutPage = (req, res) => {
   res.status(200).render('user/about', { name });
 };
 
-const addToWishlist = async (req, res) => {
-  const { carId } = req.body;
-  const { _id } = req.session;
-  if (_id === undefined) {
-    return res.status(401).json('Not Found user');
-  }
+async function bookingCar(req, res) {
   try {
-    // Find the user by their email and role
-    const user = await User.findOne({ role: 'user', _id });
-
-    if (!user) {
-      return res.status(404).json('User not found');
+    const sessionData = req.session;
+    let queryCarId = req.query.carId;
+    if (!queryCarId) {
+      queryCarId = req.session.carId;
     }
-
-    const result = await User.findByIdAndUpdate(
-      user._id,
-      { $addToSet: { whishList: carId } },
-      { new: true },
-    );
-    if (!result) {
-      return res.status(404).json('User not found');
-    }
-
-    return res.status(200).json('Car added to wishlist');
+    const result = await helper.bookingCarHelper(sessionData, queryCarId);
+    req.session.carId = queryCarId;
+    res.status(200).render('user/checkOut', result);
   } catch (error) {
-    console.error('Error adding car to wishlist:', error);
-    return res.status(404).json('Error adding car to wishlist:', error.message);
+    res.status(500).json({ error: 'Server Error', details: error });
   }
-};
-const wishListPage = async (req, res) => {
+}
+
+async function addDate(req, res) {
   try {
-    const { _id, name } = req.session;
-    if (!_id) {
-      return res.status(401).render('user/wishList');
+    const { pickDate, dropDate } = req.query;
+    const { carId } = req.session;
+
+    const result = await helper.addDateHelper(pickDate, dropDate, carId);
+    if (pickDate && dropDate) {
+      req.session.pickDate = pickDate;
+      req.session.dropDate = dropDate;
     }
-    const cars = await User.findById(_id).populate('whishList');
-    if (!cars) {
-      return res.render('user/wishList');
-    }
-    const count = cars.whishList.length;
-    return res.render('user/wishList', { data: cars.whishList, name, count });
+    res.status(200).json(result);
   } catch (error) {
-    console.error('Error fetching wishlist:', error);
-    return res.status(500).json({ error: 'Error fetching wishlist', message: error.message });
+    res.status(409).json({ message: error.message });
   }
-};
-
-const bookingCar = async (req, res) => {
-  const {
-    pickDate, dropDate, _id, name, bookingId,
-  } = req.session;
-  let { carId } = req.query;
-  if (!carId) {
-    carId = req.session.carId;
-  }
-  req.session.carId = carId;
-  const car = await Car.findById(carId);
-  const user = await User.findById(_id);
-  if (!car || !user) {
-    return res.status(402).json('not find car or user');
-  }
-  if (pickDate && dropDate) {
-    const formattedPickDate = userService.formattedDate(pickDate);
-    const formattedDropDate = userService.formattedDate(dropDate);
-    const dayDifferenceIn = differenceInDays(dropDate, pickDate);
-    const amount = car.dayRent * dayDifferenceIn;
-    req.session.days = dayDifferenceIn;
-    req.session.amount = amount;
-    if (bookingId) {
-      const user = await User.findOne({ 'bookedCar._id': bookingId }).populate('bookedCar.services');
-      const bookings = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
-      const { services } = bookings;
-      let service = null;
-      if (!car.ownerId) {
-        const adminDoc = await admin.findOne({ role: 'Admin' }).populate('service');
-        service = adminDoc.service.filter(
-          (service) => services.includes(service._id),
-        );
-      } else {
-        const vendorDoc = await Vendor.findOne({ _id: car.ownerId }).populate('service');
-        service = vendorDoc.service.filter(
-          (service) => services.includes(service._id),
-        );
-      }
-      return res.status(200).render('user/checkOut', {
-        car,
-        user,
-        name,
-        amount,
-        totalAmount: bookings.totalPrice,
-        dayDifferenceIn,
-        formattedPickDate,
-        formattedDropDate,
-        payment: 'payment',
-        bookingId,
-        service,
-      });
-    }
-    const service = [];
-
-    if (!car.ownerId) {
-      const adminData = await admin.findOne({ role: 'Admin' });
-      if (adminData) {
-        service.push(...adminData.service);
-      }
-    } else {
-      const vendorData = await Vendor.findOne({ _id: car.ownerId });
-      if (vendorData) {
-        service.push(...vendorData.service);
-      }
-    }
-    return res.status(200).render('user/checkOut', {
-      car,
-      user,
-      name,
-      amount,
-      dayDifferenceIn,
-      formattedPickDate,
-      formattedDropDate,
-      service,
-    });
-  }
-  return res.status(200).render('user/checkOut', { car, user });
-};
-const addDate = async (req, res) => {
-  const { pickDate, dropDate } = req.query;
-  const { carId } = req.session;
-  const pickDateNew = new Date(pickDate);
-  const dropDateNew = new Date(dropDate);
-  let AvailabilityId = []; // Initialize as an array
-  AvailabilityId = await userService.findCarAvailability(pickDateNew, dropDateNew);
-
-  // Filter the availabilityIds array to check if carId exists
-  AvailabilityId = AvailabilityId.map((entry) => entry._id);
-  const matchingCars = AvailabilityId.filter((id) => id.toString() === carId);
-  // Debugging output
-  // If matchingCars array is empty, the car is available
-  if (matchingCars.length !== 0) {
-    req.session.pickDate = pickDate;
-    req.session.dropDate = dropDate;
-    return res.status(200).json('ok');
-  }
-  // If matchingCars array is not empty, the car is already booked
-  return res.status(409).json({ message: 'Car is already booked' });
-};
+}
 
 const changeDate = async (req, res) => {
-  const { pickDate, dropDate } = req.query;
+  // const { pickDate, dropDate } = req.query;
   req.session.pickDate = '';
   req.session.dropDate = '';
   res.status(200).json('success');
@@ -651,202 +344,59 @@ const findCarByDate = async (req, res) => {
     }
     return res.redirect('/cars');
   }
-  // const pickDate = new Date(pickDateData);
-  // const dropDate = new Date(dropDateData);
-  // AvailabilityId = await userService.findCarAvailability(pickDate, dropDate);
-  // AvailabilityId = AvailabilityId.map((entry) => entry._id);
-  // req.session.pickDate = pickDate;
-  // req.session.dropDate = dropDate;
-  // const car = await Car.aggregate([
-  //   {
-  //     $match: {
-  //       _id: {
-  //         $in: AvailabilityId,
-  //       },
-  //       location,
-  //     },
-  //   },
-  // ]);
-  // if (!car) {
-  //   return res.status(401).redirect('/');
-  // }
-  // return res.status(200).render('user/cars', { data: car });
   req.session.dropDate = dropDate;
   req.session.pickDate = pickDate;
   req.session.location = location;
 
   return res.redirect('/cars');
 };
-const removeWishlist = async (req, res) => {
-  const { id } = req.query;
-  const { _id } = req.session;
-  if (!id || !_id) {
-    return res.status(401).json('not  fide id');
-  }
-  const user = await User.findByIdAndUpdate(_id, {
-    $pull: {
-      whishList: id,
-    },
-  }, {
-    new: true,
-  });
-  return res.status(200).redirect('/whishList');
-};
-
-const userRecoveryMessage = async (req, res) => {
+async function userRecoveryMessage(req, res) {
   try {
-    const { ...data } = req.body;
     const { _id } = req.session;
+    const { message, sender } = req.body;
 
-    // Find the admin with the role 'Admin'
-    const adminDoc = await admin.findOne({ role: 'Admin' });
-
-    if (!adminDoc) {
-      return res.status(404).send('Admin not found');
-    }
-
-    // Update the notifications field of the admin document
-    adminDoc.notifications.push({
-      userId: _id,
-      message: data.message, // Assuming the message is provided in the request body
-      sender: data.sender, // Assuming the sender is provided in the request body
-      createdAt: new Date(),
-    });
-    await adminDoc.save();
+    await helper.saveRecoveryMessage(_id, { message, sender });
 
     return res.status(201).redirect('/profile');
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error processing the recovery message:', error);
     return res.status(500).send('An error occurred while processing the recovery message');
   }
-};
-const carDetailsWhishList = async (req, res) => {
-  const { id } = req.query;
-  const car = await Car.findById(id);
-  if (!car) {
-    return res.status(200).json('car not find');
-  }
-  return res.status(200).json(car);
-};
-// eslint-disable-next-line consistent-return
-const userBookedCar = async (req, res) => {
-  const { formDatas, service } = req.body;
-  const { place, zip, houseName } = formDatas;
+}// // eslint-disable-next-line consistent-return
 
-  const {
-    _id, carId, pickDate, dropDate, amount, days,
-  } = req.session;
-  const user = await User.findByIdAndUpdate(_id, {
-    address: { place, zip, houseName },
-  }, { new: true });
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-  const bookingDate = new Date();
-
-  const userCheck = await User.findById(_id).populate('bookedCar');
-  const confirmArray = await userService.confirm(_id, carId, userCheck);
-  if (confirmArray.length > 0) {
-    return res.status(409).json({ message: 'already booked' });
-  }
-
-  let foundServices = null;
-  let ServiceAmount = 0;
-
-  if (service) {
-    const car = await Car.findById(carId);
-    if (!car.ownerId) {
-      const Admin = await admin.findOne({ role: 'Admin' });
-      foundServices = Admin.service.filter(
-        (services) => service.includes(services._id.toString()),
-      );
-      foundServices.forEach((element) => {
-        ServiceAmount += element.charge;
-      });
-    } else {
-      const vendor = await Vendor.findOne({ _id: car.ownerId });
-      foundServices = vendor.service.filter(
-        (services) => service.includes(services._id.toString()),
-      );
-      foundServices.forEach((element) => {
-        ServiceAmount += element.charge;
-      });
-    }
-  }
-  const bookingData = {
-    car: carId,
-    bookingDate,
-    pickupDate: pickDate,
-    returnDate: dropDate,
-    carRent: amount,
-    totalPrice: amount + ServiceAmount,
-    totalDays: days,
-    status: 'pending',
-    services: foundServices,
-  };
+async function userBookedCar(req, res) {
   try {
-    const user = await User.findByIdAndUpdate(
-      _id,
-      { $addToSet: { bookedCar: bookingData } },
-      { new: true },
-    );
+    const { formDatas, service } = req.body;
+    const sessionData = req.session;
 
-    const bookingId = user.bookedCar[user.bookedCar.length - 1]._id;
-    req.session.bookingId = bookingId;
-    const total = amount + ServiceAmount;
-    userService.razerPayCreation(bookingId, total * 100)
-      .then(async (razerPay) => {
-        await User.findOneAndUpdate(
-          { _id, 'bookedCar._id': bookingId },
-          { $set: { 'bookedCar.$.payment_id': razerPay.id } },
-        );
-
-        // Rest of your code...
-        return res.status(200).json({ razerPay, formDatas });
-      })
-      .catch((error) => {
-        // Handle any errors that occur during order creation
-        console.error('Error creating order:', error);
-        return res.status(400).json('error for payment');
-      });
+    const result = await helper.userBookedCarHelper(formDatas, service, sessionData);
+    req.session.bookingId = result.newBookingId;
+    return res.status(200).json(result);
   } catch (error) {
-    console.error('Error updating user:', error);
-    return res.status(500).json('Internal server error');
+    console.error('Error in userBookedCar:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
-};
+}
 
-const bookedCars = async (req, res) => {
+async function bookedCars(req, res) {
   try {
-    const { _id, name } = req.session;
-    if (!_id) {
-      return res.status(401).render('user/carsBooked');
-    }
-    const cars = await User.findById(_id).populate('bookedCar.car');
-
-    if (!cars) {
-      return res.render('user/carsBooked');
-    }
-    const count = cars.bookedCar.length;
-    return res.render('user/carsBooked', { data: cars.bookedCar, name, count });
+    const { data, name, count } = await helper.bookedCarsHelper(req);
+    return res.render('user/carsBooked', { data, name, count });
   } catch (error) {
     console.error('Error fetching bookedCar:', error);
     return res.status(500).json({ error: 'Error fetching wishlist', message: error.message });
   }
-};
-const removeBookings = async (req, res) => {
-  const { id } = req.query;
-  const { _id } = req.session;
-  if (!id || !_id) {
-    return res.status(401).json('not  find id');
-  }
-  const user = await User.findByIdAndUpdate(
-    _id,
-    { $pull: { bookedCar: { _id: id } } },
-    { new: true },
-  );
+}
 
-  return res.status(200).redirect('/bookedCars');
-};
+async function removeBookings(req, res) {
+  try {
+    await helper.removeBookingsHelper(req);
+    return res.status(200).redirect('/bookedCars');
+  } catch (error) {
+    console.error('Error removing booking:', error);
+    return res.status(500).json({ error: 'Error removing booking', message: error.message });
+  }
+}
 
 const userPayRent = async (req, res) => {
   const { bookingId } = req.body;
@@ -865,65 +415,42 @@ const paymentPage = async (req, res) => {
   return res.status(200).redirect('/bookingCar');
 };
 
-const carDetails = async (req, res) => {
-  const { _id, name } = req.session;
+async function carDetails(req, res) {
+  const { _id } = req.session;
   const { bookingId } = req.query;
   try {
-    const user = await User.findById(_id).populate('bookedCar.car');
-    const thisBooking = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
-    const { car } = thisBooking;
-
-    const { services } = thisBooking;
-    let service = null;
-    if (!car.ownerId) {
-      const adminDoc = await admin.findOne({ role: 'Admin' }).populate('service');
-      service = adminDoc.service.filter(
-        (service) => services.includes(service._id),
-      );
-    } else {
-      const vendorDoc = await Vendor.findOne({ _id: car.ownerId }).populate('service');
-      service = vendorDoc.service.filter(
-        (service) => services.includes(service._id),
-      );
-    }
+    const { thisBooking, service } = await helper.getCarDetails(bookingId, _id);
     return res.status(200).json({ thisBooking, service });
   } catch (error) {
-    console.error(error);
     return res.status(500).json(error);
   }
-};
+}
 
-const paymentVerification = async (req, res) => {
+async function paymentVerification(req, res) {
   try {
-    const { _id } = req.session;
-    await userService.verifyPayment(req.body);
-    const updatedUser = await userService.changeStatus(req.body.bookingId, _id, req.body.method);
-    await userService.sendInvoiceEmail(_id, req.body.bookingId); // Changed function name
+    const updatedUser = await helper.verifyPaymentAndUpdateUser(req.session, req.body);
     req.session.bookingId = '';
     req.session.pickDate = '';
     req.session.dropDate = '';
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.error('Payment verification failed:', error);
     res.status(500).json({ error: 'Payment verification failed' });
   }
-};
+}
 
-const orderDetails = async (req, res) => {
-  const { _id } = req.session;
-  const { bookingId } = req.body;
-  const user = await User.findById(_id).populate('bookedCar.car');
-  const thisCar = user.bookedCar.find((bookings) => bookings.id.toString() === bookingId);
-
-  if (!thisCar) {
-    return res.status(401).json({ error: 'Error finding booking details' });
+async function orderDetails(req, res) {
+  try {
+    const { bookingId } = req.body;
+    const { thisCar, user } = await helper.getOrderDetails(req.session, bookingId);
+    res.status(200).json({ thisCar, user });
+  } catch (error) {
+    console.error('Error fetching order details:', error);
+    res.status(500).json({ error: 'Error fetching order details' });
   }
-  return res.status(200).json({ thisCar, user });
-};
+}
 module.exports = {
   getHomePage,
   loginPage,
-  register,
   userLogin,
   profilePage,
   logoutUser,
@@ -932,23 +459,18 @@ module.exports = {
   showCars,
   filterCars,
   carDetailsUser,
-  carSearchByName,
   generateOtpEmail,
   userOtpCheck,
   registration,
   contactPage,
   userMessageToAdmin,
   aboutPage,
-  addToWishlist,
-  wishListPage,
   userRecoveryMessage,
-  carDetailsWhishList,
   OtpCheck,
   forgotPassword,
   bookingCar,
   addDate,
   changeDate,
-  removeWishlist,
   findCarByDate,
   userBookedCar,
   bookedCars,

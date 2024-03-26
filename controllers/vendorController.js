@@ -1,14 +1,11 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-underscore-dangle */
 const { v4: uuidv4 } = require('uuid');
-const { Vendor } = require('../models/users');
 const { User } = require('../models/users');
 const { admin } = require('../models/users');
 const { Car } = require('../models/car');
 const cloudinary = require('../service/cloudnery');
 const { sendAdminOtp, generateOtp } = require('../service/nodeMailer');
+const vendorService = require('../service/vendorService');
 
-const vendorService = require('../service/vendorService')
 const emailOtp = {};
 
 const loginPage = (req, res) => {
@@ -19,7 +16,7 @@ async function showVendorDashboard(req, res) {
   try {
     const { email, password } = req.body;
     if (email && password) {
-      const vendor = await Vendor.findOne({ role: 'vendor', email, password });
+      const vendor = await admin.findOne({ role: 'Vendor', email, password });
       if (vendor) {
         if (!vendor.vendorAccessEnabled === true) {
           res.status(403).render('vendor/login', { error: 'Admin does not have permission to enable the vendor ' });
@@ -67,7 +64,7 @@ async function loginOtp(req, res) {
   const { otp } = req.body;
   const { email } = req.session;
   if (emailOtp[email] && emailOtp[email] === otp) {
-    const vendor = Vendor.find({ email });
+    const vendor = admin.find({ email });
     if (vendor) {
       delete emailOtp[email];
       req.session.vendorId = uuidv4();
@@ -82,12 +79,13 @@ async function loginOtp(req, res) {
 const signupVendor = async (req, res) => {
   try {
     const { email } = req.body;
-    const existingVendor = await Vendor.findOne({ email });
+    const existingVendor = await admin.findOne({ email });
     if (existingVendor) {
       return res.status(409).render('vendor/signUp', { error: 'Email address is already  use' });
     }
-    const newVendor = new Vendor(req.body);
-    newVendor.role = 'vendor';
+    // eslint-disable-next-line new-cap
+    const newVendor = new admin(req.body);
+    newVendor.role = 'Vendor';
     newVendor.vendorAccessEnabled = false;
     await newVendor.save();
     return res.status(201).redirect('/vendor/login?popup=Successfully+Submit+Your+Data+Access+after+Enable+Admin');
@@ -102,7 +100,7 @@ async function vendorCarPage(req, res) {
     const { ownerId } = req.session;
     if (ownerId) {
       const cars = await Car.find({ ownerId });
-      const vendor = await Vendor.findById(ownerId);
+      const vendor = await admin.findById(ownerId);
       const locations = vendor.locations.map((locationParts) => locationParts.replace(/\s+/g, '-'));
 
       const count = await Car.countDocuments({ ownerId });
@@ -260,7 +258,7 @@ const vendorLogout = (req, res) => {
 
 const vendorNotification = async (req, res) => {
   const { ownerId } = req.session;
-  const vendor = await Vendor.findById(ownerId).populate('notifications');
+  const vendor = await admin.findById(ownerId).populate('notifications');
   res.status(200).render('vendor/notification', { data: vendor.notifications });
 };
 const venderRecoveryMessage = async (req, res) => {
@@ -344,9 +342,11 @@ const changCarStatus = async (req, res) => {
         const status = booking.carStatus;
 
         if (status === 'PickedDate') {
+          // eslint-disable-next-line no-param-reassign
           booking.carStatus = 'pickedCar';
         }
         if (status === 'ReturnDate') {
+          // eslint-disable-next-line no-param-reassign
           booking.carStatus = 'returnCar';
         }
         await user.save();
@@ -358,21 +358,21 @@ const changCarStatus = async (req, res) => {
 
 const servicePage = async (req, res) => {
   const { ownerId } = req.session;
-  const updatedAdmin = await Vendor.findById(ownerId);
+  const updatedAdmin = await admin.findById(ownerId);
   const { service } = updatedAdmin;
   return res.status(200).render('vendor/service', { service });
 };
 const addService = async (req, res) => {
-  const { ServiceName, charge, description } = req.body;
+  const { serviceName, charge, description } = req.body;
   const { ownerId } = req.session;
-  const vendor = await Vendor.findById(ownerId);
+  const vendor = await admin.findById(ownerId);
 
   if (req.file && req.file.path) {
     if (!vendor) {
       return res.status(401).json('admin not found');
     }
     const newService = {
-      ServiceName,
+      serviceName,
       charge,
       image: req.newPath.url,
       imageId: req.newPath.id,
@@ -388,11 +388,11 @@ const addService = async (req, res) => {
 const editService = async (req, res) => {
   try {
     const {
-      ServiceName, charge, description, id,
+      serviceName, charge, description, id,
     } = req.body;
     const { ownerId } = req.session;
     // Fetch the admin document and find the index of the service to update
-    const vendor = await Vendor.findById(ownerId);
+    const vendor = await admin.findById(ownerId);
     const serviceIndex = vendor.service.findIndex((service) => service._id.toString() === id);
 
     // Check if the service index is found
@@ -403,7 +403,7 @@ const editService = async (req, res) => {
     // Construct the update object
     const updateObject = {
       $set: {
-        [`service.${serviceIndex}.ServiceName`]: ServiceName,
+        [`service.${serviceIndex}.serviceName`]: serviceName,
         [`service.${serviceIndex}.charge`]: charge,
         [`service.${serviceIndex}.description`]: description,
       },
@@ -422,7 +422,7 @@ const editService = async (req, res) => {
     }
 
     // Update the service in the database
-    const result = await Vendor.updateOne({ _id: ownerId }, updateObject);
+    const result = await admin.updateOne({ _id: ownerId }, updateObject);
 
     // Check if the service was updated successfully
     if (result.nModified === 0) {
@@ -430,7 +430,7 @@ const editService = async (req, res) => {
     }
 
     // Render the admin service page with updated data
-    const updatedAdmin = await Vendor.findById(ownerId);
+    const updatedAdmin = await admin.findById(ownerId);
     const { service } = updatedAdmin;
     return res.status(200).render('vendor/service', { service });
   } catch (error) {
@@ -445,7 +445,7 @@ const deleteService = async (req, res) => {
     const { ownerId } = req.session;
 
     // Find the admin document containing the service to delete
-    const foundVendor = await Vendor.findOne({ _id: ownerId, 'service._id': id });
+    const foundVendor = await admin.findOne({ _id: ownerId, 'service._id': id });
 
     // Check if the admin and service exist
     if (!foundVendor) {

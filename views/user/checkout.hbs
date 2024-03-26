@@ -211,7 +211,7 @@
 
                         </div>
                         <div class="col-9 p-2">
-                            <h6 class="text-dark">{{ServiceName}}</h6>
+                            <h6 class="text-dark">{{serviceName}}</h6>
                             <h6 class="text-dark"> <span class="text-primary">Charge </span>{{charge}}</h6>
 
                            </div> 
@@ -242,7 +242,7 @@
                             
                             {{#each service}}
                             <div class="d-flex m-0 mt-0 px-2  ">
-                                <span class="cat">{{this.ServiceName}} Service  </span>
+                                <span class="cat">{{this.serviceName}} Service  </span>
                                 </span>
                                 <p class="price ml-md-auto m-0 p-0">{{this.charge}} <span></span></p>
                             </div>
@@ -301,7 +301,7 @@
                 </div>
 
             </div>
-            <div class=" right col-5  justify-content-center px-4  py-4">
+            <div class=" right col-5  justify-content-center px-4  py-4 bg-white">
                 <div style="border-radius:10px;" class="col-12  bg-light  p-0 m-0 row">
                     <a href="/carDetails?id={{car._id}}" class="col-3 p-0 m-0">
                         <div class="col-12"
@@ -317,7 +317,7 @@
                         <h6 class="text-dark">{{dayDifferenceIn}} / Days</h6>
                         {{else}}
                         <div class="col-12 justify-content-center">
-                            <p class="text-danger">Choose Pic Up Date and Return DAte</p>
+                            <p class="text-primary">Choose Pic Up Date and Return Date</p>
 
                         </div>
                         {{/if}}
@@ -333,7 +333,7 @@
   <option value="">Add Service</option>
   {{#each service}}
     <option value="{{this._id}}" data-image="{{this.image}}" data-description="{{this.description}}" data-charge="{{this.charge}}" class="text-dark bg-light">
-      {{this.ServiceName}}
+      {{this.serviceName}}
     </option>
   {{/each}}
 </select>
@@ -586,6 +586,7 @@ var charge = $(this).data('charge')
 
                 })
                 .catch(error => {
+                    console.log(error)
                     const errorMessage = document.getElementById('errorMessage')
                     errorMessage.style.display = 'block'
                 });
@@ -781,7 +782,6 @@ var charge = $(this).data('charge')
             sessionStorage.setItem('formData', '');
 
             const bookedCar = response.data.bookedCar[0];
-            console.log(bookedCar);
 
             document.querySelector('#paymentSuccess .modal-body').innerHTML = `
             <div class="justify-content-center row py-4">

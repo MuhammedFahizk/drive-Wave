@@ -32,7 +32,7 @@ async function deleteImage(publicId) {
     console.log(result);
     return result;
   } catch (error) {
-    console.error(error);
+    console.error('error:', error);
     throw error;
   }
 }

@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const vendorController = require('../controllers/vendorController');
 const middleware = require('../middleware/vendor');
-// const { upload } = require('../service/fileUpload-delete');
 
 const upload = multer({ dest: '/upload/' });
 
