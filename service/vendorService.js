@@ -66,7 +66,7 @@ const dailyRents = () => {
 
   return last7DaysNames;
 };
-const dailyRentalAmount = async (ownerId) => {
+const dailyRentalAmounts = async (ownerId) => {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
@@ -192,7 +192,7 @@ const dailyRentalAmountPending = async (ownerId) => {
 
 module.exports = {
   customers,
-  dailyRentalAmount,
+  dailyRentalAmounts,
   dailyRents,
   dailyRentalAmountPending,
 };

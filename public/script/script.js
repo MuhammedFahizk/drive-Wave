@@ -262,7 +262,6 @@ function handleRowClickUser(row) {
     .catch(error => console.error('Error:', error));
 }
 
-
 function handleEditClick(button) {
   const carId = button.getAttribute('data-carEId');
   fetch(`/admin/getCarDetails?carId=${encodeURIComponent(carId)}`)

@@ -18,7 +18,7 @@ async function getHomePage(req, res) {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json('Internal server error', error);
   }
 }
 const loginPage = (req, res) => {
@@ -31,7 +31,7 @@ async function userLogin(req, res) {
     res.redirect(redirectUrl);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(401).json(error);
   }
 }
 

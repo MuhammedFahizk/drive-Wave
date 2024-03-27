@@ -90,7 +90,6 @@ try {
     ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'vendor',
-
     },
     rate: {
       rate: { type: Number },

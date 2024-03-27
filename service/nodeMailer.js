@@ -1,9 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-sequences */
-/* eslint-disable comma-spacing */
-const handlebars = require('handlebars');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const handlebars = require('handlebars');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -18,10 +16,11 @@ function generateOtp() {
 }
 
 function sendAdminOtp(email, otp) {
+  console.error(otp, email);
   return new Promise((resolve, reject) => {
     const mailOption = {
       from: 'fahizk100@gmail.com',
-      to: 'fahizk100@gmail.com',
+      to: email,
       subject: 'Your OTP for Login',
       text: `Your OTP is: ${otp}`,
     };
@@ -34,14 +33,14 @@ function sendAdminOtp(email, otp) {
     });
   });
 }
-function sendMailToAdmin(email, message,subjects, callback) {
+function sendMailToAdmin(email, message, subjects, callback) {
   const mailOption = {
     from: email,
     to: 'drivewave299@gmail.com',
     subject: subjects,
     html: `<p style="font-family: Arial; sans-serif; font-size: 16px;">${message}</p>`,
   };
-  transporter.sendMail(mailOption,callback);
+  transporter.sendMail(mailOption, callback);
 }
 function sendmailVendor(email, message, subjects, callback) {
   const mailOption = {
@@ -54,7 +53,7 @@ function sendmailVendor(email, message, subjects, callback) {
   transporter.sendMail(mailOption, callback);
 }
 
-function sendMailUser(email, subject,data) {
+function sendMailUser(email, subject, data) {
   return new Promise((resolve, reject) => {
     // Read the Handlebars template file
     fs.readFile('views/ConfirmationEmail.hbs', 'utf8', (error, templateSource) => {
