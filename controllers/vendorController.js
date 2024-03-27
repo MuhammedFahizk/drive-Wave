@@ -25,7 +25,14 @@ async function showVendorDashboard(req, res) {
   return res.status(200).redirect('/vendor/dashboardPage');
 }
 const showDashboard = (req, res) => {
-  res.status(200).render('vendor/dashboard');
+  const { ownerId } = req.session;
+  helper.getDataForAdminDashboard(ownerId)
+    .then((data) => {
+      res.status(200).render('vendor/dashboard', data);
+    })
+    .catch((error) => {
+      console.error('Error rendering Vendor dashboard:', error);
+    });
 };
 
 const signUpPage = (req, res) => {
@@ -309,6 +316,22 @@ async function payment(req, res) {
     throw new Error(`Error handling payment: ${error.message}`);
   }
 }
+const addLocations = async (req, res) => {
+  const { ownerId } = req.session;
+  const { location } = req.body;
+  helper.addLocationsHelper(ownerId, location)
+    .then(() => {
+      res.status(201).json('ok');
+    });
+};
+const removeLocation = async (req, res) => {
+  const { location } = req.body;
+  const { ownerId } = req.session;
+  helper.removeLocationHelper(location, ownerId)
+    .then(() => {
+      res.status(200).json('ok');
+    });
+};
 module.exports = {
   loginPage,
   showVendorDashboard,
@@ -334,4 +357,6 @@ module.exports = {
   deleteService,
   UserPage,
   payment,
+  addLocations,
+  removeLocation,
 };

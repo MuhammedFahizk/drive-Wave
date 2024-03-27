@@ -53,7 +53,9 @@ const confirmAmount = async () => {
       },
     },
   ]);
-  return sum;
+  const [{ totalRentalAmount = 0 } = {}] = sum;
+
+  return totalRentalAmount;
 };
 
 const pendingAmount = async () => {
@@ -71,7 +73,8 @@ const pendingAmount = async () => {
       },
     },
   ]);
-  return sum;
+  const [{ totalRentalAmount = 0 } = {}] = sum;
+  return totalRentalAmount;
 };
 const dailyRentalAmount = async () => {
   const startOfToday = new Date();

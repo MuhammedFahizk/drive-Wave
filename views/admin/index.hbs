@@ -136,12 +136,12 @@
 					</span>
 
 				</a>
-				{{!-- <a href="#" class="btn-download col-5 mx-3">
+				<a href="#" class="btn-download col-5 mx-3">
 					 <span type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightLocation" aria-controls="offcanvasRight">
 						 Locations
 					</span> 
 
-				</a> --}}
+				</a>
 				</div>
 
 			</div>
@@ -151,14 +151,15 @@
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
-  <form id="addLocation" method="post" >
-    <div class="mb-3">
-      <label for="BannerName" class="form-label"> Add Location</label>
-      <input type="text" class="form-control" id="location" name="location" aria-describedby="emailHelp" required>
-    </div>
-   
-    <button type="submit" class="btn btn-primary">Add</button>
-  </form>
+  <form id="addLocation" method="post">
+						<div class="mb-3">
+							<label for="BannerName" class="form-label"> Add Location</label>
+							<input type="text" class="form-control" id="location" name="location"
+								aria-describedby="emailHelp" required>
+						</div>
+
+						<button type="submit" class="btn btn-primary">Add</button>
+					</form>
    <div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-12 mt-4 p-3">
 
                 <ul class="p-2">
@@ -172,7 +173,10 @@
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><circle cx="12" cy="12" r="4"></circle><path d="M13 4.069V2h-2v2.069A8.01 8.01 0 0 0 4.069 11H2v2h2.069A8.008 8.008 0 0 0 11 19.931V22h2v-2.069A8.007 8.007 0 0 0 19.931 13H22v-2h-2.069A8.008 8.008 0 0 0 13 4.069zM12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"></path></svg>
                     </span>
-                     <a href="#" class="locationLink">{{this}}</a>
+                      <a href="#" class="locationLink">{{this}}</a>
+
+                     <i class="bx bx-message-square-x delete-icon"></i>
+
                   {{/each}}
                 </ul>
               </div>
@@ -490,6 +494,55 @@ document.addEventListener('click', function(event) {
             // You might want to display an error message or take other actions here
         });
     }
+});
+
+	document.getElementById('addLocation').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const location = document.getElementById('location').value;
+
+    try {
+        const response = await axios.post('/admin/locations', { location });
+        console.log('Location added successfully:', response.data);
+		window.location.reload()
+        // Optionally, do something after successful addition
+    } catch (error) {
+        console.error('Error adding location:', error.response.data);
+        // Optionally, handle errors
+    }
+});
+
+document.addEventListener("click", async (event) => {
+  if (event.target.classList.contains("delete-icon")) {
+    const locationElement = event.target.parentElement;
+    const location = locationElement.querySelector("a.locationLink").textContent.trim();
+    
+    try {
+      const response = await axios.post('/vendor/removeLocation', { location: encodeURIComponent(location) });
+      
+      // Update the UI after successful removal
+      locationElement.remove();
+    } catch (error) {
+      console.error("Error removing location:", error);
+      // Handle error
+    }
+  }
+});
+document.addEventListener("click", async (event) => {
+  if (event.target.classList.contains("delete-icon")) {
+    const locationElement = event.target.parentElement;
+    const location = locationElement.querySelector("a.locationLink").textContent.trim();
+    
+    try {
+      const response = await axios.post('/admin/removeLocation', { location: encodeURIComponent(location) });
+      
+      // Update the UI after successful removal
+      locationElement.remove();
+    } catch (error) {
+      console.error("Error removing location:", error);
+      // Handle error
+    }
+  }
 });
 
 </script>

@@ -25,6 +25,83 @@ async function authenticateVendor(email, password) {
     throw new Error(`Error authenticating vendor: ${error.message}`);
   }
 }
+async function getUserData(ownerId) {
+  try {
+    const usersWithBookings = await User.aggregate([
+      {
+        $unwind: '$bookedCar',
+      },
+      {
+        $lookup: {
+          from: 'cars',
+          localField: 'bookedCar.car',
+          foreignField: '_id',
+          as: 'carDetails',
+        },
+      },
+      {
+        $unwind: '$carDetails', // Deconstruct carDetails array
+      },
+      {
+        $match: {
+          'carDetails.ownerId': new ObjectId(ownerId),
+        },
+      },
+      {
+        $project: {
+          // Project all fields from the user document
+          user: '$$ROOT',
+          carDetails: '$carDetails',
+          bookingDetails: '$bookedCar',
+        },
+      },
+    ]);
+
+    return usersWithBookings;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw new Error('Internal server error');
+  }
+}
+async function getDataForAdminDashboard(ownerId) {
+  try {
+    const customersPromise = (await getUserData(ownerId)).length;
+    const dailyRentsPromise = vendorService.dailyRents();
+    const dailyRentalAmountPromise = vendorService.dailyRentalAmount();
+    const dailyRentalPendingPromise = vendorService.dailyRentalAmountPending();
+    const confirmAmount = await vendorService.confirmAmount(ownerId);
+    const pendingAmount = await vendorService.pendingAmount(ownerId);
+    const VenderPromise = admin.findById(ownerId);
+
+    const [
+      customers,
+      dailyRents,
+      dailyRentalAmount,
+      dailyRentalPending,
+      vendor,
+    ] = await Promise.all([
+      customersPromise,
+      dailyRentsPromise,
+      dailyRentalAmountPromise,
+      dailyRentalPendingPromise,
+      VenderPromise,
+    ]);
+
+    const locations = vendor.locations.map((locationParts) => locationParts.replace(/\s+/g, '-'));
+
+    return {
+      dailyRents,
+      dailyRentalAmount,
+      dailyRentalPending,
+      confirmAmount,
+      pendingAmount,
+      customers,
+      locations,
+    };
+  } catch (error) {
+    throw new Error('Error fetching data for Vender dashboard: ', error);
+  }
+}
 function generateAndSendOtp(email) {
   return new Promise((resolve, reject) => {
     const otp = generateOtp();
@@ -380,44 +457,7 @@ async function deleteServiceData(id, ownerId) {
     throw new Error('Internal server error');
   }
 }
-async function getUserData(ownerId) {
-  try {
-    const usersWithBookings = await User.aggregate([
-      {
-        $unwind: '$bookedCar',
-      },
-      {
-        $lookup: {
-          from: 'cars',
-          localField: 'bookedCar.car',
-          foreignField: '_id',
-          as: 'carDetails',
-        },
-      },
-      {
-        $unwind: '$carDetails', // Deconstruct carDetails array
-      },
-      {
-        $match: {
-          'carDetails.ownerId': new ObjectId(ownerId),
-        },
-      },
-      {
-        $project: {
-          // Project all fields from the user document
-          user: '$$ROOT',
-          carDetails: '$carDetails',
-          bookingDetails: '$bookedCar',
-        },
-      },
-    ]);
 
-    return usersWithBookings;
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    throw new Error('Internal server error');
-  }
-}
 async function getCustomers(ownerId) {
   try {
     return await vendorService.customers(ownerId);
@@ -478,8 +518,33 @@ async function renderPaymentPage(ownerId) {
     throw new Error(`Error rendering payment page: ${error.message}`);
   }
 }
+async function addLocationsHelper(ownerId, newLocation) {
+  try {
+    const updatedOwner = await admin.findByIdAndUpdate(ownerId, {
+      $addToSet: { locations: newLocation },
+    }, { new: true });
+
+    return updatedOwner;
+  } catch (error) {
+    throw new Error(`Error adding location to owner: ${error.message}`);
+  }
+}
+async function removeLocationHelper(location, ownerId) {
+  try {
+    const updatedOwner = await admin.findByIdAndUpdate(
+      ownerId,
+      { $pull: { locations: location } },
+      { new: true },
+    );
+
+    return updatedOwner;
+  } catch (error) {
+    throw new Error(`Error Removing location to owner: ${error.message}`);
+  }
+}
 module.exports = {
   authenticateVendor,
+  getDataForAdminDashboard,
   generateAndSendOtp,
   validateOtp,
   createVendor,
@@ -498,4 +563,6 @@ module.exports = {
   deleteServiceData,
   getUserData,
   renderPaymentPage,
+  addLocationsHelper,
+  removeLocationHelper,
 };

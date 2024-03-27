@@ -290,6 +290,20 @@ const deleteBanner = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+const addLocations = async (req, res) => {
+  const { location } = req.body;
+  helper.addLocationsHelper(location)
+    .then(() => {
+      res.status(201).json('ok');
+    });
+};
+const removeLocation = async (req, res) => {
+  const { location } = req.body;
+  helper.removeLocationHelper(location)
+    .then(() => {
+      res.status(200).json('ok');
+    });
+};
 // // vendor page
 async function vendorPage(req, res) {
   helper.vendorPageHelper()
@@ -416,6 +430,8 @@ module.exports = {
   addBanner,
   getBanner,
   deleteBanner,
+  addLocations,
+  removeLocation,
   // vendor
   vendorPage,
   vendorDetails,

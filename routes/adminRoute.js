@@ -34,7 +34,8 @@ router.delete('/service/:id', login.requireAuth, adminController.deleteService);
 router.post('/banner', login.requireAuth, upload.single('bannerImage'), login.addImage, adminController.addBanner);
 router.get('/banner/:bannerId', login.requireAuth, adminController.getBanner);
 router.post('/bannerDelete/:bannerId', login.requireAuth, adminController.deleteBanner);
-
+router.post('/locations', login.requireAuth, adminController.addLocations);
+router.post('/removeLocation', login.requireAuth, adminController.removeLocation);
 // // adminVendor routs
 router.get('/Vendor', login.requireAuth, adminController.vendorPage);
 router.get('/getVendorDetails', login.requireAuth, adminController.vendorDetails);

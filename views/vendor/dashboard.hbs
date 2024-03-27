@@ -1,66 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 	<!-- My CSS -->
 	<link rel="stylesheet" href="/css/dashboard.css">
 
 	<title>AdminHub</title>
 </head>
+
 <body>
 
 
 	<!-- SIDEBAR -->
-<section id="sidebar">
+	<section id="sidebar">
 		<a href="" class="brand">
 			<i class='bx bxs-smile'></i>
 			<span class="text">AdminHub</span>
 		</a>
-		<ul class="side-menu top">
+		<ul style="padding: 0;" class="side-menu top">
 			<li class="active">
-				<a href="/vendor/DashboardPage">
-					<i class='bx bxs-dashboard' ></i>
+				<a href="/admin/DashboardPage">
+					<i class='bx bxs-dashboard'></i>
 					<span class="text">Dashboard</span>
 				</a>
 			</li>
-			<li >
+			<li>
 				<a href="/vendor/CarPage">
-                    <i class='bx bxs-car' ></i>
+					<i class='bx bxs-car'></i>
 					<span class="text">Cars</span>
 				</a>
 			</li>
 
 			<li>
 				<a href="/vendor/users">
-                    <i class='bx bxs-user-account'></i>
+					<i class='bx bxs-user-account'></i>
 					<span class="text">Users</span>
 				</a>
 			</li>
 			<li>
 				<a href="/vendor/Booking">
-                    <i class='bx bxs-book-bookmark'></i>
+					<i class='bx bxs-book-bookmark'></i>
 					<span class="text">Booking</span>
 				</a>
 			</li>
 			<li>
 				<a href="/vendor/Payment">
-					<i class='bx bxs-group' ></i>
+					<i class='bx bxs-group'></i>
 					<span class="text">Payment</span>
 				</a>
 			</li>
-			
 			<li>
-                <a href="/vendor/service">
-                    <i class='bx bxl-kubernetes'></i>
-                    <span class="text">Service</span>
-                </a>
-            </li>
-            <li>
+				<a href="/vendor/service">
+					<i class='bx bxl-kubernetes'></i>
+					<span class="text">Service</span>
+				</a>
+			</li>
+			<li>
 				<a href="/vendor/Notification">
-				<i class='bx bxs-bell' ></i>
+					<i class='bx bxs-bell'></i>
 					<span class="text">Notification</span>
 				</a>
 			</li>
@@ -68,38 +72,37 @@
 		<ul class="side-menu">
 			<li>
 				<a href="#">
-					<i class='bx bxs-cog' ></i>
+					<i class='bx bxs-cog'></i>
 					<span class="text">Settings</span>
 				</a>
 			</li>
 			<li>
-				<a href="/vendor/vendorLogout" class="logout">
-					<i class='bx bxs-log-out-circle' ></i>
+				<a href="/vendor/adminLogout" class="logout">
+					<i class='bx bxs-log-out-circle'></i>
 					<span class="text">Logout</span>
 				</a>
 			</li>
 		</ul>
-	</section> 
+	</section>
 
 
 
-	<!-- CONTENT -->
 	<section id="content">
 		<!-- NAVBAR -->
 		<nav>
-			<i class='bx bx-menu' ></i>
+			<i class='bx bx-menu'></i>
 			<a href="#" class="nav-link">Categories</a>
 			<form action="#">
 				<div class="form-input">
 					<input type="search" placeholder="Search...">
-					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
+					<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
 				</div>
 			</form>
 			<input type="checkbox" id="switch-mode" hidden>
 			<label for="switch-mode" class="switch-mode"></label>
-			<a href="#" class="notification">
-				<i class='bx bxs-bell' ></i>
-				<span class="num">8</span>
+			<a href="/vendor/Notification" class="notification">
+				<i class='bx bxs-bell'></i>
+				<span class="num">{{NotificationCount}}</span>
 			</a>
 			<a href="#" class="profile">
 				<img src="img/people.png">
@@ -109,45 +112,100 @@
 
 		<!-- MAIN -->
 		<main>
-			<div class="head-title">
-				<div class="left">
+			<div class="head-title ">
+				<div class="left ">
 					<h1>Dashboard</h1>
 					<ul class="breadcrumb">
 						<li>
 							<a href="#">Dashboard</a>
 						</li>
-						<li><i class='bx bx-chevron-right' ></i></li>
+						<li><i class='bx bx-chevron-right'></i></li>
 						<li>
-							<a class="active" href="#">Home</a>
+							<a class="active" href="#"></a>
 						</li>
 					</ul>
 				</div>
-				<a href="#" class="btn-download">
-					<i class='bx bxs-cloud-download' ></i>
-					<span class="text">Download PDF</span>
-				</a>
+{{!-- 
+				<a href="#" class="btn-download ">
+					<span type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightLocation"
+						aria-controls="offcanvasRightLocation">
+						Add Location
+					</span>
+
+				</a> --}}
+				{{!-- <a href="#" class="btn-download col-5 mx-3">
+					<span type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightLocation"
+						aria-controls="offcanvasRight">
+						Locations
+					</span>
+
+				</a> --}}
+
 			</div>
 
+
+			<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRightLocation"
+				aria-labelledby="offcanvasRightLabel">
+				<div class="offcanvas-header">
+					<h5 id="offcanvasRightLabel">Location </h5>
+					<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+						aria-label="Close"></button>
+				</div>
+				<div class="offcanvas-body">
+					<form id="addLocation" method="post">
+						<div class="mb-3">
+							<label for="BannerName" class="form-label"> Add Location</label>
+							<input type="text" class="form-control" id="location" name="location"
+								aria-describedby="emailHelp" required>
+						</div>
+
+						<button type="submit" class="btn btn-primary">Add</button>
+					</form>
+					<div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-12 mt-4 p-3">
+
+						<ul class="p-2">
+							<li>
+
+								<input type="text" id="locationSearch" class="col-12 border-0"
+									placeholder="Search locations">
+
+							</li>
+							{{#each locations}}
+							<li>
+								<span>
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+										style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+										<circle cx="12" cy="12" r="4"></circle>
+										<path
+											d="M13 4.069V2h-2v2.069A8.01 8.01 0 0 0 4.069 11H2v2h2.069A8.008 8.008 0 0 0 11 19.931V22h2v-2.069A8.007 8.007 0 0 0 19.931 13H22v-2h-2.069A8.008 8.008 0 0 0 13 4.069zM12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z">
+										</path>
+									</svg>
+								</span>
+								<a href="#" class="locationLink">{{this}}</a>
+								{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
 			<ul class="box-info">
 				<li>
-					<i class='bx bxs-calendar-check' ></i>
-					<span class="text">
-						<h3>1020</h3>
-						<p>New Order</p>
+					<i class='bx bx-rupee'></i> <span class="text">
+						<h3>{{confirmAmount}}</h3>
+						<p>Confirm Amount</p>
 					</span>
 				</li>
 				<li>
-					<i class='bx bxs-group' ></i>
-					<span class="text">
-						<h3>2834</h3>
-						<p>Visitors</p>
+					<i class='bx bx-rupee'></i> <span class="text">
+						<h3>{{pendingAmount}}</h3>
+						<p>Pending Amount</p>
 					</span>
 				</li>
 				<li>
-					<i class='bx bxs-dollar-circle' ></i>
+					<i class='bx bxs-group'></i>
+
 					<span class="text">
-						<h3>$2543</h3>
-						<p>Total Sales</p>
+						<h3>{{customers}}</h3>
+						<p>Users</p>
 					</span>
 				</li>
 			</ul>
@@ -156,99 +214,147 @@
 			<div class="table-data">
 				<div class="order">
 					<div class="head">
-						<h3>Recent Orders</h3>
-						<i class='bx bx-search' ></i>
-						<i class='bx bx-filter' ></i>
+						<h3></h3>
+						<i class='bx bx-search'></i>
+						<i class='bx bx-filter'></i>
 					</div>
-					<table>
-						<thead>
-							<tr>
-								<th>User</th>
-								<th>Date Order</th>
-								<th>Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status process">Process</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="img/people.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-						</tbody>
-					</table>
+					<div>
+						<canvas id="myChart"></canvas>
+
+					</div>
 				</div>
 				<div class="todo">
 					<div class="head">
-						<h3>To dos</h3>
-						<i class='bx bx-plus' ></i>
-						<i class='bx bx-filter' ></i>
+						<h3>Locations</h3>
+
+						<i class='bx bx-plus' type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightLocation"
+						aria-controls="offcanvasRightLocation"></i>
 					</div>
 					<ul class="todo-list">
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
+  {{#each locations}}
+  <li class="location-item">
+    <p>{{this}}</p>
+    <i class="bx bx-message-square-x delete-icon"></i>
+  </li>
+  {{/each}}
+</ul>
+					<ul class="todo-list row col-12" id="bannerList">
+
 					</ul>
+
+
+
 				</div>
 			</div>
 		</main>
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
-	
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"
+		integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-	<script src="/script/script.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"
+		integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+		integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </body>
+
 </html>
+<script>
+	const ctx = document.getElementById('myChart');
+
+	new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: [{{#each dailyRents }}'{{this}}',{{/each}}],
+		datasets: [
+		{
+			label: 'Confirmed',
+			data: [{{#each dailyRentalAmount}}{{totalRentalAmount }}, {{/each}}],
+		borderWidth: 1,
+		backgroundColor: "rgba(151,187,205,0.2)",
+		borderColor: "#000",
+		pointBackgroundColor: "#000",
+		pointBorderColor: "#fff",
+		pointHoverBackgroundColor: "#fff",
+		pointHoverBorderColor: "#000",
+		cubicInterpolationMode: 'monotone' // Set interpolation mode here
+            },
+		{
+			label: 'Pending',
+			data: [{{#each dailyRentalPending }}{{ totalRentalAmount }}, {{/each}}],
+		borderWidth: 1,
+		backgroundColor: "rgba(255,187,151,0.2)",
+		borderColor: "rgba(255,187,151,1)",
+		pointBackgroundColor: "#000",
+		pointBorderColor: "#fff",
+		pointHoverBackgroundColor: "#fff",
+		pointHoverBorderColor: "rgba(255,187,151,1)",
+		cubicInterpolationMode: 'monotone' // Set interpolation mode here
+            }
+        ]
+    },
+		options: {
+		scales: {
+			y: {
+				beginAtZero: true
+			}
+		}
+	}
+});
+
+	$(document).ready(function () {
+		$('#locationSearch').on('keyup', function () {
+			var searchTerm = $(this).val().toLowerCase();
+			$('.locationLink').each(function () {
+				var text = $(this).text().toLowerCase();
+				if (text.includes(searchTerm)) {
+					$(this).parent().show();
+				} else {
+					$(this).parent().hide();
+				}
+			});
+		});
+	});
+	document.getElementById('addLocation').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const location = document.getElementById('location').value;
+
+    try {
+        const response = await axios.post('/vendor/locations', { location });
+        console.log('Location added successfully:', response.data);
+		window.location.reload()
+        // Optionally, do something after successful addition
+    } catch (error) {
+        console.error('Error adding location:', error.response.data);
+        // Optionally, handle errors
+    }
+});
+document.addEventListener("click", async (event) => {
+  if (event.target.classList.contains("delete-icon")) {
+    const locationElement = event.target.parentElement;
+    const location = locationElement.querySelector("p").textContent;
+    
+    try {
+      const response = await axios.post('/vendor/removeLocation', { location: encodeURIComponent(location) });
+      
+      // Update the UI after successful removal
+      locationElement.remove();
+    } catch (error) {
+      console.error("Error removing location:", error);
+      // Handle error
+    }
+  }
+});
+
+</script>

@@ -50,14 +50,13 @@ function loginOtpHelper(otp, email) {
 }
 async function getDataForAdminDashboard() {
   try {
-    const customersPromise = User.find({ role: 'User' }).countDocuments();
+    const customersPromise = await User.find({ role: 'user' }).countDocuments();
     const dailyRentsPromise = adminService.dailyRents();
     const dailyRentalAmountPromise = adminService.dailyRentalAmount();
     const dailyRentalPendingPromise = adminService.dailyRentalAmountPending();
-    const confirmAmountPromise = adminService.confirmAmount()
-      .then((result) => result.totalRentalAmount);
-    const pendingAmountPromise = adminService.pendingAmount()
-      .then((result) => result.totalRentalAmount);
+    const confirmAmount = await adminService.confirmAmount();
+
+    const pendingAmount = await adminService.pendingAmount();
     const AdminPromise = admin.findOne({ role: 'Admin' });
 
     const [
@@ -65,16 +64,12 @@ async function getDataForAdminDashboard() {
       dailyRents,
       dailyRentalAmount,
       dailyRentalPending,
-      confirmAmount,
-      pendingAmount,
       Admin,
     ] = await Promise.all([
       customersPromise,
       dailyRentsPromise,
       dailyRentalAmountPromise,
       dailyRentalPendingPromise,
-      confirmAmountPromise,
-      pendingAmountPromise,
       AdminPromise,
     ]);
 
@@ -962,7 +957,31 @@ function deleteUserDataHelper(id) {
       });
   });
 }
+async function addLocationsHelper(newLocation) {
+  try {
+    const updatedAdmin = await admin.findOneAndUpdate(
+      { role: 'Admin' },
+      { $addToSet: { locations: newLocation } },
+      { new: true },
+    );
+    return updatedAdmin;
+  } catch (error) {
+    throw new Error(`Error adding location to admin: ${error.message}`);
+  }
+}
+async function removeLocationHelper(location) {
+  try {
+    const updatedOwner = await admin.findOneAndUpdate(
+      { role: 'Admin' },
+      { $pull: { locations: location } },
+      { new: true },
+    );
 
+    return updatedOwner;
+  } catch (error) {
+    throw new Error(`Error Removing location to owner: ${error.message}`);
+  }
+}
 module.exports = {
   authenticateAdmin,
   getDataForAdminDashboard,
@@ -997,4 +1016,6 @@ module.exports = {
   cleanupSoftDeletedData,
   deleteCancelUserHelper,
   deleteUserDataHelper,
+  addLocationsHelper,
+  removeLocationHelper,
 };

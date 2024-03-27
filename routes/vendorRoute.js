@@ -31,5 +31,7 @@ router.get('/service', middleware.requireAuth, vendorController.servicePage);
 router.post('/service', middleware.requireAuth, upload.single('serviceImage'), middleware.addImage, vendorController.addService);
 router.post('/editService', middleware.requireAuth, upload.single('serviceImage'), middleware.addImage, vendorController.editService);
 router.delete('/service/:id', middleware.requireAuth, vendorController.deleteService);
+router.post('/locations', middleware.requireAuth, vendorController.addLocations);
+router.post('/removeLocation', middleware.requireAuth, vendorController.removeLocation);
 
 module.exports = router;
