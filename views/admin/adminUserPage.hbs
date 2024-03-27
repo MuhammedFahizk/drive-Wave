@@ -97,8 +97,7 @@
 			{{!-- <a href="#" class="nav-link">Categories</a> --}}
 			<form action="/admin/searchUser" method="post">
 				<div class="form-input">
-					<input type="search" placeholder="Search..." name="search">
-					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
+					<input type="search" id="searchInput" placeholder="Search..." name="search">
 				</div>
 			</form>
 			<input type="checkbox" id="switch-mode" hidden>
@@ -177,17 +176,16 @@
 </div>
 					</div>
 					<table>
-						<thead style="" >
-							<tr style="color: #3C91E6;font-size:x-large;border-bottom"><th></th>
-								<th>User Name</th>
-								<th>Email</th>
-								<th>Phone</th>
-								<th>License Number</th>
+						  <thead>
+    <tr>
+      <th></th>
+      <th>User Name <span class="sort-indicator"></span></th>
+      <th>Email <span class="sort-indicator"></span></th>
+      <th>Phone <span class="sort-indicator"></span></th>
+      <th>License Number <span class="sort-indicator"></span></th>
+    </tr>
+  </thead>
 
-
-
-							</tr>
-						</thead>
 						<tbody class="order" style="">
 						
 
@@ -234,6 +232,13 @@
 
 						</tbody>
 					</table>
+
+
+<div class="pagination">
+  <button id="prevPage">Previous</button>
+  <span id="currentPage"></span>
+  <button id="nextPage">Next</button>
+</div>
 				</div>
 				
 			</div>
@@ -247,5 +252,64 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 	<script src="/script/script.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </body>
 </html>
+<script>
+  // Search Functionality
+  $('#searchInput').on('input', function() {
+    const searchText = $(this).val().toLowerCase();
+    $('tbody tr').each(function() {
+      const name = $(this).find('td:eq(1)').text().toLowerCase();
+      const email = $(this).find('td:eq(2)').text().toLowerCase();
+      const phone = $(this).find('td:eq(3)').text().toLowerCase();
+      const licenseNumber = $(this).find('td:eq(4)').text().toLowerCase();
+      if (name.includes(searchText) || email.includes(searchText) || phone.includes(searchText) || licenseNumber.includes(searchText)) {
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
+  });
+
+  // Sorting Functionality
+  $('th').on('click', function() {
+    const index = $(this).index();
+    const rows = $('tbody tr').get();
+    rows.sort((a, b) => {
+      const aValue = $(a).find('td:eq(' + index + ')').text().toLowerCase();
+      const bValue = $(b).find('td:eq(' + index + ')').text().toLowerCase();
+      return aValue.localeCompare(bValue);
+    });
+    $('tbody').empty().append(rows);
+  });
+
+  // Pagination Functionality
+  const rowsPerPage = 10;
+  let currentPage = 1;
+
+  function showPage(page) {
+    const startIndex = (page - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    $('tbody tr').hide().slice(startIndex, endIndex).show();
+  }
+
+  showPage(currentPage);
+
+  $('#prevPage').on('click', function() {
+    if (currentPage > 1) {
+      currentPage--;
+      showPage(currentPage);
+    }
+  });
+
+  $('#nextPage').on('click', function() {
+    const totalRows = $('tbody tr').length;
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+    if (currentPage < totalPages) {
+      currentPage++;
+      showPage(currentPage);
+    }
+  });
+</script>

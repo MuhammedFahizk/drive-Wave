@@ -1,6 +1,6 @@
 /* eslint-disable import/order */
 /* eslint-disable no-underscore-dangle */
-const { User } = require('../models/users');
+const { User } = require('../models/owners');
 const { ObjectId } = require('mongoose').Types;
 
 const customers = async (ownerId) => {

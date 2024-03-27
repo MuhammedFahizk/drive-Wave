@@ -560,7 +560,7 @@
             </a>
             <div class="collapse" id="collapseExample">
               <div class="card card-body p-0">
-                <input type="search" class="form-control m-0" id="searchByCarName" placeholder="Search . . ."
+                <input type="search" class="form-control m-0" id="searchInput" placeholder="Search . . ."
                   name="insurenceDate" aria-label="Username">
 
 
@@ -580,36 +580,37 @@
             </div>
 
           </div>
-          <table>
-            <thead style="">
-              <tr style="color: #3C91E6;font-size:x-large;border-bottom">
-                <th></th>
-                <th>Car Name</th>
-                <th>Car Model</th>
-                <th>Transmission</th>
-                <th>Year</th>
-
-              </tr>
-            </thead>
-            <tbody class="order" style="">
+         
 
 
-            <tbody>
-              {{#each data}}
-              <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal"
-                data-bs-target="#viewCars" data-carId="{{this._id}}" onclick="handleRowClick(this)">
-                <td>
-                  <img src="{{this.carImage}}">
-                </td>
-                <td>
-                  {{this.carName}}
-                </td>
-                <td>{{this.carModal}}</td>
-                <td>{{this.TransmitionType}}</td>
-                <td>{{this.year}}</td>
-              </tr>
-              {{/each}}
-            </tbody>
+         
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Car Name</th>
+      <th>Car Modal</th>
+      <th>Transmission Type</th>
+      <th>Year</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each data}}
+    <tr style="border-bottom-width: 1px;border-color:#3C91E6" data-bs-toggle="modal"
+      data-bs-target="#viewCars" data-carId="{{this._id}}" onclick="handleRowClick(this)">
+      <td>
+        <img src="{{this.carImage}}">
+      </td>
+      <td>
+        {{this.carName}}
+      </td>
+      <td>{{this.carModal}}</td>
+      <td>{{this.TransmitionType}}</td>
+      <td>{{this.year}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
 
             <div class="modal fade" id="viewCars" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered  " style="max-width: 800px; margin-left:370px;">
@@ -647,7 +648,26 @@
   </section>
   <!-- CONTENT -->
   <script src="/script/script.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script>
+  $(document).ready(function () {
+    $('#searchInput').on('keyup', function () {
+      var searchText = $(this).val().toLowerCase();
+      $('tbody tr').each(function () {
+        var carName = $(this).find('td:nth-child(2)').text().toLowerCase();
+        var carModal = $(this).find('td:nth-child(3)').text().toLowerCase();
+        var transType = $(this).find('td:nth-child(4)').text().toLowerCase();
+        var year = $(this).find('td:nth-child(5)').text().toLowerCase();
+
+        if (carName.includes(searchText) || carModal.includes(searchText) || transType.includes(searchText) || year.includes(searchText)) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+    });
+  });
     document.getElementById('searchByCarName').addEventListener('keypress', (event) => {
       if (event.key === 'Enter') {
         const search = document.getElementById('searchByCarName').value;

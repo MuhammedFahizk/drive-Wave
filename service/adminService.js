@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const { User } = require('../models/users');
 
 const customers = async () => {

@@ -14,7 +14,7 @@ module.exports = {
         '.eslintrc.{js,cjs}',
       ],
       rules: {
-        'linebreak-style': ['error', 'unix'],
+        'linebreak-style': ['error', 'unix'], // Override rule for this file
       },
       parserOptions: {
         sourceType: 'script',
@@ -28,14 +28,5 @@ module.exports = {
     'linebreak-style': ['error', 'windows'],
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'no-underscore-dangle': 'off',
-
-    'import/order': ['error', {
-      pathGroups: [
-        {
-          pattern: '~/**',
-          group: 'external',
-        },
-      ],
-    }],
   },
 };

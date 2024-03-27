@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const { ObjectId } = require('mongoose').Types;
 const { User } = require('../models/users');
-const { admin } = require('../models/users');
+const { admin } = require('../models/owners');
 const { Car } = require('../models/car');
 const cloudinary = require('../service/cloudnery');
 const { sendAdminOtp, generateOtp } = require('../service/nodeMailer');

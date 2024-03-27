@@ -175,15 +175,14 @@
 		<input type="text" name="email" class="email" id="Email" placeholder="E-mail" required>
 		<input type="password" name="password" class="Password" id="Password" placeholder="Password" required>
 		<span>
-			{{!-- <input type="checkbox" id="staySingedIn" checked> --}}
-			{{!-- <label for="staySingedIn">stay Signed In</label> --}}
+
 		</span>
 		{{#if error}}
-		{{error }}
+		<p class="m-0 ml-4" style="color:red">{{error }}</p>
 
 		{{/if}} <button type="submit" title="Sing In">Sing In</button>
 
-		<a id="forgotPassword">Forgot Your Password?</a>
+		<a class="mt-0" id="forgotPassword">Forgot Password?</a>
 		<a id="LoginWithOtp" class="mt-0">Login With OTP?</a>
 
 

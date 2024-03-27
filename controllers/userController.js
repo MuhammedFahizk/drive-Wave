@@ -30,8 +30,7 @@ async function userLogin(req, res) {
     const redirectUrl = await helper.userLoginHelper(req);
     res.redirect(redirectUrl);
   } catch (error) {
-    console.error(error);
-    res.status(401).json(error);
+    res.render('user/login', { error: 'Mismatch Password Or Email' });
   }
 }
 
@@ -172,8 +171,8 @@ async function filterCars(req, res) {
     const { transmission, fuel, carCategory } = req.body;
     const { location, pickDate, dropDate } = req.session;
 
-    const allCollections = await
-    helper.filterCars(transmission, fuel, carCategory, location, pickDate, dropDate);
+    const allCollections = await helper
+      .filterCars(transmission, fuel, carCategory, location, pickDate, dropDate);
 
     res.status(200).json(allCollections);
   } catch (error) {

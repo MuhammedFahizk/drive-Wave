@@ -1,9 +1,7 @@
-/* eslint-disable global-require */
-/* eslint-disable no-unused-vars */
-/* eslint-disable import/no-extraneous-dependencies */
-const express = require('express');
-const hbs = require('hbs');
 const path = require('path');
+const express = require('express');
+const Handlebars = require('handlebars');
+const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const handlebars = require('express-handlebars');
@@ -12,7 +10,6 @@ const dotEnv = require('dotenv');
 const mongoose = require('mongoose');
 
 const adminRoute = require('./routes/adminRoute');
-const admin = require('./models/users');
 const userRoute = require('./routes/userRout');
 const vendorRoute = require('./routes/vendorRoute');
 
@@ -37,13 +34,13 @@ hbs.registerHelper('formatDate', (date) => { new Date(date).toLocaleDateString()
 app.engine(
   'hbs',
   handlebars.engine({
-    handlebars: allowInsecurePrototypeAccess(require('handlebars')),
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
     extname: 'hbs',
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, '/views/layouts/'),
     partialsDir: path.join(__dirname, '/views/partials/'),
     layouts: {
-      adminMain: 'adminMain', // Layout for admin pages
+      adminMain: 'adminMain',
     },
   }),
 );
@@ -61,9 +58,15 @@ hbs.registerHelper('formatDate', (date) => { new Date(date).toLocaleDateString()
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static('uploads'));
 
-app.use('/admin', adminRoute);
+const excludeLayoutAndPartials = (req, res, next) => {
+  res.locals.layout = false; // Disable layout
+  res.locals.partials = false; // Disable partials
+  next();
+};
+
+app.use('/admin', excludeLayoutAndPartials, adminRoute);
+app.use('/vendor', excludeLayoutAndPartials, vendorRoute);
 app.use('/', userRoute);
-app.use('/vendor', vendorRoute);
 
 app.use((req, res) => {
   res.status(404).render('404');

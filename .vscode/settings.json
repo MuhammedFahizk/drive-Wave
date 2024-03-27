@@ -26,5 +26,8 @@
         "uuidv",
         "Whislist",
         "ytsdxllcjhqkglba"
-    ]
+    ],
+    
+        "typescript.suggestionActions.enabled": false,
+        "javascript.suggestionActions.enabled": false
 }

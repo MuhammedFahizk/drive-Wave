@@ -1,5 +1,5 @@
 /* eslint-disable import/order */
-const { admin } = require('../models/users');
+const { admin } = require('../models/owners');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const { User } = require('../models/users');
@@ -10,7 +10,7 @@ const cloudinary = require('../service/cloudnery');
 
 const emailOtp = {};
 
-function authenticateAdmin(data) {
+async function authenticateAdmin(data) {
   return new Promise((resolve, reject) => {
     admin.findOne({ role: 'Admin', email: data.email })
       .then((Admin) => {

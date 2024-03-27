@@ -4,9 +4,8 @@ const emailValidator = require('email-validator');
 const {
   differenceInDays, parse,
 } = require('date-fns');
-const { admin } = require('../models/users');
 const { User } = require('../models/users');
-// const adminService = require('../service/adminService');
+const { admin } = require('../models/owners');
 const {
   sendAdminOtp, generateOtp, sendMailToAdmin,
 } = require('../service/nodeMailer');
@@ -41,7 +40,7 @@ async function homePageHelper(req) {
       name, location, car, banner,
     };
   } catch (error) {
-    throw new Error(`Error rendering home page: ${error.message}`);
+    throw new Error('Error rendering home page');
   }
 }
 
@@ -89,7 +88,7 @@ async function userLoginHelper(req) {
     }
     return '/';
   } catch (error) {
-    throw new Error('Error logging in: ', error.message);
+    throw new Error(error);
   }
 }
 

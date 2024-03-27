@@ -11,7 +11,14 @@
 
 	<!-- My CSS -->
 	<link rel="stylesheet" href="/css/dashboard.css">
+    <style>
+		.todo-list {
+    max-height: 200px; /* Set the maximum height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    margin-bottom: 10px; /* Add some margin at the bottom */
+}
 
+	</style>
 	<title>AdminHub</title>
 </head>
 
@@ -224,27 +231,21 @@
 					</div>
 				</div>
 				<div class="todo">
-					<div class="head">
-						<h3>Locations</h3>
+    <div class="head">
+        <h3>Locations</h3>
+        <i class='bx bx-plus' type="button" data-bs-toggle="tooltip" title="Add  Location" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightLocation" aria-controls="offcanvasRightLocation"></i>
+    </div>
+    <ul class="todo-list">
+        {{#each locations}}
+        <li class="location-item">
+            <p>{{this}}</p>
+            <i class="bx bx-message-square-x delete-icon" data-bs-toggle="tooltip" title='Delete {{this}}'></i>
+        </li>
+        {{/each}}
+    </ul>
+    <ul class="todo-list row col-12" id="bannerList"></ul>
+</div>
 
-						<i class='bx bx-plus' type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRightLocation"
-						aria-controls="offcanvasRightLocation"></i>
-					</div>
-					<ul class="todo-list">
-  {{#each locations}}
-  <li class="location-item">
-    <p>{{this}}</p>
-    <i class="bx bx-message-square-x delete-icon"></i>
-  </li>
-  {{/each}}
-</ul>
-					<ul class="todo-list row col-12" id="bannerList">
-
-					</ul>
-
-
-
-				</div>
 			</div>
 		</main>
 		<!-- MAIN -->
@@ -270,6 +271,15 @@
 
 </html>
 <script>
+    // Initialize Bootstrap tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+</script>
+
+<script>
+	
 	const ctx = document.getElementById('myChart');
 
 	new Chart(ctx, {
