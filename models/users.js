@@ -61,19 +61,6 @@ const userSchema = new mongoose.Schema({
       type: Date,
       required: true,
     },
-    pickUp: {
-      type: Boolean,
-      default: false,
-    },
-    carStatus: {
-      type: String,
-      enum: ['PickedDate', 'ReturnDate', 'Booked', 'pickedCar', 'returnCar'],
-      default: 'Booked',
-    },
-    return: {
-      type: Boolean,
-      default: false,
-    },
     payment_id: {
       type: String,
     },

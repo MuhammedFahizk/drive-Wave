@@ -634,16 +634,21 @@ async function bookedCarsHelper(req) {
     throw new Error(error.message);
   }
 }
+
 async function removeBookingHelper(userId, bookingId) {
   try {
     if (!userId || !bookingId) {
       throw new Error('User ID or Booking ID not provided');
     }
+
     const user = await User.findByIdAndUpdate(
       userId,
-      { $pull: { bookedCar: { _id: bookingId } } },
+      { $pull: { bookedCar: { _id: new ObjectId(bookingId) } } },
       { new: true },
     );
+
+    await user.save();
+
     return user;
   } catch (error) {
     throw new Error('Error removing booking');

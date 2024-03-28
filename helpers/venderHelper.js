@@ -293,32 +293,54 @@ async function venderRecoveryMessageHelper(data, ownerId) {
 }
 async function getBookingPageData(ownerId) {
   try {
-    const userWithBookings = await User.find({}).populate('bookedCar.car');
-    const allBookings = userWithBookings.flatMap((user) => user.bookedCar.map((booking) => {
-      if (booking.car.ownerId || booking.car.ownerId === ownerId) {
-        const { pickupDate, returnDate } = booking;
-        const totalDays = Math.ceil(
-          (new Date(returnDate) - new Date(pickupDate)) / (1000 * 60 * 60 * 24),
-        );
-        return {
-          user,
-          userId: user._id,
-          userName: user.name,
+    const pipeline = [
+      {
+        $unwind: '$bookedCar', // Flatten the bookedCar array
+      },
+      {
+        $lookup: {
+          from: 'cars', // Name of the Car collection
+          localField: 'bookedCar.car',
+          foreignField: '_id',
+          as: 'carDetails',
+        },
+      },
+      {
+        $match: {
+          $or: [
+            { 'carDetails.ownerId': ownerId },
+            { 'bookedCar.car': null }, // Add condition to handle null car references
+          ],
+        },
+      },
+      {
+        $project: {
+          userId: '$_id',
+          userName: '$name',
           bookingDetails: {
-            bookingDate: booking.bookingDate ? new Date(booking.bookingDate).toLocaleDateString() : 'N/A',
-            pickupDate: pickupDate ? new Date(pickupDate).toLocaleDateString() : 'N/A',
-            returnDate: returnDate ? new Date(returnDate).toLocaleDateString() : 'N/A',
-            totalDays,
-            totalPrice: booking.totalPrice || 0,
-            status: booking.status || 'N/A',
-            _id: booking._id,
-            carStatus: booking.carStatus,
+            bookingDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.bookingDate', timezone: 'UTC' } },
+            pickupDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.pickupDate', timezone: 'UTC' } },
+            returnDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.returnDate', timezone: 'UTC' } },
+            totalDays: {
+              $ceil: {
+                $divide: [
+                  { $subtract: ['$bookedCar.returnDate', '$bookedCar.pickupDate'] },
+                  1000 * 60 * 60 * 24,
+                ],
+              },
+            },
+            totalPrice: '$bookedCar.totalPrice',
+            status: '$bookedCar.status',
+            _id: '$bookedCar._id',
+            carStatus: '$bookedCar.carStatus',
           },
-          car: booking.car,
-        };
-      }
-      return null;
-    })).filter(Boolean);
+          car: '$bookedCar.car',
+        },
+      },
+    ];
+
+    const allBookings = await User.aggregate(pipeline);
+
     const bookingsCount = allBookings.length;
     const confirmedBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'Confirmed').length;
     const pendingBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'Pending').length;
