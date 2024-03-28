@@ -48,12 +48,6 @@ const userSchema = new mongoose.Schema({
       require: false,
     },
   },
-  whishList: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Car',
-    },
-  ],
   bookedCar: [{
     car: {
       type: mongoose.Schema.Types.ObjectId,
@@ -100,8 +94,8 @@ const userSchema = new mongoose.Schema({
     },
     status: {
       type: String,
-      enum: ['pending', 'Confirmed', 'cancelled'],
-      default: 'pending',
+      enum: ['Pending', 'Confirmed', 'In Progress', 'Completed', 'Overdue', 'Not Picked'],
+      default: 'Pending',
     },
     carRent: {
       type: Number,

@@ -321,7 +321,7 @@ async function getBookingPageData(ownerId) {
     })).filter(Boolean);
     const bookingsCount = allBookings.length;
     const confirmedBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'Confirmed').length;
-    const pendingBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'pending').length;
+    const pendingBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'Pending').length;
 
     return {
       allBookings,
@@ -489,7 +489,7 @@ async function getTotalPendingAmount(ownerId) {
       .reduce((total, current) => total + current.totalRentalAmount, 0);
     return { pendingAmount, dailyRentalPending };
   } catch (error) {
-    throw new Error(`Error calculating total pending amount: ${error.message}`);
+    throw new Error(`Error calculating total Pending amount: ${error.message}`);
   }
 }
 

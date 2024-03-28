@@ -380,7 +380,8 @@ async function userBookedCar(req, res) {
 async function bookedCars(req, res) {
   try {
     const { data, name, count } = await helper.bookedCarsHelper(req);
-    return res.render('user/carsBooked', { data, name, count });
+    console.log(data);
+    return res.render('user/carsBooked', { data: data.user, history: data.history, name, count });
   } catch (error) {
     console.error('Error fetching bookedCar:', error);
     return res.status(500).json({ error: 'Error fetching wishlist', message: error.message });

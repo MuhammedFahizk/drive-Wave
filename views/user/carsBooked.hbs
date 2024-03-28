@@ -81,28 +81,28 @@
         <div class="col-12 m-0 p-0 " style="overflow-y: auto; height: 450px; overflow-x: hidden;">
           {{#each data}}
 
-          <div class="rowClick  m-2  p-0 row col-12 car-wrap rounded ftco-animate " data-car-id="{{this._id}}"
+          <div class="rowClick  m-2  p-0 row col-12 car-wrap rounded ftco-animate " data-car-id="{{this.bookedCar._id}}"
             type="button" style="background-color: #fff;">
             <div class="col-2 p-0 m-0">
-              <img src="{{this.car.carImage}}" alt="Car Image"
+              <img src="{{this.bookedCar.carDetails.carImage}}" alt="Car Image"
                 class="img-thumbnail img rounded d-flex align-items-end p-0 car-image "
                 style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;">
             </div>
             <div class="col-4">
-              <h6 class="my-3">{{this.car.carName}}</h6>
-              <h6 class="my-3">{{this.car.carModal}}</h6>
+              <h6 class="my-3">{{this.bookedCar.carDetails.carName}}</h6>
+              <h6 class="my-3">{{this.bookedCar.carDetails.carModal}}</h6>
 
             </div>
             <div class="col-2">
-              <h6 class="mt-5">{{this.totalPrice}} Rs</h6>
+              <h6 class="mt-5">{{this.bookedCar.totalPrice}} Rs</h6>
 
             </div>
             <div class="col-2 mt-4">
-              <h6 class="mt-4">{{this.status}}</h6>
+              <h6 class="mt-4">{{this.bookedCar.status}}</h6>
             </div>
 
             <div class="col-2">
-              <button class="btn  remove-booking pt-4" data-car-id="{{this._id}} ">
+              <button class="btn  remove-booking pt-4" data-car-id="{{this.bookedCar.carDetails._id}} ">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                   style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                   <path
@@ -135,7 +135,65 @@
       </div>
       
     </div>
+         {{#if history}}
 
+    <div class="car-wrap rounded ftco-animate p-0   row m-md-4">
+      
+
+      <div style="display: none;" id="rightSideHistory" style="background-color:#2edbcd ;" class="col-md-4 ">
+        <div class="col-12 mt-4">
+          <div class="car-wrap rounded ftco-animate " id="summaryContainerHistory">
+
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-8 row m-0 px-md-4">
+        <h3 class=" col-md-8 mx-4 mt-3 fw-4 fs-4"> Booking History</h3>
+        <p id="count" class=" col-md-2 my-3 ml-md-5">{{countHistory}} Items</p>
+        <div class="col-12 m-0 p-0 " style="overflow-y: auto; height: 450px; overflow-x: hidden;">
+          {{#each history}}
+
+          <div class="rowClickHistory  m-2  p-0 row col-12 car-wrap rounded ftco-animate " data-car-id="{{this.bookedCar._id}}"
+            type="button" style="background-color: #fff;">
+            <div class="col-2 p-0 m-0">
+              <img src="{{this.bookedCar.carDetails.carImage}}" alt="Car Image"
+                class="img-thumbnail img rounded d-flex align-items-end p-0 car-image "
+                style="height: 95px; object-fit: cover; width: 70%;border-radius: 20px;">
+            </div>
+            <div class="col-4">
+              <h6 class="my-3">{{this.bookedCar.carDetails.carName}}</h6>
+              <h6 class="my-3">{{this.bookedCar.carDetails.carModal}}</h6>
+
+            </div>
+            <div class="col-2">
+              <h6 class="mt-5">{{this.bookedCar.totalPrice}} Rs</h6>
+
+            </div>
+            <div class="col-2 mt-4">
+              <h6 class="mt-4">{{this.bookedCar.status}}</h6>
+            </div>
+
+         
+
+          </div>
+
+
+          {{/each}}
+         
+        </div>
+          {{else}}
+      <div class="col-12 d-flex justify-content-center  ">
+        <div class="justify-content-center">
+        <h2 class="text-center fs-4">Your  Is Empty</h2>
+        <p class="text-center p-0 m-0">Looks like you have not added anything to your <span><a href="/cars">Booking</a></span>. Go</p>
+        <p class="text-center p-0 m-0">ahead and explore top category's</p>
+        </div>
+      </div>
+    {{/if}}
+      </div>
+      
+    </div>
   </div>
  
 
@@ -156,32 +214,32 @@
 </section>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Event listener for "Remove Booking" buttons
-    document.querySelectorAll('.remove-booking').forEach(button => {
-      button.addEventListener('click', function (event) {
-        event.preventDefault(); // Prevent the default action of the button
+document.querySelectorAll('.remove-booking').forEach(button => {
+  button.addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent the default action of the button
 
-        const carId = button.dataset.carId; // Get the car ID from the data attribute
+    const carId = button.dataset.carId; // Get the car ID from the data attribute
 
-        // Send a request to remove the booking
-        axios.get(`/bookings/remove?id=${carId}`)
-          .then(response => {
-            console.log('Booking removed:', response.data);
-            // Remove the booking element from the DOM
-            const count = document.getElementById('count')
-            let value = parseInt(count.textContent)
-            value--;
-            count.innerHTML = `${value} Items`
-            button.closest('.rowClick').remove();
-          })
-          .catch(error => {
-            console.error('Error removing booking:', error);
-          });
-      });
-    });
+    // Show an alert to confirm removal
+    if (confirm("Are you sure you want to Cancel  booking?")) {
+      // If user confirms, send a request to remove the booking
+      axios.get(`/bookings/remove?id=${carId}`)
+        .then(response => {
+          console.log('Booking removed:', response.data);
+          // Remove the booking element from the DOM
+          const count = document.getElementById('count')
+          let value = parseInt(count.textContent)
+          value--;
+          count.innerHTML = `${value} Items`
+          button.closest('.rowClick').remove();
+        })
+        .catch(error => {
+          console.error('Error removing booking:', error);
+        });
+    }
   });
-  const rowClickElements = document.querySelectorAll('.rowClick');
+});
+ const rowClickElements = document.querySelectorAll('.rowClick');
 
   rowClickElements.forEach((rowClick) => {
     rowClick.addEventListener('click', (e) => {
@@ -235,7 +293,7 @@ orderBtn.addEventListener('click', (e) => {
           <p class="price ml-md-auto ml-2 m-0">Card<span></span></p>
         </div>
         <div class="d-flex mb-1">
-          <span class="cat">Payment Status </span>
+          <span class="cat"> Status </span>
           <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.status}<span></span></p>
         </div>
         <div class="d-flex m-0">
@@ -303,6 +361,110 @@ orderBtn.addEventListener('click', (e) => {
     });
 });
 
+  const rowClickElementsHistory = document.querySelectorAll('.rowClickHistory');
+
+  rowClickElementsHistory.forEach((rowClick) => {
+    rowClick.addEventListener('click', (e) => {
+        e.preventDefault();
+        const rightSide = document.getElementById('rightSideHistory');
+        rightSide.style.display = 'block';
+        const carId = rowClick.getAttribute('data-car-id');
+        console.log(carId)
+        axios.get(`/BookedCar?bookingId=${carId}`)
+            .then(res => {
+                console.log(res);
+                const summaryContainer = document.getElementById('summaryContainerHistory');
+
+                if (summaryContainer) {
+                        console.log(res.data.status);
+
+                        summaryContainer.innerHTML = `
+                            <div class="image-container position-relative">
+                                <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${res.data.thisBooking.car.carImage}">
+                                <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0"></div>
+                            </div>
+                            <div class="text">
+                                <h2 class="mb-0"><a href="carDetails?id=${res.data.thisBooking.car._id}">${res.data.thisBooking.car.carName}</a></h2>
+                                <div class="d-flex mb-1">
+                                    <span class="cat">${res.data.thisBooking.car.carModal}/${res.data.thisBooking.car.brandName}</span>
+                                </div>
+                                <p class="price m-0 p-0"><span>${res.data.thisBooking.totalPrice}/Total Amount</span></p>
+                                <p class="d-flex mb-0 d-block">
+                                <button type="text" class="btn btn-primary py-2 ml-1" id="orderBtn"> Details</button>
+                                    <a href="/carDetails?id=${res.data.thisBooking.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
+                                </p>
+                            </div>`;
+                            const orderBtn = document.getElementById('orderBtn');
+orderBtn.addEventListener('click', (e) => {
+  // Trigger a click event on the button that launches the modal
+  console.log(res.data);
+
+  const modalLauncherHistory = document.querySelector('[data-target="#orderDetails"]');
+  const modalBody = document.querySelector('#orderDetails .modal-body');
+  
+  if (!res || !res.data.service) {
+    console.error("Error: res or res.service is undefined or null.");
+    return;
+  }
+
+  modalBody.innerHTML = `
+    <div class="justify-content-center row py-3">
+      <div style="align-items: center;" class="col-9">
+        <div class="d-flex mb-1">
+          <span class="cat">Payment Type </span>
+          <p class="price ml-md-auto ml-2 m-0">Card<span></span></p>
+        </div>
+        <div class="d-flex mb-1">
+          <span class="cat"> Status </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.status}<span></span></p>
+        </div>
+        <div class="d-flex m-0">
+          <span class="cat">Days </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.totalDays} <span></span></p>
+        </div>
+        <div class="d-flex mb-1 mt-1 m-0 ">
+          <span class="cat text-dark">Amount Paid </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.totalPrice} <span></span></p>
+        </div>
+        <div class="d-flex mb-0 m-0">
+          <span class="cat">Transaction Id </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.payment_id} <span></span></p>
+        </div>
+        <div class="d-flex mb-0 m-0">
+          <span class="cat">Pick Up Date </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.pickupDate} <span></span></p>
+        </div>
+        <div class="d-flex mb-0 m-0">
+          <span class="cat">Return Date </span>
+          <p class="price ml-md-auto ml-2 m-0">${res.data.thisBooking.returnDate} <span></span></p>
+        </div>
+        <div class="d-flex mb-0 m-0">
+          <span class="cat text-dark">Services </span>
+        </div>`;
+  
+  // Iterate over each service and dynamically add them to the modal body
+  res.data.service.forEach(service => {
+    modalBody.innerHTML += `
+      <div class="d-flex mb-0 m-0 mx-5">
+        <span class="cat text-dark">${service.ServiceName} </span>
+        <p class="price ml-md-auto ml-2 m-0 text-primary">${service.charge} <span></span></p>
+      </div>`;
+  });
+
+  if (modalLauncherHistory) {
+    modalLauncherHistory.click();
+  }
+});
+          
+                } else {
+                    console.error('Summary container not found in the DOM');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+});
 
   document.querySelectorAll('.payment-page').forEach(button => {
     button.addEventListener('click', () => {

@@ -470,7 +470,7 @@ function countConfirmedBookings(bookings) {
 }
 
 function countPendingBookings(bookings) {
-  return bookings.filter((booking) => booking.bookingDetails.status === 'pending').length;
+  return bookings.filter((booking) => booking.bookingDetails.status === 'Pending').length;
 }
 
 async function BookingPageHelper() {
@@ -529,12 +529,12 @@ async function updateUserBooking(user, bookingId) {
   try {
     const bookingToUpdate = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
     if (bookingToUpdate) {
-      const status = bookingToUpdate.carStatus;
-      if (status === 'PickedDate') {
-        bookingToUpdate.carStatus = 'pickedCar';
+      const { status } = bookingToUpdate;
+      if (status === 'Not Picked') {
+        bookingToUpdate.status = 'In Progress';
       }
-      if (status === 'ReturnDate') {
-        bookingToUpdate.carStatus = 'returnCar';
+      if (status === 'Overdue') {
+        bookingToUpdate.status = 'Completed';
       }
       await user.save();
     }
@@ -855,18 +855,18 @@ async function checkPickUp() {
         const targetTimeDate = new Date(booking.pickupDate);
         const returnTargetTimeDate = new Date(booking.returnDate);
 
-        if (booking.carStatus === 'Booked' && targetTimeDate <= currentTime) {
+        if (booking.status === 'Confirmed' && targetTimeDate <= currentTime) {
           // eslint-disable-next-line no-param-reassign
-          booking.carStatus = 'PickedDate';
+          booking.status = 'Not Picked';
           try {
             await user.save();
           } catch (error) {
             console.error('Error updating booking:', error);
           }
         }
-        if (booking.carStatus === 'PickedDate' && returnTargetTimeDate <= currentTime) {
+        if (booking.status === 'In Progress' && returnTargetTimeDate <= currentTime) {
           // eslint-disable-next-line no-param-reassign
-          booking.carStatus = 'ReturnDate';
+          booking.status = 'Overdue';
           try {
             await user.save();
           } catch (error) {

@@ -62,7 +62,7 @@ const pendingAmount = async () => {
     { $unwind: '$bookedCar' },
     {
       $match: {
-        'bookedCar.status': 'pending',
+        'bookedCar.status': 'Pending',
       },
     },
     {
@@ -149,7 +149,7 @@ const dailyRentalAmountPending = async () => {
     {
       $match: {
         'bookedCar.bookingDate': { $gte: sevenDaysAgo, $lte: startOfToday },
-        'bookedCar.status': 'pending',
+        'bookedCar.status': 'Pending',
       },
     },
     {

@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const emailValidator = require('email-validator');
+const { ObjectId } = require('mongoose').Types;
 const {
   differenceInDays, parse,
 } = require('date-fns');
@@ -491,7 +492,7 @@ async function userBookedCarHelper(formDatas, service, sessionData) {
     carRent: amount,
     totalPrice: amount + serviceAmount,
     totalDays: days,
-    status: 'pending',
+    status: 'Pending',
     services: foundServices,
   };
 
@@ -516,8 +517,103 @@ async function userBookedCarHelper(formDatas, service, sessionData) {
 
 async function fetchBookedCars(_id) {
   try {
-    const user = await User.findById(_id).populate('bookedCar.car');
-    return user ? user.bookedCar : null;
+    const pipeline = [
+      {
+        $match: {
+          _id: new ObjectId(_id), // Convert userId to ObjectId type
+        },
+      },
+      {
+        $unwind: '$bookedCar', // Flatten the bookedCar array
+      },
+      {
+        $match: {
+          $or: [
+            { 'bookedCar.status': 'Pending' },
+            { 'bookedCar.status': 'Confirmed' },
+            { 'bookedCar.status': 'Not Picked' },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'cars', // Name of the Car collection
+          localField: 'bookedCar.car',
+          foreignField: '_id',
+          as: 'bookedCar.carDetails',
+        },
+      },
+      {
+        $unwind: '$bookedCar.carDetails', // Deconstruct the carDetails array
+      },
+      {
+        $project: {
+          _id: 0,
+          'bookedCar._id': 1,
+          'bookedCar.car': 1,
+          'bookedCar.bookingDate': 1,
+          'bookedCar.pickupDate': 1,
+          'bookedCar.returnDate': 1,
+          'bookedCar.totalPrice': 1,
+          'bookedCar.totalDays': 1,
+          'bookedCar.status': 1,
+          'bookedCar.carDetails': '$bookedCar.carDetails',
+          // Include other fields you want to project
+        },
+      },
+    ];
+
+    const historyPipeline = [
+      {
+        $match: {
+          _id: new ObjectId(_id), // Convert userId to ObjectId type
+        },
+      },
+      {
+        $unwind: '$bookedCar', // Flatten the bookedCar array
+      },
+      {
+        $match: {
+          $or: [
+            { 'bookedCar.status': 'Completed' },
+            { 'bookedCar.status': 'Overdue' },
+            { 'bookedCar.status': 'In Progress' },
+
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'cars', // Name of the Car collection
+          localField: 'bookedCar.car',
+          foreignField: '_id',
+          as: 'bookedCar.carDetails',
+        },
+      },
+      {
+        $unwind: '$bookedCar.carDetails', // Deconstruct the carDetails array
+      },
+      {
+        $project: {
+          _id: 0,
+          'bookedCar._id': 1,
+          'bookedCar.car': 1,
+          'bookedCar.bookingDate': 1,
+          'bookedCar.pickupDate': 1,
+          'bookedCar.returnDate': 1,
+          'bookedCar.totalPrice': 1,
+          'bookedCar.totalDays': 1,
+          'bookedCar.status': 1,
+          'bookedCar.carDetails': '$bookedCar.carDetails',
+          // Include other fields you want to project
+        },
+      },
+    ];
+
+    // Execute the aggregation
+    const user = await User.aggregate(pipeline);
+    const history = await User.aggregate(historyPipeline);
+    return { user, history } || null;
   } catch (error) {
     throw new Error('Error fetching booked cars');
   }

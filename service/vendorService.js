@@ -157,7 +157,7 @@ const dailyRentalAmountPending = async (ownerId) => {
     {
       $match: {
         'bookedCar.bookingDate': { $gte: sevenDaysAgo, $lte: startOfToday },
-        'bookedCar.status': 'pending',
+        'bookedCar.status': 'Pending',
         'carDetails.ownerId': new ObjectId(ownerId),
       },
     },
@@ -302,7 +302,7 @@ const pendingAmount = async (ownerId) => {
     },
     {
       $match: {
-        'bookedCar.status': 'pending',
+        'bookedCar.status': 'Pending',
       },
     },
     {
