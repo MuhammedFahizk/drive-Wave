@@ -192,7 +192,7 @@
 <td>
 								<input type="hidden" class="booking-id" value="{{this.bookingDetails._id}}">
     <a class="car-status btn btn-outline-primary">
-        {{bookingDetails.carStatus}} 
+        {{bookingDetails.status}} 
     </a>
 								</td>
 								<td>{{car.carName}}</td>
@@ -218,8 +218,7 @@
 
 												<p><strong>Total Days:</strong> {{this.bookingDetails.totalDays}}</p>
 												<p><strong>Total Price:</strong> {{this.bookingDetails.totalPrice}}</p>
-												<p><strong>Payment Status:</strong> {{this.bookingDetails.status}}</p>
-												<p><strong>Car Status:</strong> {{this.bookingDetails.carStatus}}</p>
+												<p><strong> Status:</strong> {{this.bookingDetails.status}}</p>
 
 												<p><strong>Car:</strong> {{this.car.carName}}</p>
 												<!-- Add more details as needed -->

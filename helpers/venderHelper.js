@@ -67,8 +67,8 @@ async function getDataForAdminDashboard(ownerId) {
   try {
     const customersPromise = (await getUserData(ownerId)).length;
     const dailyRentsPromise = vendorService.dailyRents();
-    const dailyRentalAmountPromise = vendorService.dailyRentalAmount();
-    const dailyRentalPendingPromise = vendorService.dailyRentalAmountPending();
+    const dailyRentalAmountPromise = vendorService.dailyRentalAmounts(ownerId);
+    const dailyRentalPendingPromise = vendorService.dailyRentalAmountPending(ownerId);
     const confirmAmount = await vendorService.confirmAmount(ownerId);
     const pendingAmount = await vendorService.pendingAmount(ownerId);
     const VenderPromise = admin.findById(ownerId);
@@ -340,14 +340,14 @@ async function updateCarStatus(bookingId) {
   await Promise.all(users.map(async (user) => {
     await Promise.all(user.bookedCar.map(async (booking) => {
       if (booking._id.toString() === bookingId) {
-        const status = booking.carStatus;
+        const { status } = booking;
 
-        if (status === 'PickedDate') {
+        if (status === 'Not Picked') {
           // eslint-disable-next-line no-param-reassign
-          booking.carStatus = 'pickedCar';
-        } else if (status === 'ReturnDate') {
+          booking.status = 'In Progress';
+        } else if (status === 'Overdue') {
           // eslint-disable-next-line no-param-reassign
-          booking.carStatus = 'returnCar';
+          booking.status = 'Completed';
         }
 
         await user.save();

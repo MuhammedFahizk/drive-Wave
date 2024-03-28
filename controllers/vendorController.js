@@ -28,6 +28,8 @@ const showDashboard = (req, res) => {
   const { ownerId } = req.session;
   helper.getDataForAdminDashboard(ownerId)
     .then((data) => {
+  console.log(data);
+
       res.status(200).render('vendor/dashboard', data);
     })
     .catch((error) => {

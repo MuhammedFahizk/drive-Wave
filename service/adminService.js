@@ -42,7 +42,7 @@ const confirmAmount = async () => {
     { $unwind: '$bookedCar' },
     {
       $match: {
-        'bookedCar.status': 'Confirmed',
+        'bookedCar.status': { $ne: 'Pending' },
       },
     },
     {
@@ -95,8 +95,8 @@ const dailyRentalAmount = async () => {
     { $unwind: '$bookedCar' },
     {
       $match: {
-        'bookedCar.bookingDate': { $gte: sevenDaysAgo, $lte: startOfToday },
-        'bookedCar.status': 'Confirmed',
+        'bookedCar.bookingDate': { $gte: sevenDaysAgo, $lte: startOfToday }, // Match booking date within the specified range
+        'bookedCar.status': { $ne: 'Pending' }, // Match documents with status not equal to 'Pending'
       },
     },
     {

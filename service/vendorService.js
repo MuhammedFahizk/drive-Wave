@@ -1,13 +1,13 @@
 /* eslint-disable import/order */
 /* eslint-disable no-underscore-dangle */
-const { User } = require('../models/owners');
+const { User } = require('../models/users');
 const { ObjectId } = require('mongoose').Types;
 
 const customers = async (ownerId) => {
   try {
     const customer = await User.aggregate([
       { $unwind: '$bookedCar' },
-      { $match: { 'bookedCar.status': 'Confirmed' } },
+      { $match: { 'bookedCar.status': { $ne: 'Pending' } } },
       {
         $lookup: {
           from: 'cars',
@@ -95,7 +95,7 @@ const dailyRentalAmounts = async (ownerId) => {
     {
       $match: {
         'bookedCar.bookingDate': { $gte: sevenDaysAgo, $lte: startOfToday },
-        'bookedCar.status': 'Confirmed',
+        'bookedCar.status': { $ne: 'Pending' },
         'carDetails.ownerId': new ObjectId(ownerId),
       },
     },
@@ -190,7 +190,7 @@ const dailyRentalAmountPending = async (ownerId) => {
   return rentalAmounts;
 };
 
-const dailyRentalAmount = async () => {
+const dailyRentalAmount = async (ownerId) => {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
@@ -210,8 +210,9 @@ const dailyRentalAmount = async () => {
     { $unwind: '$bookedCar' },
     {
       $match: {
-        'bookedCar.bookingDate': { $gte: sevenDaysAgo, $lte: startOfToday },
-        'bookedCar.status': 'Confirmed',
+        'bookedCar.bookingDate': { $gte: sevenDaysAgo, $lte: startOfToday }, // Match booking date within the specified range
+        'bookedCar.status': { $ne: 'Pending' }, // Match documents with status not equal to 'Pending'
+        'carDetails.ownerId': new ObjectId(ownerId),
       },
     },
     {
@@ -265,7 +266,7 @@ const confirmAmount = async (ownerId) => {
     },
     {
       $match: {
-        'bookedCar.status': 'Confirmed',
+        'bookedCar.status': { $ne: 'Pending' },
       },
     },
     {
