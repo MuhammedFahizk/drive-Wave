@@ -11,7 +11,7 @@ async function getHomePage(req, res) {
     }
     if (name) {
       res.render('user/index', {
-        car: data.car, location: data.location, banner: data.banner, name: data.name,
+        car: data.car, locations: data.location, banner: data.banner, name: data.name,
       });
     } else {
       res.render('user/index', { car: data.car, location: data.location, banner: data.banner });
@@ -361,8 +361,8 @@ async function userRecoveryMessage(req, res) {
     console.error('Error processing the recovery message:', error);
     return res.status(500).send('An error occurred while processing the recovery message');
   }
-}// // eslint-disable-next-line consistent-return
-
+}
+// eslint-disable-next-line consistent-return
 async function userBookedCar(req, res) {
   try {
     const { formDatas, service } = req.body;

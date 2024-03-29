@@ -585,6 +585,7 @@ body {
                 {{#if dayDifferenceIn }}
                     <select name="cars" id="cars" class="col-12 mt-4 p-2 btn- btn-outline-primary rounded">
   <option value="">Add Service</option>
+  {{service}}
   {{#each service}}
     <option value="{{this._id}}" data-image="{{this.image}}" data-description="{{this.description}}" data-charge="{{this.charge}}" class="text-dark bg-light">
       {{this.serviceName}}
@@ -686,9 +687,8 @@ body {
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
       
-        <div class="modal-body p-5 ">
-           
-           <div class="loading-window py-5">
+      
+           <div class="loading-window py-5 col-12">
     <div class="car ">
         <div class="strike"></div>
         <div class="strike strike2"></div>
@@ -704,9 +704,7 @@ body {
         <div class="car-detail wheel wheel2"></div>
     </div>
 
-    <div class="text">
-        <span>Loading</span><span class = "dots">...</span>
-    </div>
+
 </div>
 
         </div>

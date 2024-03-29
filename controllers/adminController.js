@@ -26,7 +26,7 @@ async function loginOtp(req, res) {
       if (error.message === 'Admin not found') {
         res.status(404).redirect('/admin/login');
       } else {
-        res.status(400).send(error.message); // Send error message for invalid OTP or server error
+        res.status(400).send(error.message);
       }
     });
 }

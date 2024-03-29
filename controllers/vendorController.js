@@ -90,7 +90,7 @@ async function vendorCarPage(req, res) {
 
     const result = await helper.getVendorCars(ownerId);
     res.status(200).render('vendor/carPage', {
-      data: result.cars, count: result.count, vendor: result.vendor, location: result.locations,
+      data: result.cars, count: result.count, vendor: result.vendor, locations: result.locations,
     });
   } catch (error) {
     throw new Error(`Error rendering vendor car page: ${error.message}`);
