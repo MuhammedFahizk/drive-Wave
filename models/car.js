@@ -90,10 +90,13 @@ try {
       ref: 'vendor',
     },
     rate: {
-      rate: { type: Number },
+      type: Number,
+      default: 0,
+      required: true,
     },
     rating: [
       {
+        name: { type: String },
         description: { type: String },
         rate: { type: Number },
       },

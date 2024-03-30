@@ -345,11 +345,10 @@ async function userMessageToAdminHelper(email, message, subject) {
   });
 }
 
-async function bookingCarHelper(sessionData, queryCarId) {
+async function bookingCarHelper(sessionData, _id, name, carId) {
   const {
-    pickDate, dropDate, _id, name, bookingId,
+    pickDate, dropDate, bookingId,
   } = sessionData;
-  const carId = queryCarId || sessionData.carId;
   const car = await Car.findById(carId);
   const user = await User.findById(_id);
   if (!car || !user) {
@@ -437,10 +436,10 @@ async function addDateHelper(pickDate, dropDate, carId) {
   // If matchingCars array is not empty, the car is already booked
 }
 
-async function userBookedCarHelper(formDatas, service, sessionData) {
+async function userBookedCarHelper(formDatas, service, sessionData, _id) {
   const { place, zip, houseName } = formDatas;
   const {
-    _id, carId, pickDate, dropDate,
+    carId, pickDate, dropDate,
   } = sessionData;
 
   const user = await User.findByIdAndUpdate(_id, {
@@ -735,6 +734,37 @@ async function saveRecoveryMessage(userId, messageData) {
 
   return true;
 }
+async function addReview(id, formData) {
+  try {
+    const { message, rate, carId } = formData;
+    const user = await User.findById(id);
+
+    // Find the car by its ID and update its rating array with the new review data
+    const updatedCar = await Car.findByIdAndUpdate(
+      carId, // Car ID
+      { $push: { rating: { description: message, rate, name: user.name } } },
+      { new: true },
+    );
+
+    let sumOfRates = 0;
+    let count = 0;
+    updatedCar.rating.forEach((review) => {
+      sumOfRates += review.rate;
+      count += count;
+    });
+
+    const averageRate = Math.round(sumOfRates / count);
+    updatedCar.rate = averageRate;
+
+    await updatedCar.save();
+
+    return true;
+  } catch (error) {
+    console.error('Error while adding review:', error);
+    throw error; // Throw the error for handling in the calling function
+  }
+}
+
 module.exports = {
   homePageHelper,
   userLoginHelper,
@@ -759,4 +789,5 @@ module.exports = {
   verifyPaymentAndUpdateUser,
   getOrderDetails,
   saveRecoveryMessage,
+  addReview,
 };

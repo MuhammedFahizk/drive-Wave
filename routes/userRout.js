@@ -36,5 +36,6 @@ router.get('/paymentPage', middleware.mustLogin, userController.paymentPage);
 router.get('/BookedCar', middleware.mustLogin, userController.carDetails);
 router.post('/payment/verification', middleware.mustLogin, userController.paymentVerification);
 router.post('/orderDetails', middleware.mustLogin, userController.orderDetails);
+router.post('/review', middleware.mustLogin, userController.review);
 
 module.exports = router;

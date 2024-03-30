@@ -54,7 +54,11 @@
     position: relative;
     cursor: pointer;
   }
-
+@media (max-width: 576px) {
+    .time-picker {
+        width:100px; /* Adjust the width for smaller screens */
+    }
+}
   .time-handle {
     width: 20px;
     height: 20px;
@@ -158,41 +162,28 @@
 </section>
 
 <section style="color: black;" class="ftco-section ftco-no-pt bg-light">
-  <div class="container">
-    <div class="row no-gutters">
+  <div class="container ">
+    <div class="row no-gutters ">
       <div class="col-md-12	featured-top">
-        <div class="row no-gutters">
+        <div class="row no-gutters ">
           <div class="col-md-4 d-flex align-items-center">
-            <form action="/findCarByDate" class="request-form ftco-animate bg-primary" method="post">
+            <form action="/findCarByDate" class="request-form ftco-animate bg-primary col-md-12" method="post">
               <h2>Make your trip</h2>
               <div class="form-group">
                 <label for="" class="label">Pick-up location</label>
-                <input type="button" class="form-control" id="locationButton" value="{{location}} ">
+                <input type="button" class="form-control" id="locationButton" value="{{#if location}}{{location}}{{else}}Location{{/if}} ">
 
                 <input type="hidden" name="location" id="selectedLocation" required>
               </div>
-              {{!-- <div class="form-group">
-                <label for="" class="label">Drop-off location</label>
-                <input type="text" class="form-control" placeholder="City, Airport, Station, etc">
-              </div> --}}
-              {{!-- <div class="d-flex ">
-                <div class="form-group mr-2 p-2">
-                  <label for="" class="label">Pick-up date</label>
-                  <input type="text" class="form-control" name="pickDateData" id="pickDate" placeholder="Date">
-                </div>
-                <div class="form-group ml-2">
-                  <label for="" class="label">Drop-off date</label>
-                  <input type="text" class="form-control" name="dropDateData" id="dropDate" placeholder="Date">
-                </div>
-              </div> --}}
-              <div class="d-flex ">
+         
+              <div class="d-flex row">
 
-                <div class="form-group">
+                <div class="form-group col-12 col-md-6">
                   <label for="" class="label">Pick-up time</label>
                   <input type="text" class="form-control" name="pickDate" id="pick-up" placeholder="Time"
                     value="{{pickDate}}" required>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-12 col-md-6">
                   <label for="" class="label">Drop-off time</label>
                   <input type="text" class="form-control" name="dropDate" id="drop-off" placeholder="Time"
                     value="{{dropDate}}" required>
@@ -201,8 +192,7 @@
 
 
               <div class="form-group">
-                <button type="submit" id="submitButton" value="Rent A Car Now" class="btn btn-secondary py-3 px-4">Rent
-                  A Car Now</button>
+                <button type="submit" id="submitButton" value="Rent A Car Now" class="btn btn-secondary py-3 px-4"><span > Filter Car</span></button>
 
               </div>
 
@@ -211,7 +201,7 @@
 
           </div>
           <div class="col-md-8 d-flex align-items-center">
-            <div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-10 p-3">
+            <div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-md-10 p-3">
 
               <ul class="p-0">
                 <li>
@@ -220,17 +210,12 @@
 
                 </li>
                 {{#each locations}}
-                <li>
-                  <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                      style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
-                      <circle cx="12" cy="12" r="4"></circle>
-                      <path
-                        d="M13 4.069V2h-2v2.069A8.01 8.01 0 0 0 4.069 11H2v2h2.069A8.008 8.008 0 0 0 11 19.931V22h2v-2.069A8.007 8.007 0 0 0 19.931 13H22v-2h-2.069A8.008 8.008 0 0 0 13 4.069zM12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z">
-                      </path>
-                    </svg>
-                  </span>
-                  <a href="#" class="locationLink">{{this}}</a>
+           <li class="locationLinkLi">
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><circle cx="12" cy="12" r="4"></circle><path d="M13 4.069V2h-2v2.069A8.01 8.01 0 0 0 4.069 11H2v2h2.069A8.008 8.008 0 0 0 11 19.931V22h2v-2.069A8.007 8.007 0 0 0 19.931 13H22v-2h-2.069A8.008 8.008 0 0 0 13 4.069zM12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"></path></svg>
+                    </span>
+                    <a href="#" class="locationLink">{{this}}</a>
+                  </li>
                   {{/each}}
               </ul>
             </div>
@@ -276,9 +261,16 @@
 
 
 
-<section class="ftco-section bg-light col-12 row m-0 pt-0 mt-0">
-  <div class="col-12 p-0 pl-3 py-4  ftco-section  rounded mb-2  ml-2     pr-4">
-    <input type="text" id="carSearch" class="col-12 border-0 p-3 mb-2" placeholder="Search Cars ...">
+<section class="ftco-section bg-light col-12 row m-0 pt-0 mt-0 row d-flex justify-content-end">
+ 
+
+ <div class="col-md-1   d-flex justify-content-end">
+ <div class="col-md-8 col-12 d-none  d-md-block border-0 pl-md-3 m-0  p-md-3 p-3 mb-5 ftco-animate rounded car-wrap">
+  <i class="icomoon icon-search"></i>
+
+  </div>
+ </div>
+    <input type="text" id="carSearch" class="col-md-4 col-11 border-0 pl-3 m-0 mr-3  p-2 mb-5  ftco-animate rounded car-wrap" placeholder="Search Cars ...">
   </div>
   <aside class="col-md-12">
 
@@ -375,16 +367,41 @@
 
             </div>
           </div>
-          <div class="text">
-            <h2 class="mb-0"><a href="carDetails?id={{_id}}">{{carName}}</a></h2>
-            <div class="d-flex mb-3">
-              <span class="cat">{{carModal}}/{{brandName}}</span>
-              <p class="price ml-auto">${{dayRent}} <span>/day</span></p>
-            </div>
+          <div class="text row">
+            <h2 class="mb-0 col-9"><a href="carDetails?id={{_id}}">{{carName}}</a></h2>
+                    <p class="star p-0 col-3">
+                        <span id="starRating{{@index}}" class="m-0"></span>
+                    </p>
+        <div class="d-flex mb-3 row pl-3">
+    <div class="col-auto">
+        <span class="cat">{{carModal}}/{{brandName}}</span>
+    </div>
+    <div class="col-auto ml-auto">
+        <p class="price">${{dayRent}} <span>/day</span></p>
+    </div>
+</div>
+
             <p class="d-flex mb-0 d-block">
               <a href="/bookingCar?carId={{_id}}" class="btn btn-primary py-2 mr-1">Book now</a>
               <a href="/carDetails?id={{_id}}" class="btn btn-secondary py-2 ml-1">Details</a>
             </p>
+            <script>
+                // Function to dynamically generate star ratings
+                function showStars(rating, containerId) {
+                    let starsHTML = '';
+                    for (let i = 0; i < 5; i++) {
+                        if (i < rating) {
+                            starsHTML += '<i class="ion-ios-star"style="color: gold;"></i>';
+                        } else {
+                            starsHTML += '<i class="ion-ios-star-outline"></i>';
+                        }
+                    }
+                    document.getElementById(containerId).innerHTML = starsHTML;
+                }
+
+                // Example usage to populate star ratings
+                showStars({{this.rate}}, 'starRating{{@index}}');
+            </script>
           </div>
         </div>
       </div>
@@ -439,19 +456,18 @@
   $(document).ready(function () {
     $('#carSearch').on('keyup', function () {
       var searchTerm = $(this).val().toLowerCase();
-      var carsFound = false; // Variable to track if any cars are found
+      var carsFound = false;
 
       $('.searchCars').each(function () {
         var text = $(this).find('h2 a').text().toLowerCase();
         if (text.includes(searchTerm)) {
-          $(this).parent().show(); // Show the parent container
-          carsFound = true; // At least one car is found
+          $(this).parent().show(); 
+          carsFound = true;
         } else {
-          $(this).parent().hide(); // Hide the parent container
+          $(this).parent().hide();
         }
       });
 
-      // Show/hide "No cars found" message based on whether any cars are found
       if (!carsFound) {
         $('#noCarsMessage').show();
       } else {
@@ -619,47 +635,64 @@
         const cars = response.data;
 
         if (cars.length === 0) {
-          // Handle case where no cars match the criteria
-        } else {
-          cars.forEach(car => {
-            const carHtml = `
-                                <div class="col-md-4">
-                                    <div class="car-wrap rounded searchCars">
-                                         <div class="image-container position-relative">
-                  <a href="/carDetails?id=${car._id}">
-
-                    <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${car.carImage}">
-                </a>
-                  <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0">
-                      
-                    </div>
-                </div>          <div class="text">
-                                            <h2 class="mb-0"><a href="car-single.html">${car.carName}</a></h2>
-                                            <div class="d-flex mb-3">
-                                                <span class="cat">${car.carModal}/${car.brandName}</span>
-                                                <p class="price ml-auto">${car.dayRent} <span>/day</span></p>
-                                            </div>
-                                            <p class="d-flex mb-0 d-block">
-                                                        </p>
-                                                  <a href="/bookingCar?carId=${car._id}" class="btn btn-primary py-2 mr-1">Book now</a>
-                                                <a href="/carDetails?id=${car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
-                                              
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="noCarsMessage" style="display: none;" class="col-12">
-                             <div class="justify-content-center">
+              const noCar = `
+                <div  style="display: block;" class="col-12">
+        <div class="justify-content-center">
           <div class="d-flex justify-content-center align-items-center">
-    <img src="images/bg_vector.png" style="object-fit: fill;" class="image-fluid mt-0" alt="Your image alt text">
-</div>
-        <h2 class="text-center fs-4  mb-0 pb-0"> There is no Vehicles available </h2>
+            <img src="images/bg_vector.png" style="object-fit: fill;" class="image-fluid mt-0"
+              alt="Your image alt text">
+          </div>
+          <h2 class="text-center fs-4  mb-0 pb-0"> There is no Vehicles available </h2>
 
 
 
         </div>
-                          </div>
-                            `;
-            $('.container .rowcars').append(carHtml);
+      </div>`
+$('.container .rowcars').append(noCar);
+
+        } else {
+          cars.forEach(car => {
+          const carHtml = `
+    <div class="col-md-4">
+        <div class="car-wrap rounded searchCars">
+            <div class="image-container position-relative">
+                <a href="/carDetails?id=${car._id}">
+                    <img style="height: 325px; object-fit: cover; width: 100%;" alt="Car Image" class="img rounded d-flex align-items-end" src="${car.carImage}">
+                </a>
+                <div class="hover-icon d-flex justify-content-end position-absolute top-0 end-0"></div>
+            </div>
+            <div class="text row">
+                <h2 class="mb-0 col-9"><a href="car-single.html">${car.carName}</a></h2>
+                <p class="star p-0 col-3">
+                    ${getStarRating(car.rate)}
+                </p>
+                <div class="d-flex mb-3">
+                    <span class="cat">${car.carModal}/${car.brandName}</span>
+                    <p class="price ml-auto">${car.dayRent} <span>/day</span></p>
+                </div>
+                <p class="d-flex mb-0 d-block"></p>
+                <a href="/bookingCar?carId=${car._id}" class="btn btn-primary py-2 mr-1">Book now</a>
+                <a href="/carDetails?id=${car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
+            </div>
+        </div>
+    </div>
+`;
+
+$('.container .rowcars').append(carHtml);
+
+function getStarRating(rating) {
+    let starsHTML = '';
+    const roundedRating = Math.round(rating); // Round the rating to the nearest integer
+    for (let i = 0; i < 5; i++) {
+        if (i < roundedRating) {
+            starsHTML += '<i class="ion-ios-star" style="color: gold;"></i>';
+        } else {
+            starsHTML += '<i class="ion-ios-star-outline" "></i>';
+        }
+    }
+    return starsHTML;
+}
+
           });
 
         }
@@ -680,7 +713,7 @@
   const locationButton = document.getElementById('locationButton')
   document.addEventListener('DOMContentLoaded', function () {
 
-    document.querySelectorAll('.locationLink').forEach(anchor => {
+    document.querySelectorAll('.locationLinkLi').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const selectedLocation = this.textContent.trim();

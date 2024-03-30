@@ -126,17 +126,15 @@ async function deleteUser(req, res) {
 }
 async function showCars(req, res) {
   try {
-    const {
-      name, pickDate, dropDate, location,
-    } = req.session;
-    req.session.bookingId = '';
+    const { pickDate, dropDate, location } = req.session.booking || {};
+    const { name } = req.session;
+    req.session.booking = req.session.booking || {};
 
     let allCollections = [];
     let locations = [];
 
     if (pickDate && dropDate) {
-      req.session.pickDate = pickDate;
-      req.session.dropDate = dropDate;
+      req.session.booking = { pickDate, dropDate };
 
       const { allCollections: specifiedCarsData, locations: specifiedLocations } = await helper
         .specifiedCars(pickDate, dropDate, location);
@@ -169,7 +167,7 @@ async function showCars(req, res) {
 async function filterCars(req, res) {
   try {
     const { transmission, fuel, carCategory } = req.body;
-    const { location, pickDate, dropDate } = req.session;
+    const { location, pickDate, dropDate } = req.session.booking;
 
     const allCollections = await helper
       .filterCars(transmission, fuel, carCategory, location, pickDate, dropDate);
@@ -299,13 +297,14 @@ const aboutPage = (req, res) => {
 
 async function bookingCar(req, res) {
   try {
-    const sessionData = req.session;
+    const sessionData = req.session.booking || {};
     let queryCarId = req.query.carId;
     if (!queryCarId) {
-      queryCarId = req.session.carId;
+      queryCarId = req.session.booking.carId;
     }
-    const result = await helper.bookingCarHelper(sessionData, queryCarId);
-    req.session.carId = queryCarId;
+    req.session.booking = { ...req.session.booking, carId: queryCarId };
+    const result = await helper
+      .bookingCarHelper(sessionData, req.session._id, req.session.name, queryCarId);
     res.status(200).render('user/checkOut', result);
   } catch (error) {
     res.status(500).json({ error: 'Server Error', details: error });
@@ -315,12 +314,11 @@ async function bookingCar(req, res) {
 async function addDate(req, res) {
   try {
     const { pickDate, dropDate } = req.query;
-    const { carId } = req.session;
+    const { carId } = req.session.booking;
 
     const result = await helper.addDateHelper(pickDate, dropDate, carId);
     if (pickDate && dropDate) {
-      req.session.pickDate = pickDate;
-      req.session.dropDate = dropDate;
+      req.session.booking = { ...req.session.booking, pickDate, dropDate };
     }
     res.status(200).json(result);
   } catch (error) {
@@ -330,8 +328,8 @@ async function addDate(req, res) {
 
 const changeDate = async (req, res) => {
   // const { pickDate, dropDate } = req.query;
-  req.session.pickDate = '';
-  req.session.dropDate = '';
+  req.session.booking = { pickDate: '', dropDate: '' };
+
   res.status(200).json('success');
 };
 
@@ -339,14 +337,11 @@ const findCarByDate = async (req, res) => {
   const { pickDate, dropDate, location } = req.body;
   if (!pickDate || !dropDate) {
     if (location) {
-      req.session.location = location;
+      req.session.booking.location = location;
     }
     return res.redirect('/cars');
   }
-  req.session.dropDate = dropDate;
-  req.session.pickDate = pickDate;
-  req.session.location = location;
-
+  req.session.booking = { pickDate, dropDate, location };
   return res.redirect('/cars');
 };
 async function userRecoveryMessage(req, res) {
@@ -366,10 +361,10 @@ async function userRecoveryMessage(req, res) {
 async function userBookedCar(req, res) {
   try {
     const { formDatas, service } = req.body;
-    const sessionData = req.session;
-
-    const result = await helper.userBookedCarHelper(formDatas, service, sessionData);
-    req.session.bookingId = result.newBookingId;
+    const sessionData = req.session.booking;
+    const { _id } = req.session;
+    const result = await helper.userBookedCarHelper(formDatas, service, sessionData, _id);
+    req.session.booking.bookingId = result.newBookingId;
     return res.status(200).json(result);
   } catch (error) {
     console.error('Error in userBookedCar:', error);
@@ -408,10 +403,9 @@ const paymentPage = async (req, res) => {
   const {
     bookingId, pickDate, dropDate, id,
   } = req.query;
-  req.session.bookingId = bookingId;
-  req.session.pickDate = pickDate;
-  req.session.dropDate = dropDate;
-  req.session.carId = id;
+  req.session.booking = {
+    bookingId, pickDate, dropDate, carId: id,
+  };
 
   return res.status(200).redirect('/bookingCar');
 };
@@ -430,9 +424,8 @@ async function carDetails(req, res) {
 async function paymentVerification(req, res) {
   try {
     const updatedUser = await helper.verifyPaymentAndUpdateUser(req.session, req.body);
-    req.session.bookingId = '';
-    req.session.pickDate = '';
-    req.session.dropDate = '';
+    req.session.booking = { pickDate: '', dropDate: '', bookingId: '' };
+
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ error: 'Payment verification failed' });
@@ -448,6 +441,18 @@ async function orderDetails(req, res) {
     console.error('Error fetching order details:', error);
     res.status(500).json({ error: 'Error fetching order details' });
   }
+}
+async function review(req, res) {
+  const { ...formData } = req.body;
+
+  helper.addReview(req.session._id, formData)
+    .then(() => {
+      res.status(201).redirect('/bookedCars');
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(201).redirect('/bookedCars');
+    });
 }
 module.exports = {
   getHomePage,
@@ -481,4 +486,5 @@ module.exports = {
   carDetails,
   paymentVerification,
   orderDetails,
+  review,
 };

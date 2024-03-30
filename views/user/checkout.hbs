@@ -167,7 +167,6 @@
 }
 body {
 	background: #333;
-	font-family: "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
 }
 
 .fadeIn,
@@ -447,7 +446,7 @@ body {
                             <h6 class="text-dark">{{dayDifferenceIn}} / Days</h6>
                             {{else}}
                             <div class="col-12 justify-content-center">
-                                <p class="text-danger">Choose Pic Up Date and Return DAte</p>
+                                <p class="text-danger">Select Pic Up Date and Return DAte</p>
 
                             </div>
                             {{/if}}
@@ -565,11 +564,24 @@ body {
                     </div>
                     </a>
                     <div class="col-9 p-2">
-                        <h6 class="text-dark">{{car.carName}}</h6>
-                        {{#if dayDifferenceIn }}
-                            <h6 class="text-dark">{{formattedPickDate}} TO {{formattedDropDate}}  </h6>
-                        <h6 class="text-dark">{{dayDifferenceIn}} / Days</h6>
-                        {{else}}
+                        <h6 class="text-dark d-flex justify-content-between">
+    Car Name
+    <span class="text-primary mr-4">{{car.carName}}</span>
+</h6>
+{{#if dayDifferenceIn }}
+                     <h6 class="text-dark d-flex justify-content-between">
+    Pick Up Date
+    <span class="text-primary mr-4">{{formattedPickDate}}</span>
+</h6>
+            <h6 class="text-dark d-flex justify-content-between">
+    Pick off Date
+    <span class="text-primary mr-4">{{formattedDropDate}}</span>
+</h6>
+    <h6 class="text-dark d-flex justify-content-between">
+        Total Days
+        <span class="text-primary mr-4">{{dayDifferenceIn}}</span>
+    </h6>
+    {{else}}
                         <div class="col-12 justify-content-center">
                             <p class="text-primary">Choose Pic Up Date and Return Date</p>
 
@@ -600,9 +612,9 @@ body {
                 <div class="row col-12  m-0 my-4 p-0  car-wrap rounded ftco-animate">
 
                     <form class="row col-12 m-2 p-0 justify-content-center ">
-                        <input style="border: 1px solid;" id="pickDate" type="text" value="{{formattedPickDate}}"
+                        <input style="border: 1px solid;" id="pickDate" type="text" placeholder="Pick-Up-Time" value="{{formattedPickDate}}"
                             class="col-4 mr-1  rounded p-1 m-0">
-                        <input style="border: 1px solid;" id="dropDate" type="text" value="{{formattedDropDate}}"
+                        <input style="border: 1px solid;" id="dropDate" type="text" placeholder="Drop-off-Time" value="{{formattedDropDate}}"
                             class="col-4 mr-1  rounded p-1 m-0">
                         <input style="border: 1px solid;" id="carId" value="{{car._id}}" type="hidden" class=" ">
 
@@ -614,38 +626,6 @@ body {
 
                 {{/if}}
 
-                {{!-- <div id="userDetails" class="car-wrap rounded ftco-animate ">
-
-                    <div id="text" class="text mt-4">
-                        <div class="d-flex mb-1">
-                            <span class="cat">Car Model </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{car.carModal}} <span></span></p>
-                        </div>
-                        <div class="d-flex mb-1">
-                            <span class="cat">Fuel Type </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{car.fuelType}} <span></span></p>
-                        </div>
-                        <div class="d-flex mb-1">
-                            <span class="cat">Transmission </span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{car.TransmitionType}} <span></span></p>
-                        </div>
-                        <div class="d-flex mb-1">
-                            <span class="cat">Day Rent</span>
-                            </span>
-                            <p class="price ml-md-auto ml-2">{{car.dayRent}} <span></span></p>
-                        </div>
-
-
-
-                    </div>
-                    <div id="calendar">
-
-                    </div>
-
-                </div> --}}
                 <div class="car-wrap rounded ftco-animate row col-12 m-0 px-4 p-4 justify-content-center mt-2 ">
 
                     <input type="button" id="changeDate" class="btn btn-outline-info mx-2" value="Change Date">
@@ -723,43 +703,60 @@ body {
 <script>
     const service = []
 $(document).ready(function(){
-  $('#cars').change(function(){
-    // Get the selected option
-    var selectedOptions = $(this).find('option:selected');
-    console.log(selectedOptions)
-    // Iterate over all selected options
-    selectedOptions.each(function() {
-      var serviceName = $(this).text();
-      var serviceImage = $(this).data('image');
-      var serviceId = $(this).val();
-var description = $(this).data('description')
-var charge = $(this).data('charge')
-
-
- selectedOptions.each(function() {
-            service.push($(this).val());
+    $('#cars').change(function(){
+        // Get the selected option(s)
+        var selectedOptions = $(this).find('option:selected');
+        
+        // Iterate over all selected options
+        selectedOptions.each(function() {
+            var serviceId = $(this).val();
+            var existingService = $('#serviceDetails').find('[data-service-id="' + serviceId + '"]');
+            
+            // Check if service already exists in the serviceDetails div
+            if (existingService.length === 0) {
+                var serviceName = $(this).text();
+                var serviceImage = $(this).data('image');
+                var description = $(this).data('description');
+                var charge = $(this).data('charge');
+                
+                // Generate the div for the selected option
+                var divContent = '<div style="border-radius:10px; position: relative;" class="col-12 bg-light p-0 m-0 mt-2 row remove-service" data-service-id="' + serviceId + '">';
+                divContent += '<div class="col-3" style="border-radius:10px;background-image: url(' + serviceImage + '); background-size: cover; background-position: center; height: 100px; width: 100%;"></div>';
+                divContent += '<div class="col-9 p-2">';
+                divContent += '<h5 class="text-dark">' + serviceName + '</h5>';
+                divContent += '<h6 class="text-dark">' + description + '</h6>';
+                divContent += '<h6 class="text-dark"> <span class="text-warning">Service Charge </span>' + charge + '</h6>';
+                divContent += '</div>';
+                divContent += '<div class="hover-message">Click to remove service</div>'; // Added message div here
+                divContent += '</div>';
+                
+                // Append the generated div to the container
+                $('#serviceDetails').append(divContent);
+            }
         });
-
-      
-      // Generate the div for each selected option
-      var divContent = '<div style="border-radius:10px;" class="col-12 bg-light p-0 m-0 mt-2 row">';
-      divContent += '<a href="/carDetails?id=' + serviceId + '" class="col-3 p-0 m-0">';
-      divContent += '<div class="col-12" style="border-radius:10px;background-image: url(' + serviceImage + '); background-size: cover; background-position: center; height: 100px; width: 100%;"></div>';
-      divContent += '</a>';
-      divContent += '<div class="col-9 p-2">';
-      divContent += '<h5 class="text-dark">' + serviceName + '</h5>';
-      divContent += '<h6 class="text-dark">' + description + '</h6>';
-      divContent += '<h6 class="text-dark"> <span class="text-warning ">Service Charge </span> '  + charge + '</h6>';
-
-      divContent += '</div>';
-      divContent += '</div>';
-      
-      // Append the generated div to the container
-      $('#serviceDetails').append(divContent);
     });
-  });
+
+    // Show message on hover after a delay
+    var timeout;
+    $('#serviceDetails').on('mouseenter', '.remove-service', function() {
+        var message = $(this).find('.hover-message');
+        message.fadeIn('fast');
+        timeout = setTimeout(function() {
+            message.fadeOut('fast');
+        }, 2000); // Change 2000 to the desired time in milliseconds
+    }).on('mouseleave', '.remove-service', function() {
+        clearTimeout(timeout);
+        $(this).find('.hover-message').fadeOut('fast');
+    });
+
+    // Remove service on click
+    $('#serviceDetails').on('click', '.remove-service', function(e) {
+        e.preventDefault();
+        var serviceId = $(this).data('service-id');
+        $('#serviceDetails').find('[data-service-id="' + serviceId + '"]').remove();
+    });
 });
-  
+
 
     // Use booking ID if available
     const bookingId = sessionStorage.getItem('bookingId');
@@ -792,7 +789,7 @@ var charge = $(this).data('charge')
     });
 
   const razorpay = new Razorpay({
-        key: "rzp_test_4n6m1t1iIOWyRe", // Replace with your Razorpay API key
+        key: "rzp_test_4n6m1t1iIOWyRe",
     });
     const calendarEl = document.getElementById('calendar');
     const bookingPage = document.getElementById('bookingPage');

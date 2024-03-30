@@ -189,6 +189,47 @@
                                     <p> {{car.description}}</p>
                                 
                            </div>
+						     <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
+						      <div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="d-flex flex-column align-items-center" style="max-height: 300px; overflow-y: auto;">
+            <h3 class="head">{{car.rating.length}} Reviews</h3>
+            {{#each car.rating}}
+            <div class="review">
+                <div class="desc">
+                    <h4 class="d-flex justify-content-between">
+                        <span>{{this.name}}</span>
+                        <span>{{this.date}}</span>
+                    </h4>
+                    <p class="star">
+                        <span id="starRating{{@index}}"></span>
+                    </p>
+                    <p>{{this.description}}</p>
+                </div>
+            </div>
+            <script>
+                // Function to dynamically generate star ratings
+                function showStars(rating, containerId) {
+                    let starsHTML = '';
+                    for (let i = 0; i < 5; i++) {
+                        if (i < rating) {
+                            starsHTML += '<i class="ion-ios-star"></i>';
+                        } else {
+                            starsHTML += '<i class="ion-ios-star-outline"></i>';
+                        }
+                    }
+                    document.getElementById(containerId).innerHTML = starsHTML;
+                }
+
+                // Example usage to populate star ratings
+                showStars({{this.rate}}, 'starRating{{@index}}');
+            </script>
+            {{/each}}
+        </div>
+    </div>
+</div>
+
+						    </div>
 
 						  </div>
 						</div>

@@ -72,6 +72,7 @@ app.use((req, res) => {
   res.status(404).render('404');
 });
 
+// eslint-disable-next-line no-unused-vars
 const server = app.listen(PORT, (err) => {
   if (err) {
     console.error('Error starting the server:', err);

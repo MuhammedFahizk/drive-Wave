@@ -27,6 +27,11 @@
     border-radius: 50%;
     cursor: pointer;
   }
+  @media (max-width: 576px) {
+    .time-picker {
+        width:100px; /* Adjust the width for smaller screens */
+    }
+}
 
   .flatpickr-calendar {
     background-color: #f0f0f0;
@@ -176,21 +181,21 @@
         <div class="col-md-12	featured-top">
           <div class="row no-gutters">
             <div class="col-md-4 d-flex align-items-center">
-              <form action="/findCarByDate" class="request-form ftco-animate bg-primary" method="post">
+              <form action="/findCarByDate" class="request-form ftco-animate bg-primary col-md-12 " method="post">
                 <h2>Make your trip</h2>
-                <div class="form-group">
+                <div class="form-group  ">
                   <label for="" class="label">Pick-up location</label>
                   <input type="button" class="form-control" id="locationButton" value="City, Airport, Station, etc">
                   <input type="hidden"  name="location" id="selectedLocation">
                 </div>
               
-                <div class="d-flex ">
+                <div class="d-flex row">
 
-                  <div class="form-group">
+                  <div class="form-group col-md-6">
                     <label for="" class="label">Pick-up time</label>
                     <input type="time" class="form-control" name="pickDate" id="pick-up" placeholder="Time">
                   </div>
-                  <div class="form-group">
+                  <div class="form-group col-md-6">
                     <label for="" class="label">Drop-off time</label>
                     <input type="text" class="form-control" name="dropDate" id="drop-off" placeholder="Time">
                   </div>
@@ -199,7 +204,7 @@
 
                 <div class="form-group">
                   <button type="submit" id="submitButton" value="Rent A Car Now"
-                    class="btn btn-secondary py-3 px-4">Rent A Car Now</button>
+                    class="btn btn-secondary py-3 px-4">Filter Car</button>
 
                 </div>
 
@@ -208,18 +213,20 @@
 
             </div>
             <div class="col-md-8 d-flex align-items-center">
-              <div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-10 p-3">
+              <div id="locations" class="p-0 m-0 ftco-animate services-wrap border rounded col-12 p-3">
                 <ul class="p-0">
                   <li>
                 <input type="text" id="locationSearch" class="col-12 border-0" placeholder="Search locations">
 
                   </li>
-                  {{#each location}}
-                  <li>
+                  {{#each locations}}
+                  
+                  <li class="locationLinkLi">
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><circle cx="12" cy="12" r="4"></circle><path d="M13 4.069V2h-2v2.069A8.01 8.01 0 0 0 4.069 11H2v2h2.069A8.008 8.008 0 0 0 11 19.931V22h2v-2.069A8.007 8.007 0 0 0 19.931 13H22v-2h-2.069A8.008 8.008 0 0 0 13 4.069zM12 18c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"></path></svg>
                     </span>
-      <a href="#" class="locationLink">{{this}}</a>
+                    <a href="#" class="locationLink">{{this}}</a>
+                  </li>
                   {{/each}}
                 </ul>
               </div>
@@ -610,7 +617,7 @@ At Drive Wave, we believe that convenience, reliability, and affordability shoul
   const locationButton = document.getElementById('locationButton')
   document.addEventListener('DOMContentLoaded', function() {
 
-     document.querySelectorAll('.locationLink').forEach(anchor => {
+     document.querySelectorAll('.locationLinkLi').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
       const selectedLocation = this.textContent.trim();
