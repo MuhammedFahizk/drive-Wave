@@ -4,7 +4,11 @@ const helper = require('../helpers/userHelper');
 
 async function getHomePage(req, res) {
   try {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     let { name } = req.session;
+    req.session.booking = {};
     const data = await helper.homePageHelper(req);
     if (!name) {
       name = data.name;
@@ -14,15 +18,21 @@ async function getHomePage(req, res) {
         car: data.car, locations: data.location, banner: data.banner, name: data.name,
       });
     } else {
-      res.render('user/index', { car: data.car, location: data.location, banner: data.banner });
+      res.render('user/index', { car: data.car, locations: data.location, banner: data.banner });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json('Internal server error', error);
+    res.status(500).json('Internal server error');
   }
 }
 const loginPage = (req, res) => {
-  res.render('user/login');
+  if (req.session.userId) {
+    return res.redirect('/');
+  }
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  return res.render('user/login');
 };
 
 async function userLogin(req, res) {
@@ -163,14 +173,21 @@ async function showCars(req, res) {
     res.status(500).json('Internal Server Error');
   }
 }
-
+const allCars = async (req, res) => {
+  const { name } = req.session;
+  req.session.booking = {};
+  const data = await helper.allCarHelper();
+  res.render('user/cars', { data: data.cars, locations: data.locations, name });
+};
 async function filterCars(req, res) {
   try {
-    const { transmission, fuel, carCategory } = req.body;
+    const {
+      transmission, fuel, carCategory, search, sortOrder,
+    } = req.body;
     const { location, pickDate, dropDate } = req.session.booking;
 
     const allCollections = await helper
-      .filterCars(transmission, fuel, carCategory, location, pickDate, dropDate);
+      .filterCars(transmission, fuel, carCategory, location, pickDate, dropDate, search, sortOrder);
 
     res.status(200).json(allCollections);
   } catch (error) {
@@ -183,8 +200,10 @@ async function carDetailsUser(req, res) {
     const { name } = req.session;
     const { id } = req.query;
     const { car, data } = await helper.carDetailsUserHelper(id, name);
-
-    res.status(200).render('user/carDetails', { car, data, name });
+    const bookings = await helper.bookingDate(id);
+    res.status(200).render('user/carDetails', {
+      car, data, name, bookings,
+    });
   } catch (error) {
     console.error('Error Details User:', error);
     res.status(500).json('Internal Server Error');
@@ -305,8 +324,12 @@ async function bookingCar(req, res) {
     req.session.booking = { ...req.session.booking, carId: queryCarId };
     const result = await helper
       .bookingCarHelper(sessionData, req.session._id, req.session.name, queryCarId);
+    result.name = req.session.name;
+    const bookings = await helper.bookingDate(queryCarId);
+    result.bookings = bookings;
     res.status(200).render('user/checkOut', result);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Server Error', details: error });
   }
 }
@@ -328,7 +351,7 @@ async function addDate(req, res) {
 
 const changeDate = async (req, res) => {
   // const { pickDate, dropDate } = req.query;
-  req.session.booking = { pickDate: '', dropDate: '' };
+  req.session.booking = { pickDate: '', dropDate: '', carId: req.session.booking.carId };
 
   res.status(200).json('success');
 };
@@ -337,7 +360,7 @@ const findCarByDate = async (req, res) => {
   const { pickDate, dropDate, location } = req.body;
   if (!pickDate || !dropDate) {
     if (location) {
-      req.session.booking.location = location;
+      req.session.booking = { location };
     }
     return res.redirect('/cars');
   }
@@ -454,6 +477,11 @@ async function review(req, res) {
       res.status(201).redirect('/bookedCars');
     });
 }
+function bookNow(req, res) {
+  const { pickDate, dropDate, carId } = req.body;
+  req.session.booking = { pickDate, dropDate, carId };
+  res.status(200).json('ok');
+}
 module.exports = {
   getHomePage,
   loginPage,
@@ -487,4 +515,6 @@ module.exports = {
   paymentVerification,
   orderDetails,
   review,
+  allCars,
+  bookNow,
 };

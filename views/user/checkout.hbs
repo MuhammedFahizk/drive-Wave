@@ -693,6 +693,7 @@ body {
     </div>
   </div>
 </section>
+
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js'></script>
 <script type="text/javascript" src="https://checkout.razorpay.com/v1/razorpay.js"></script>
@@ -757,6 +758,72 @@ $(document).ready(function(){
     });
 });
 
+// Initialize pickDate picker
+var pickDate = flatpickr("#pickDate", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+    minTime: "08:00",
+    maxTime: "22:00",
+    minDate: "today",
+    disable: getDisableDates(),
+     onChange: function(selectedDates, dateStr, instance) {
+        // Your existing onChange logic
+        var pickupDate = selectedDates[0];
+        var maxDropoffDate = new Date(pickupDate);
+        maxDropoffDate.setDate(maxDropoffDate.getDate() + 365); // Set max drop-off date to 365 days after pickup date
+
+        // Find the nearest disabled date after pickup date
+        var disabledDates = getDisableDates();
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (disabledDates[i] > pickupDate) {
+                maxDropoffDate = disabledDates[i];
+                break;
+            }
+        }
+
+        // Update the disable dates for dropDate picker
+        dropDate.set("disable", getDisableDates(selectedDates));
+
+        // Set maxDate for dropDate picker
+        dropDate.set("maxDate", maxDropoffDate);
+
+        // Set minDate for dropDate picker
+        dropDate.set("minDate", pickupDate);
+
+        // Ensure dropDate is after pickupDate
+        var dropoffInstance = document.getElementById("dropDate")._flatpickr;
+        if (dropoffInstance.selectedDates.length > 0 && dropoffInstance.selectedDates[0] < pickupDate) {
+            dropoffInstance.setDate(pickupDate);
+        }
+    }
+});
+
+// Initialize dropDate picker
+var dropDate = flatpickr("#dropDate", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+    minTime: "08:00",
+    maxTime: "22:00",
+    minDate: "today",
+    disable: getDisableDates()
+});
+// Function to get disable dates based on selected pick-up date
+// Function to get disable dates based on selected pick-up date
+function getDisableDates(selectedDates) {
+    var disableDates = [];
+    {{#each this.bookings}}
+    var pickupDate = new Date("{{this.pickupDate}}");
+    var returnDate = new Date("{{this.returnDate}}");
+    
+    // Disable all dates within the booking range
+    var currentDate = new Date(pickupDate);
+    while (currentDate <= returnDate) {
+        disableDates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    {{/each}}
+    return disableDates;
+}
 
     // Use booking ID if available
     const bookingId = sessionStorage.getItem('bookingId');
@@ -768,25 +835,6 @@ $(document).ready(function(){
         document.getElementById('bookingIdElement').textContent = bookingId;
     }
     console.log(sessionStorage)
-
-    flatpickr("#pickDate", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        minTime: "08:00",
-        maxTime: "22:00",
-        minDate: "today",
-        onChange: function (selectedDates, dateStr, instance) {
-            document.getElementById("dropDate")._flatpickr.set("minDate", dateStr);
-        }
-    });
-
-    flatpickr("#dropDate", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        minTime: "08:00",
-        maxTime: "22:00",
-        minDate: "today"
-    });
 
   const razorpay = new Razorpay({
         key: "rzp_test_4n6m1t1iIOWyRe",

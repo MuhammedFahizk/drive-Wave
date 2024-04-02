@@ -120,7 +120,7 @@ function otpGenerate(req, res) {
 }
 async function updateCar(req, res) {
   const { editCarId, ...updateValues } = req.body;
-  helper.updateCarHelper(editCarId, updateValues, req)
+  helper.updateCarHelper(editCarId, updateValues)
     .then(() => {
       res.status(200).redirect('/admin/carPage');
     })

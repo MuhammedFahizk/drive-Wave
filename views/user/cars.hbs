@@ -146,7 +146,9 @@
 <link href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/all.css' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-
+{{#if location  }}
+{{else pickDate }}
+{{else}}
 <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');"
   data-stellar-background-ratio="0.5">
   <div class="overlay"></div>
@@ -258,19 +260,31 @@
       </div>
     </div>
 </section>
+{{/if}}
 
 
 
-<section class="ftco-section bg-light col-12 row m-0 pt-0 mt-0 row d-flex justify-content-end">
+<section class="ftco-section bg-light col-12 row   mt-1 py-5 m-0 row d-flex justify-content-end">
  
 
- <div class="col-md-1   d-flex justify-content-end">
+ <div class="col-md-1 mt-5   d-flex justify-content-end">
  <div class="col-md-8 col-12 d-none  d-md-block border-0 pl-md-3 m-0  p-md-3 p-3 mb-5 ftco-animate rounded car-wrap">
   <i class="icomoon icon-search"></i>
 
   </div>
  </div>
-    <input type="text" id="carSearch" class="col-md-4 col-11 border-0 pl-3 m-0 mr-3  p-2 mb-5  ftco-animate rounded car-wrap" placeholder="Search Cars ...">
+    <input type="text"  id="carSearch" class="col-md-4 col-11 border-0 pl-3 mr-0 pr-0  p-2 my-5  ftco-animate rounded car-wrap" placeholder="Search Cars ...">
+ <div class="col-md-1 mt-5  m-0   d-flex justify-content-left">
+ <div class="col-md-8 col-12 d-none  d-md-block border-0  m-0  p-md-3 p-3 mb-5 ftco-animate rounded car-wrap dropup"  data-toggle="dropdown" aria-expanded="false" data-offset="10,20">
+<i class="icomoon icon-filter"  ></i>
+
+  </div>
+   <div class="dropdown-menu mr-4" >
+    <a class="dropdown-item " id="sortBtn" href="#">Price Low to High</a>
+    <a class="dropdown-item" href="#" id="sortBtnDescending">Price High to Low</a>
+    <a class="dropdown-item" href="/car">Clear</a>
+  </div>
+ </div>
   </div>
   <aside class="col-md-12">
 
@@ -376,8 +390,9 @@
     <div class="col-auto">
         <span class="cat">{{carModal}}/{{brandName}}</span>
     </div>
-    <div class="col-auto ml-auto">
-        <p class="price">${{dayRent}} <span>/day</span></p>
+    <div class="col-auto ml-auto d-flex justify-content-right">
+        <p class="price ">
+          <img src="https://cdn-icons-png.flaticon.com/512/11967/11967601.png" alt="Ruppe" title="Ruppe" width="14" height="14">{{dayRent}} <span>/day</span></p>
     </div>
 </div>
 
@@ -439,7 +454,60 @@
 
 
 <script>
+  let sortOrder = 0
+  $(document).ready(function() {
+    // Function to sort cars by price
+    function sortCarsByPrice() {
+      sortOrder = 1
+      var carsContainer = $('.rowcars');
+      var cars = carsContainer.children('.col-md-4').get();
+
+      cars.sort(function(a, b) {
+        var priceA = parseFloat($(a).find('.price').text().replace('$', ''));
+        var priceB = parseFloat($(b).find('.price').text().replace('$', ''));
+
+        return priceA - priceB;
+      });
+
+      // Empty container and append sorted cars
+      carsContainer.empty();
+      $.each(cars, function(index, car) {
+        carsContainer.append(car);
+      });
+    }
+
+    function sortCarsByPriceDescending() {
+      sortOrder = -1
+      var carsContainer = $('.rowcars');
+      var cars = carsContainer.children('.col-md-4').get();
+
+      cars.sort(function(a, b) {
+        var priceA = parseFloat($(a).find('.price').text().replace('$', ''));
+        var priceB = parseFloat($(b).find('.price').text().replace('$', ''));
+
+        return priceB - priceA;
+      });
+
+      // Empty container and append sorted cars
+      carsContainer.empty();
+      $.each(cars, function(index, car) {
+        carsContainer.append(car);
+      });
+    }
+
+    // Event listener for sorting button
+    $('#sortBtn').on('click', function() {
+      sortCarsByPrice();
+    });
+    sortBtnDescending
+    $('#sortBtnDescending').on('click',function(){
+      sortCarsByPriceDescending();
+
+    })
+  });
   // jQuery
+  let search = ''
+
   $(document).ready(function () {
     $('#locationSearch').on('keyup', function () {
       var searchTerm = $(this).val().toLowerCase();
@@ -456,6 +524,7 @@
   $(document).ready(function () {
     $('#carSearch').on('keyup', function () {
       var searchTerm = $(this).val().toLowerCase();
+        search = searchTerm
       var carsFound = false;
 
       $('.searchCars').each(function () {
@@ -485,11 +554,11 @@
   let pickTimeData = ''
   let carId = ''
 
-
+  
   const submitBtn = document.getElementById('submitButton');
 
   const calendarEl = document.getElementById('calendar');
-
+if (submitBtn) {
   submitBtn.addEventListener('click', function () {
 
     carId = document.getElementById('id').value;
@@ -500,7 +569,7 @@
 
 
   });
-
+}
 
 
   $('#transmission input').on('change', function () {
@@ -627,9 +696,10 @@
     console.log(transmission)
     console.log(engine)
     console.log(category)
+    console.log(search)
 
 
-    axios.post(url, { transmission: transmission, fuel: engine, carCategory: category })
+    axios.post(url, { transmission: transmission, fuel: engine, carCategory: category, search, sortOrder })
 
       .then(response => {
         const cars = response.data;
@@ -728,11 +798,13 @@ function getStarRating(rating) {
       });
     });
   })
+  if (locationButton) {
   locationButton.addEventListener('click', function (e) {
     e.preventDefault();
     servicePage.style.display = 'none';
     locations.style.display = 'block';
   });
+  }
 
 
   flatpickr("#pick-up", {

@@ -483,17 +483,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+const deleteBanner = document.getElementById('deleteBanner')
+deleteBanner.addEventListener('click', (event) => {
 
-document.addEventListener('click', function(event) {
-    if (event.target.matches('#deleteBanner')) {
+
         event.preventDefault();
 
         const parentListItem = event.target.closest('li'); // Find the closest parent <li> element
-        const bannerId = parentListItem.dataset.bannerId; // Get bannerId from data attribute
-        const imageId = parentListItem.querySelector('#imageId').value; // Find imageId within the <li> element
-
+        const bannerId = document.getElementById('bannerId').value // Get bannerId from data attribute
+        console.log(bannerId)
         axios.post(`/admin/bannerDelete/${bannerId}`, {
-            imageId: imageId
         })
         .then(response => {
             console.log('Banner deleted successfully:', response.data);
@@ -506,8 +505,7 @@ document.addEventListener('click', function(event) {
             // Handle errors
             // You might want to display an error message or take other actions here
         });
-    }
-});
+    });
 
 	document.getElementById('addLocation').addEventListener('submit', async (event) => {
     event.preventDefault();

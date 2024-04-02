@@ -1,4 +1,44 @@
+ <style>
+	    .time-picker {
+        width: 300px;
+        height: 20px;
+        background-color: #f0f0f0;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .time-handle {
+        width: 20px;
+        height: 20px;
+        background-color: #007bff;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .flatpickr-calendar {
+        background-color: #f0f0f0;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .flatpickr-day {
+        background-color: transparent;
+    }
+
+    .flatpickr-day.today {
+        background-color: #01d28e;
+    }
+
+    .flatpickr-month {
+        font-size: 1.em;
+    }
+
+ </style>
  <body>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <!-- END nav -->
     
@@ -156,7 +196,14 @@
         
           
       	</div>
+        <div style="border: solid 1px;" class="col-12 row d-flex justify-content-around  rounded p-5">
+			<input type="text" style="border: solid 1px;"  id="pickDate" type="text" placeholder="Pick-Up-Time" class="col-3   rounded">
+			<input type="text" style="border: solid 1px;" id="dropDate" type="text" placeholder="Drop-off-Time" class="col-3 rounded">
+			<p id='error' class="text-danger"></p>
+			<input type="hidden" id="carId" value="{{car._id}}">
+			<input type="button" class="col-2 btn btn-success " id="bookCar" value="Book Now">
 
+		</div>
 
 
       	<div class="row">
@@ -278,9 +325,107 @@
 
 
     
-  
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <!-- loader -->
- 
+<script>
+  const bookCar = document.getElementById('bookCar')
+  const error = document.getElementById('error')
+  bookCar.addEventListener('click', (e) => {
+	const pickDate = document.getElementById('pickDate').value
+	const dropDate = document.getElementById('dropDate').value
+	const carId = document.getElementById('carId').value
+
+			if (pickDate === ''){
+		error.innerHTML = 'Please Select Pick-Up-Time'
+		return false
+	}
+	if (dropDate === ''){
+		error.innerHTML = 'Please Select Drop-Off-Time'
+		return false
+	}
+	error.innerHTML = ''
+	axios.post('/bookNow',{pickDate, dropDate, carId })
+	.then((res) => {
+		console.log(res)
+    window.location.href = '/bookingCar'
+	})
+	.catch((err) => {
+		console.log(err)
+	})
+  })
+	
+// Initialize pickDate picker
+var pickDate = flatpickr("#pickDate", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+    minTime: "08:00",
+    maxTime: "22:00",
+    minDate: "today",
+    disable: getDisableDates(),
+     onChange: function(selectedDates, dateStr, instance) {
+        // Your existing onChange logic
+        var pickupDate = selectedDates[0];
+        var maxDropoffDate = new Date(pickupDate);
+        maxDropoffDate.setDate(maxDropoffDate.getDate() + 365); // Set max drop-off date to 365 days after pickup date
+
+        // Find the nearest disabled date after pickup date
+        var disabledDates = getDisableDates();
+        for (var i = 0; i < disabledDates.length; i++) {
+            if (disabledDates[i] > pickupDate) {
+                maxDropoffDate = disabledDates[i];
+                break;
+            }
+        }
+
+        // Update the disable dates for dropDate picker
+        dropDate.set("disable", getDisableDates(selectedDates));
+
+        // Set maxDate for dropDate picker
+        dropDate.set("maxDate", maxDropoffDate);
+
+        // Set minDate for dropDate picker
+        dropDate.set("minDate", pickupDate);
+
+        // Ensure dropDate is after pickupDate
+        var dropoffInstance = document.getElementById("dropDate")._flatpickr;
+        if (dropoffInstance.selectedDates.length > 0 && dropoffInstance.selectedDates[0] < pickupDate) {
+            dropoffInstance.setDate(pickupDate);
+        }
+    }
+});
+
+// Initialize dropDate picker
+var dropDate = flatpickr("#dropDate", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+    minTime: "08:00",
+    maxTime: "22:00",
+    minDate: "today",
+    disable: getDisableDates()
+});
+
+// Function to get disable dates based on selected pick-up date
+// Function to get disable dates based on selected pick-up date
+function getDisableDates(selectedDates) {
+    var disableDates = [];
+    {{#each this.bookings}}
+    var pickupDate = new Date("{{this.pickupDate}}");
+    var returnDate = new Date("{{this.returnDate}}");
     
+    // Disable all dates within the booking range
+    var currentDate = new Date(pickupDate);
+    while (currentDate <= returnDate) {
+        disableDates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    {{/each}}
+    return disableDates;
+}
+
+
+
+</script>
   </body>

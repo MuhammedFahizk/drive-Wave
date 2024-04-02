@@ -78,7 +78,6 @@
         </div>
       </div>
     </section>
-	
   <script>
     const contactFormInput = document.getElementById('contactForm')
     const nameError = document.getElementById('nameError')
@@ -92,7 +91,6 @@
 
    contactFormInput.addEventListener('submit', function(event) {
   event.preventDefault();
-
   const formData = new FormData(event.target);
   const { name, email, subject, message } = Object.fromEntries(formData.entries());
 
@@ -130,11 +128,15 @@
   }
 
   if (isValid) {
+
     // If form is valid, make Axios API call here
     axios.post('/Message', { name, email, subject, message })
       .then(response => {
         // Handle response if needed
         console.log(response.data);
+        document.getElementById("ftco-loader").style.display = "none";
+
+        window.location.reload()
       })
       .catch(error => {
         // Handle error if needed
@@ -142,5 +144,6 @@
       });
   }
 });
+
 
   </script>

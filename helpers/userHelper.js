@@ -190,20 +190,22 @@ async function specifiedCars(pickDate, dropDate, location) {
 
   return { allCollections, locations };
 }
-async function filterCars(transmission, fuel, carCategory, sessionLocation, pickDate, dropDate) {
+async function
+// eslint-disable-next-line max-len
+filterCars(transmission, fuel, carCategory, sessionLocation, pickDate, dropDate, search, sortOrder) {
   let location;
   if (!sessionLocation) {
     location = await Car.distinct('location').exec();
   } else {
     location = [sessionLocation];
   }
-
   let AvailabilityId = [];
   const matchConditions = {
     TransmitionType: { $in: transmission },
     fuelType: { $in: fuel },
     carCategory: { $in: carCategory },
     location: { $in: location },
+    carName: { $regex: search, $options: 'i' }, // Search by car name (case-insensitive)
   };
 
   if (pickDate && dropDate) {
@@ -212,8 +214,17 @@ async function filterCars(transmission, fuel, carCategory, sessionLocation, pick
     const availability = await userService.findCarAvailability(pickDateData, dropDateData);
     AvailabilityId = availability.map((entry) => entry._id);
     matchConditions._id = { $in: AvailabilityId };
-    matchConditions.pickDate = pickDateData;
-    matchConditions.dropDate = dropDateData;
+  }
+  if (sortOrder !== 0) {
+    const sortStage = {
+      $sort: {
+        dayRent: sortOrder, // Sort by dayRent field (price) based on sortOrder
+      },
+    };
+    const model = [{ $match: matchConditions }, sortStage];
+    const allCollections = await Car.aggregate(model);
+
+    return allCollections;
   }
 
   const model = [{ $match: matchConditions }];
@@ -244,7 +255,32 @@ async function carDetailsUserHelper(id, name) {
 
   return { car: cars, data: carData, name };
 }
-
+async function bookingDate(id) {
+  try {
+    const bookings = await User.aggregate([
+      {
+        $unwind: '$bookedCar', // Deconstruct bookedCar array
+      },
+      {
+        $match: {
+          'bookedCar.car': new ObjectId(id), // Match carId
+        },
+      },
+      {
+        $project: {
+          _id: 0, // Exclude _id field
+          pickupDate: '$bookedCar.pickupDate',
+          returnDate: '$bookedCar.returnDate',
+          // Project bookedCar object as 'booking'
+        },
+      },
+    ]);
+    return bookings;
+  } catch (error) {
+    console.error('Error finding bookings:', error);
+    throw error;
+  }
+}
 const emailOtp = {};
 
 async function generateOtpEmailHelper(email) {
@@ -450,7 +486,6 @@ async function userBookedCarHelper(formDatas, service, sessionData, _id) {
     throw new Error('User not found');
   }
 
-  const bookingDate = new Date();
   const car = await Car.findById(carId);
   const userCheck = await User.findById(_id).populate('bookedCar');
   const confirmArray = await userService.confirm(_id, carId, userCheck);
@@ -485,7 +520,7 @@ async function userBookedCarHelper(formDatas, service, sessionData, _id) {
   const amount = days * car.dayRent;
   const bookingData = {
     car: carId,
-    bookingDate,
+    bookingDate: new Date(),
     pickupDate: pickDate,
     returnDate: dropDate,
     carRent: amount,
@@ -764,7 +799,22 @@ async function addReview(id, formData) {
     throw error; // Throw the error for handling in the calling function
   }
 }
+async function allCarHelper() {
+  try {
+    // Fetch all cars
+    const cars = await Car.find();
 
+    // Fetch distinct locations
+    const locations = await Car.distinct('location');
+
+    // Return cars and locations
+    return { cars, locations };
+  } catch (error) {
+    // Handle errors
+    console.error('Error fetching cars and locations:', error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+}
 module.exports = {
   homePageHelper,
   userLoginHelper,
@@ -774,6 +824,7 @@ module.exports = {
   specifiedCars,
   filterCars,
   carDetailsUserHelper,
+  bookingDate,
   generateOtpEmailHelper,
   userOtpCheckHelper,
   forgotPasswordHelper,
@@ -790,4 +841,5 @@ module.exports = {
   getOrderDetails,
   saveRecoveryMessage,
   addReview,
+  allCarHelper,
 };

@@ -8,7 +8,6 @@ const handlebars = require('express-handlebars');
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 const dotEnv = require('dotenv');
 const mongoose = require('mongoose');
-
 const adminRoute = require('./routes/adminRoute');
 const userRoute = require('./routes/userRout');
 const vendorRoute = require('./routes/vendorRoute');

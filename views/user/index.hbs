@@ -289,20 +289,33 @@
                 <div class="img rounded d-flex align-items-end" style="background-image: url({{carImage}});">
                 </div>
                 <div class="text">
-                  <h2 class="mb-0"><a href="#">{{carName}}</a></h2>
+                  <h2 class="mb-0"><a href="carDetails?id={{_id}}">{{carName}}</a></h2>
                   <div class="d-flex mb-3">
                     <span class="cat">{{carModal}}</span>
-                    <p class="price ml-auto">{{dayRent}} <span>/day</span></p>
+                    <p class="price ml-auto">
+                      {{dayRent}} <span>/day</span></p>
                   </div>
                   <div class="d-flex mb-3">
-                    <span class="cat">Users</span>
-                    <p class="price ml-auto">{{bookingsCount}} <span><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                          height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
-                          <path
-                            d="M20 2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-6 2.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM19 15H9v-.25C9 12.901 11.254 11 14 11s5 1.901 5 3.75V15z">
-                          </path>
-                          <path d="M4 8H2v12c0 1.103.897 2 2 2h12v-2H4V8z"></path>
-                        </svg>
+                    <p class="star p-0 col-3">
+                        <span id="starRating{{@index}}" class="m-0"></span>
+                    </p>
+                     <script>
+                // Function to dynamically generate star ratings
+                function showStars(rating, containerId) {
+                    let starsHTML = '';
+                    for (let i = 0; i < 5; i++) {
+                        if (i < rating) {
+                            starsHTML += '<i class="ion-ios-star"style="color: gold;"></i>';
+                        } else {
+                            starsHTML += '<i class="ion-ios-star-outline"></i>';
+                        }
+                    }
+                    document.getElementById(containerId).innerHTML = starsHTML;
+                }
+
+                // Example usage to populate star ratings
+                showStars({{this.rate}}, 'starRating{{@index}}');
+            </script>
                   </div>
 
 
@@ -486,63 +499,7 @@ At Drive Wave, we believe that convenience, reliability, and affordability shoul
     </div>
   </section>
 
-  {{!-- <section class="ftco-section">
-    <div class="container">
-      <div class="row justify-content-center mb-5">
-        <div class="col-md-7 heading-section text-center ftco-animate">
-          <span class="subheading">Blog</span>
-          <h2>Recent Blog</h2>
-        </div>
-      </div>
-      <div class="row d-flex">
-        <div class="col-md-4 d-flex ftco-animate">
-          <div class="blog-entry justify-content-end">
-            <a href="blog-single.html" class="block-20" style="background-image: url('images/image_1.jpg');">
-            </a>
-            <div class="text pt-4">
-              <div class="meta mb-3">
-                <div><a href="#">Oct. 29, 2019</a></div>
-                <div><a href="#">Admin</a></div>
-                <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
-              </div>
-              <h3 class="heading mt-2"><a href="#">Why Lead Generation is Key for Business Growth</a></h3>
-              <p><a href="#" class="btn btn-primary">Read more</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 d-flex ftco-animate">
-          <div class="blog-entry justify-content-end">
-            <a href="blog-single.html" class="block-20" style="background-image: url('images/image_2.jpg');">
-            </a>
-            <div class="text pt-4">
-              <div class="meta mb-3">
-                <div><a href="#">Oct. 29, 2019</a></div>
-                <div><a href="#">Admin</a></div>
-                <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
-              </div>
-              <h3 class="heading mt-2"><a href="#">Why Lead Generation is Key for Business Growth</a></h3>
-              <p><a href="#" class="btn btn-primary">Read more</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 d-flex ftco-animate">
-          <div class="blog-entry">
-            <a href="blog-single.html" class="block-20" style="background-image: url('images/image_3.jpg');">
-            </a>
-            <div class="text pt-4">
-              <div class="meta mb-3">
-                <div><a href="#">Oct. 29, 2019</a></div>
-                <div><a href="#">Admin</a></div>
-                <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
-              </div>
-              <h3 class="heading mt-2"><a href="#">Why Lead Generation is Key for Business Growth</a></h3>
-              <p><a href="#" class="btn btn-primary">Read more</a></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section> --}}
+
 
   <section class="ftco-counter ftco-section img bg-light" id="section-counter">
     <div class="overlay"></div>
@@ -598,6 +555,19 @@ At Drive Wave, we believe that convenience, reliability, and affordability shoul
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
+   window.onload = function () {
+            if (window.history && window.history.pushState) {
+                window.history.pushState('/', null, './');
+                window.onpopstate = function () {
+                  console.log(window.location)
+                    if (window.location.hash === '/login' ||window.location.hash === '') {
+                        // User pressed back button, reload the page to ensure it's not cached
+                        window.location.reload();
+                       console.log(window.location)
+                    }
+                };
+            }
+        }
   $(document).ready(function() {
   $('#locationSearch').on('keyup', function() {
     var searchTerm = $(this).val().toLowerCase();
@@ -642,9 +612,26 @@ At Drive Wave, we believe that convenience, reliability, and affordability shoul
     minTime: "08:00",
     maxTime: "22:00",
     minDate: "today",
-    onChange: function (selectedDates, dateStr, instance) {
-      document.getElementById("drop-off")._flatpickr.set("minDate", dateStr);
+onChange: function(selectedDates, dateStr, instance) {
+    // Get the selected pick-up date
+    var pickupDate = selectedDates[0];
+    
+    // Calculate the max date allowed for drop-off (pick-up date + one year)
+    var maxDropoffDate = new Date(pickupDate);
+    maxDropoffDate.setFullYear(maxDropoffDate.getFullYear() + 1);
+    
+    // Get the Flatpickr instance for the drop-off field
+    var dropoffInstance = document.getElementById("drop-off")._flatpickr;
+    
+    // Set the maxDate for drop-off
+    dropoffInstance.set("maxDate", maxDropoffDate);
+    
+    // Update the minDate for drop-off if necessary
+    if (dropoffInstance.selectedDates.length > 0 && dropoffInstance.selectedDates[0] < pickupDate) {
+        dropoffInstance.setDate(dateStr);
     }
+}
+
   });
 
   flatpickr("#drop-off", {

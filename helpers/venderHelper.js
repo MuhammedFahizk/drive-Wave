@@ -205,9 +205,10 @@ async function updateCarById(editCarId, updateValues) {
     if (!editCarId) {
       throw new Error('Could not get car Id');
     }
-
-    // eslint-disable-next-line no-param-reassign
-    updateValues.location = updateValues.location.replace(/-/g, ' ');
+    if (updateValues.location !== undefined) {
+      // eslint-disable-next-line no-param-reassign
+      updateValues.location = updateValues.location.replace(/-/g, ' ');
+    }
 
     const updatedCar = await Car.findByIdAndUpdate(
       editCarId,

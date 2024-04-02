@@ -175,20 +175,20 @@ const FeaturedCar = async () => {
   const mostBookedCar = await Car.aggregate([
     {
       $match: {
-        bookings: { $exists: true, $ne: [] }, // Filter cars that have bookings
+        rate: { $exists: true, $ne: [] }, // Filter cars that have bookings
       },
     },
     {
       $project: {
         carName: 1,
-        bookingsCount: { $size: '$bookings' },
+        rate: 1,
         dayRent: 1,
         carModal: 1,
         carImage: 1,
       },
     },
     {
-      $sort: { bookingsCount: -1 }, // Sort by bookingsCount in descending order
+      $sort: { rate: -1 }, // Sort by bookingsCount in descending order
     },
     {
       $limit: 4, // Take only the first result, which will be the car with the most bookings
