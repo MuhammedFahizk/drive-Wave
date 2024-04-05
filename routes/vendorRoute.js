@@ -3,7 +3,7 @@ const multer = require('multer');
 const vendorController = require('../controllers/vendorController');
 const middleware = require('../middleware/vendor');
 
-const upload = multer({ dest: '/upload/' });
+const upload = multer({ dest: '/tmp/' });
 
 const router = express.Router();
 router.get('/', middleware.loginMiddleWare, vendorController.loginPage);
