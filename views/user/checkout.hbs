@@ -329,9 +329,9 @@ body {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 </head>
-<section class="ftco-section bg-light col-12 row p-0 p-md-5 m-0 ">
+<section class="ftco-section bg-light col-12 row p-0 p-md-5 m-md-0 ">
     <div class="container p-0 p-md-5">
-        <div class="container p-md-4 p-4 col-md-12 justify-content-center ">
+        <div class="container p-md-4 p-md-4 col-md-12 justify-content-center p-0 ">
 
 
 
@@ -344,7 +344,7 @@ body {
                 </div>
                 <div class="col-md-7 ">
                     <div class="row  ">
-                        <h2 class="px-md-3 py-3">Payment Details</h2>
+                        <h2 class="px-md-3 ml-4 py-3">Payment Details</h2>
                         <div class="form-group row justify-content-center my-1 col-md-12">
 
                             <div class="form-check  col-5">
@@ -431,7 +431,7 @@ body {
                     </div>
                 </div>
 
-                <div class=" right col-md-5  justify-content-center px-4 my-4 py-4">
+                <div class=" right col-md-5  justify-content-center px-md-4  ml-3 m-md-0  my-4 py-4">
                     <h6 class="text-dark">{{car.carName}}</h6>
                     <div style="border-radius:10px;" class="col-12  bg-light  p-0 m-0 row">
                         <div class="col-3"
@@ -524,29 +524,30 @@ body {
             </div>
         </div>
         {{else}}
-        <div id="bookingPage" class="body row justify-content-center p-1 col-12 ">
+        <div id="bookingPage" class="body row d-flex justify-content-center m-2 my-4 p-md-1 col-12 ">
             <div class="col-12 justify-content-left d-flex ">
                 <p class="mr-3 text-success">Booking</p>
                 <p class="mr-3 ">Payment</p>
             </div>
-            <div class="col-7 ">
-                <div class="row">
+            <div class="col-md-7 ">
+                <div class="row  ml-2">
 
-                    <h2 class="px-3 py-3">Booking Page</h2>
+                    <h2 class="px-md-3  py-md-3 ">Booking Page</h2>
                     <div class="col-12 row ">
-                        <form action="" class="p-3" id="bookingForm">
+                        <form action="" class="p-md-3 py-4" id="bookingForm">
                             <input type="text" class=" col-12 mt-2" name="email" value="{{user.email}}"
                                 placeholder="Email Address" required>
                             <input type="text" class="col-12 mt-3 " value="{{user.phone}}" name="phone"
                                 placeholder="Phone Number" required>
-                            <input class=" col-12 mt-3" name="houseName" value="{{user.address.houseName}}"
+                            <input class=" col-12 mt-3" name="houseName" id="houseName" value="{{user.address.houseName}}"
                                 placeholder="House Name">
-                            <input type="text" class="  col-5 mt-3 " name="place" value="{{user.address.place}}" 
-                                placeholder="Place" required>
-                            <input type="text" maxlength="6" class=" col-5 mt-3 " name="zip" value="{{user.address.zip}}"
-                                placeholder="Zip" required>
-                            <input id="bookingPageSubmit" type="button" class="col-12 mt-4 btn btn-primary"
-                                value="Booking" >
+                            <input type="text" class="  col-5 mt-3 " id="place" name="place" value="{{user.address.place}}" 
+                                placeholder="Place" >
+                            <input type="number" maxlength="6"class=" col-5 mt-3 " id="zip" name="zip" value="{{user.address.zip}}"
+                                placeholder="Zip" >
+                                <p id="errMsg"></p>
+                            <button id="bookingPageSubmit" type="submit" class="col-12 mt-4 btn btn-primary"
+                                value="Booking" > Submit</button>
                         </form>
                         <h6 style="display: none;" id="errorMessage" class="mx-4 text-danger">You Already Booked this
                             Car. <a style="text-decoration: solid;" href="/bookedCars"> Go To Bookings </a> </h6>
@@ -554,32 +555,32 @@ body {
                 </div>
 
             </div>
-            <div class=" right col-5  justify-content-center px-4  py-4 bg-white">
-                <div style="border-radius:10px;" class="col-12  bg-light  p-0 m-0 row">
-                    <a href="/carDetails?id={{car._id}}" class="col-3 p-0 m-0">
+            <div class=" right col-md-5  justify-content-center px-md-4  py-4  bg-white">
+                <div style="border-radius:10px;" class="col-12  bg-light  p-md-0 m-md-0 ml-1 row">
+                    <a href="/carDetails?id={{car._id}}" class="col-md-3 p-0 m-0 my-2">
                         <div class="col-12"
                         style="border-radius:10px;background-image: url({{car.carImage}}); background-size: cover; background-position: center; height: 100px; width: 100%;">
 
 
                     </div>
                     </a>
-                    <div class="col-9 p-2">
+                    <div class="col-md-9 p-md-2 ">
                         <h6 class="text-dark d-flex justify-content-between">
     Car Name
-    <span class="text-primary mr-4">{{car.carName}}</span>
+    <span class="text-primary mr-md-4">{{car.carName}}</span>
 </h6>
 {{#if dayDifferenceIn }}
                      <h6 class="text-dark d-flex justify-content-between">
     Pick Up Date
-    <span class="text-primary mr-4">{{formattedPickDate}}</span>
+    <span class="text-primary mr-md-4">{{formattedPickDate}}</span>
 </h6>
             <h6 class="text-dark d-flex justify-content-between">
     Pick off Date
-    <span class="text-primary mr-4">{{formattedDropDate}}</span>
+    <span class="text-primary mr-md-4">{{formattedDropDate}}</span>
 </h6>
     <h6 class="text-dark d-flex justify-content-between">
         Total Days
-        <span class="text-primary mr-4">{{dayDifferenceIn}}</span>
+        <span class="text-primary mr-md-4">{{dayDifferenceIn}}</span>
     </h6>
     {{else}}
                         <div class="col-12 justify-content-center">
@@ -628,8 +629,8 @@ body {
 
                 <div class="car-wrap rounded ftco-animate row col-12 m-0 px-4 p-4 justify-content-center mt-2 ">
 
-                    <input type="button" id="changeDate" class="btn btn-outline-info mx-2" value="Change Date">
-                    <a type="button" href="/cars" class="btn btn-outline-success mx-2" value="">Change Car</a>
+                    <input type="button" id="changeDate" class="btn btn-outline-info m-2 col-md-5 col-12" value="Change Date">
+                    <a type="button" href="/cars" class="btn btn-outline-success m-2 col-md-5 col-12" value="">Change Car</a>
 
                 </div>
             </div>
@@ -886,10 +887,20 @@ function getDisableDates(selectedDates) {
     if (bookingPageSubmit) {
         bookingPageSubmit.addEventListener('click', (e) => {
             e.preventDefault();
+            const houseName = document.getElementById('houseName').value
+            const place = document.getElementById('place').value
+            const zip = document.getElementById('zip').value
+            const errMsg = document.getElementById('errMsg')
             if (pickDateInput || dropDateInput) {
                 if (pickDateInput.value === "" || dropDateInput.value === "") {
                     return error.innerHTML = 'Enter Pick-Up date and Drop-off date';
                 }
+            }
+console.log('sds')
+
+            if(houseName === '' || zip === ''|| place === '') {
+             errMsg.innerHTML = 'Enter Address '
+            return false
             }
             const formDatas = {}; // Initialize an empty object
 
@@ -901,7 +912,7 @@ function getDisableDates(selectedDates) {
                 formDatas[key] = value; // Use key as property of the object
             }
 
-            console.log(formDatas);
+            console .log(formDatas);
 
             e.preventDefault();
             console.log(formDatas)
@@ -916,8 +927,6 @@ function getDisableDates(selectedDates) {
                 })
                 .catch(error => {
                     console.log(error)
-                    const errorMessage = document.getElementById('errorMessage')
-                    errorMessage.style.display = 'block'
                 });
         });
     }

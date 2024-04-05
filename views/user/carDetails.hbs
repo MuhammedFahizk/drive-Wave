@@ -196,14 +196,23 @@
         
           
       	</div>
+        
+{{#if date}}
+<div class="col-12 d-flex justify-content-center">
+              <a href="/bookingCar?carId={{car._id}}" class="btn btn-outline-success py-2 mr-1">Book {{car.carName}}</a>
+
+</div>
+{{else}}
         <div style="border: solid 1px;" class="col-12 row d-flex justify-content-around  rounded p-5">
 			<input type="text" style="border: solid 1px;"  id="pickDate" type="text" placeholder="Pick-Up-Time" class="col-3   rounded">
 			<input type="text" style="border: solid 1px;" id="dropDate" type="text" placeholder="Drop-off-Time" class="col-3 rounded">
 			<p id='error' class="text-danger"></p>
 			<input type="hidden" id="carId" value="{{car._id}}">
-			<input type="button" class="col-2 btn btn-success " id="bookCar" value="Book Now">
+			<input type="button" class="col-2 btn btn-outline-success " id="bookCar" value="Book Now">
 
 		</div>
+    {{/if}}
+
 
 
       	<div class="row">

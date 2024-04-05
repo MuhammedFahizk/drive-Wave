@@ -138,13 +138,12 @@ async function showCars(req, res) {
   try {
     const { pickDate, dropDate, location } = req.session.booking || {};
     const { name } = req.session;
-    req.session.booking = req.session.booking || {};
 
     let allCollections = [];
     let locations = [];
 
     if (pickDate && dropDate) {
-      req.session.booking = { pickDate, dropDate };
+      req.session.booking = { location, pickDate, dropDate };
 
       const { allCollections: specifiedCarsData, locations: specifiedLocations } = await helper
         .specifiedCars(pickDate, dropDate, location);
@@ -185,7 +184,6 @@ async function filterCars(req, res) {
       transmission, fuel, carCategory, search, sortOrder,
     } = req.body;
     const { location, pickDate, dropDate } = req.session.booking;
-
     const allCollections = await helper
       .filterCars(transmission, fuel, carCategory, location, pickDate, dropDate, search, sortOrder);
 
@@ -202,7 +200,7 @@ async function carDetailsUser(req, res) {
     const { car, data } = await helper.carDetailsUserHelper(id, name);
     const bookings = await helper.bookingDate(id);
     res.status(200).render('user/carDetails', {
-      car, data, name, bookings,
+      car, data, name, bookings, date: req.session.booking.pickDate,
     });
   } catch (error) {
     console.error('Error Details User:', error);
@@ -364,7 +362,11 @@ const findCarByDate = async (req, res) => {
     }
     return res.redirect('/cars');
   }
-  req.session.booking = { pickDate, dropDate, location };
+  if (location) {
+    req.session.booking = { pickDate, dropDate, location };
+    return res.redirect('/cars');
+  }
+  req.session.booking = { pickDate, dropDate };
   return res.redirect('/cars');
 };
 async function userRecoveryMessage(req, res) {

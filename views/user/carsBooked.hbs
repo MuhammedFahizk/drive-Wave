@@ -171,7 +171,7 @@
         <div class="col-md-12 row m-0 px-md-4 ">
           <h3 class=" col-md-8 mx-4 mt-5 fw-4 fs-4"> Booked Car</h3>
           <p id="count" class=" col-md-2 my-5 ml-md-5">{{data.length}} Items</p>
-          <div class="col-12 ml-2 p-0 " style="overflow-y: auto; maxheight: 450px; overflow-x: hidden;">
+          <div class="col-12 ml-2 p-0 " style="overflow-y: auto; max-height: 400px; overflow-x: hidden;">
             {{#each data}}
 
             <div style="border: solid 1px;"
@@ -230,9 +230,9 @@
 
           </div>
           {{else}}
-          <div class="col-12 d-flex justify-content-center  ">
-            <div class="justify-content-center">
-              <h2 class="text-center fs-4">Your Booking Is Empty</h2>
+          <div class="col-12 d-flex justify-content-center my-5">
+            <div class="justify-content-center mt-5">
+              <h2 class="text-center fs-4">Your Booking Page Is Empty</h2>
               <p class="text-center p-0 m-0">Looks like you have not added anything to your <span><a
                     href="/cars">Booking</a></span>. Go</p>
               <p class="text-center p-0 m-0">ahead and explore top category's</p>
@@ -260,7 +260,7 @@
           <div class="col-md-12 row m-0 px-md-4" id="historyTable">
             <h3 class=" col-md-8 mx-4 mt-3 fw-4 fs-4"> Booking History</h3>
             <p id="count" class=" col-md-2 my-3 ml-md-5">{{history.length}} Items</p>
-            <div class="historyData col-12 ml-2 p-0 " style="overflow-y: auto; maxheight: 450px; overflow-x: hidden;">
+            <div class="historyData col-12 ml-2 p-0 " style="overflow-y: auto; max-height: 400px; overflow-x: hidden;">
             {{#each history}}
 
             <div style="border: solid 1px;"
@@ -311,17 +311,17 @@
 
           </div>
             {{else}}
-            <div class="col-12 d-flex justify-content-center  ">
+            {{!-- <div class="col-12 d-flex justify-content-center  p-5">
               <div class="justify-content-center">
                 <h2 class="text-center fs-4">Your Is Empty</h2>
                 <p class="text-center p-0 m-0">Looks like you have not added anything to your <span><a
                       href="/cars">Booking</a></span>. Go</p>
                 <p class="text-center p-0 m-0">ahead and explore top category's</p>
               </div>
-            </div>
+            </div> --}}
             {{/if}}
           </div>
-          <div class="col-md-12 row m-0 px-md-4 p-4" style="display: none;" id="reviewPage">
+          <div class="col-md-12 row m-0 px-md-4 p-4 " style="display: none; background-color:#2edbcd00" id="reviewPage">
             <div class="col-md-12 block-9 mb-md-5">
               <form action='/review' class="bg-light p-5 contact-form" method="post">
  

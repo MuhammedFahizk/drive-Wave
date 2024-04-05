@@ -243,11 +243,10 @@ async function deleteCarHelper(deleteId) {
     if (!car) {
       throw new Error('Car not found');
     }
-
     const publicIdToDelete = car.imageId;
-    await cloudinary.deleteImage(publicIdToDelete);
 
     await Car.findByIdAndDelete(deleteId);
+    await cloudinary.deleteImage(publicIdToDelete);
 
     return { success: true, message: 'Car deleted successfully' };
   } catch (error) {

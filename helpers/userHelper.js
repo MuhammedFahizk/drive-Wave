@@ -487,12 +487,12 @@ async function userBookedCarHelper(formDatas, service, sessionData, _id) {
   }
 
   const car = await Car.findById(carId);
-  const userCheck = await User.findById(_id).populate('bookedCar');
-  const confirmArray = await userService.confirm(_id, carId, userCheck);
+  // const userCheck = await User.findById(_id).populate('bookedCar');
+  // const confirmArray = await userService.confirm(_id, carId, userCheck);
 
-  if (confirmArray.length > 0) {
-    throw new Error('Car is already booked');
-  }
+  // if (confirmArray.length > 0) {
+  //   throw new Error('Car is already booked');
+  // }
 
   let foundServices = null;
   let serviceAmount = 0;

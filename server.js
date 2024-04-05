@@ -13,7 +13,6 @@ const userRoute = require('./routes/userRout');
 const vendorRoute = require('./routes/vendorRoute');
 
 dotEnv.config();
-
 mongoose.connect(process.env.MONGODB_ATLAS, {
 });
 
