@@ -148,18 +148,18 @@
   }
 </style>
 <section style="background-color: #f9fafa;" class="ftco-section ftco-car-details col-md-12 px-md-3 py-4">
-  <div class="container p-md-4 p-4 col-md-12">
+  <div class="container p-md-4  col-md-12">
     <div class="table-responsive">
       <table class="table">
       </table>
     </div>
 
     {{#if data}}
-    <div class="col-12 row d-flex justify-content-center ftco-animated p-1 ">
+    <div class="col-12 row d-flex justify-content-center ftco-animated p-1 m-0 ">
 
 
-      <div style="display: none;" id="rightSide" style="background-color:#2edbcd ;" class="col-md-4 ">
-        <div class="col-12 mt-4">
+      <div style="display: none;" id="rightSide" style="background-color:#2edbcd ;" class="col-md-4 p-0 ">
+        <div class="col-12 mt-4 p-0">
           <div class="car-wrap rounded ftco-animate " id="summaryContainer">
 
           </div>
@@ -244,11 +244,11 @@
 
 
       {{#if history}}
-      <div class="col-12 row d-flex justify-content-center ftco-animated p-1 ">
+      <div class="col-12 row d-flex justify-content-center ftco-animated p-0  ">
 
-        <div style="display: none;" id="rightSideHistory" style="background-color:#2edbcd ;" class="col-md-4 ">
-          <div class="col-12 mt-4">
-            <div class="car-wrap rounded ftco-animate " id="summaryContainerHistory">
+        <div style="display: none;" id="rightSideHistory" style="background-color:#2edbcd ;" class="col-md-4 p-0 m-0">
+          <div class="col-12  p-0 m-0">
+            <div class="car-wrap rounded ftco-animate p-0" id="summaryContainerHistory">
 
             </div>
 
@@ -596,7 +596,10 @@
         .then(res => {
           console.log(res);
           const summaryContainer = document.getElementById('summaryContainer');
+     if (window.innerWidth <= 768) {
+    summaryContainer.scrollIntoView({ behavior: 'smooth' });
 
+     }
           if (summaryContainer) {
             if (res.data.thisBooking.status === 'Confirmed') {
               console.log(res.data.status);
@@ -613,10 +616,11 @@
                                 </div>
                                 <p class="price m-0 p-0"><span>${res.data.thisBooking.totalPrice}/Total Amount</span></p>
                                 <p class="d-flex mb-0 d-block">
-                                <button type="text" class="btn btn-primary py-2 ml-1" id="orderBtn"> Details</button>
+                                <a type="text" class="btn btn-primary py-2 mr-1" id="orderBtn"> Details</a>
                                     <a href="/carDetails?id=${res.data.thisBooking.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
                                 </p>
                             </div>`;
+
               const orderBtn = document.getElementById('orderBtn');
               orderBtn.addEventListener('click', (e) => {
                 // Trigger a click event on the button that launches the modal
@@ -722,7 +726,10 @@
         .then(res => {
           console.log(res);
           const summaryContainer = document.getElementById('summaryContainerHistory');
+               if (window.innerWidth <= 768) {
+    summaryContainer.scrollIntoView({ behavior: 'smooth' });
 
+     }
           if (summaryContainer) {
             console.log(res.data.status);
 
@@ -738,10 +745,11 @@
                                 </div>
                                 <p class="price m-0 p-0"><span>${res.data.thisBooking.totalPrice}/Total Amount</span></p>
                                 <p class="d-flex mb-0 d-block">
-                                <button type="text" class="btn btn-primary py-2 ml-1" id="orderBtn"> Details</button>
+                                <a type="text" class="btn btn-primary py-2 mr-1" id="orderBtn"> Details</a>
                                     <a href="/carDetails?id=${res.data.thisBooking.car._id}" class="btn btn-secondary py-2 ml-1">Details</a>
                                 </p>
                             </div>`;
+            
             const orderBtn = document.getElementById('orderBtn');
             orderBtn.addEventListener('click', (e) => {
               // Trigger a click event on the button that launches the modal

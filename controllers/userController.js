@@ -325,7 +325,7 @@ async function bookingCar(req, res) {
     result.name = req.session.name;
     const bookings = await helper.bookingDate(queryCarId);
     result.bookings = bookings;
-    res.status(200).render('user/checkOut', result);
+    res.status(200).render('user/checkout', result);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error', details: error });

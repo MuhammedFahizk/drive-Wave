@@ -264,18 +264,18 @@
 
 
 
-<section class="ftco-section bg-light col-12 row   mt-1 py-5 m-0 row d-flex justify-content-end">
+<section class="ftco-section bg-light col-12 row   mt-1 py-md-5 m-0 p-3  row d-flex justify-content-md-end justify-content-center ">
  
 
- <div class="col-md-1 mt-5   d-flex justify-content-end">
+ <div class="col-md-1 mt-md-5 col-3   d-flex justify-content-md-end ">
  <div class="col-md-8 col-12 d-none  d-md-block border-0 pl-md-3 m-0  p-md-3 p-3 mb-5 ftco-animate rounded car-wrap">
   <i class="icomoon icon-search"></i>
 
   </div>
  </div>
-    <input type="text"  id="carSearch" class="col-md-4 col-11 border-0 pl-3 mr-0 pr-0  p-2 my-5  ftco-animate rounded car-wrap" placeholder="Search Cars ...">
- <div class="col-md-1 mt-5  m-0   d-flex justify-content-left">
- <div class="col-md-8 col-12 d-none  d-md-block border-0  m-0  p-md-3 p-3 mb-5 ftco-animate rounded car-wrap dropup"  data-toggle="dropdown" aria-expanded="false" data-offset="10,20">
+    <input type="text"  id="carSearch" class="col-md-4  ml-0 col-7 border-0 pl-3 mr-md-0 pr-0  p-2 my-md-5  ftco-animate rounded car-wrap" placeholder="Search Cars ...">
+ <div class="col-1 mt-md-5  m-0   d-flex justify-content-left">
+ <div class="col-md-8 col-12    border-0  m-0  p-md-3 p-3 mb-5 ftco-animate rounded car-wrap dropup"  data-toggle="dropdown" aria-expanded="false" data-offset="10,20">
 <i class="icomoon icon-filter"  ></i>
 
   </div>
@@ -540,6 +540,9 @@
       if (!carsFound) {
         $('#noCarsMessage').show();
       } else {
+         if (window.innerWidth <= 768) {
+    document.getElementById('searchCars').scrollIntoView({ behavior: 'smooth' });
+     }
         $('#noCarsMessage').hide();
       }
     });
@@ -794,6 +797,9 @@ function getStarRating(rating) {
         console.log("Selected location:", selectedLocation);
         servicePage.style.display = 'block';
         locations.style.display = 'none';
+           if (window.innerWidth <= 768) {
+    document.getElementById('locationButton').scrollIntoView({ behavior: 'smooth' });
+     }
 
       });
     });
@@ -803,6 +809,9 @@ function getStarRating(rating) {
     e.preventDefault();
     servicePage.style.display = 'none';
     locations.style.display = 'block';
+       if (window.innerWidth <= 768) {
+    locations.scrollIntoView({ behavior: 'smooth' });
+     }
   });
   }
 

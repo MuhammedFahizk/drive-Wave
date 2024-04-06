@@ -104,6 +104,8 @@
 
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
@@ -548,7 +550,7 @@ At Drive Wave, we believe that convenience, reliability, and affordability shoul
 
 
 </body>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
@@ -581,30 +583,6 @@ At Drive Wave, we believe that convenience, reliability, and affordability shoul
     });
   });
 });
-
-  const locations = document.getElementById('locations')
-  const servicePage = document.getElementById('servicePage')
-  const locationButton = document.getElementById('locationButton')
-  document.addEventListener('DOMContentLoaded', function() {
-
-     document.querySelectorAll('.locationLinkLi').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const selectedLocation = this.textContent.trim();
-      document.getElementById('selectedLocation').value = selectedLocation;
-      document.getElementById('locationButton').value = selectedLocation;
-
-      console.log("Selected location:", selectedLocation);
-          servicePage.style.display = 'block';
-    locations.style.display = 'none';
-    });
-  });
-   })
-  locationButton.addEventListener('click', function (e) {
-    e.preventDefault();
-    servicePage.style.display = 'none';
-    locations.style.display = 'block';
-  });
 
   flatpickr("#pick-up", {
     enableTime: true,
@@ -641,6 +619,37 @@ onChange: function(selectedDates, dateStr, instance) {
     maxTime: "22:00",
     minDate: "today"
   });
+
+  const locations = document.getElementById('locations')
+  const servicePage = document.getElementById('servicePage')
+  const locationButton = document.getElementById('locationButton')
+  document.addEventListener('DOMContentLoaded', function() {
+
+     document.querySelectorAll('.locationLinkLi').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const selectedLocation = this.textContent.trim();
+      document.getElementById('selectedLocation').value = selectedLocation;
+      document.getElementById('locationButton').value = selectedLocation;
+
+      console.log("Selected location:", selectedLocation);
+          servicePage.style.display = 'block';
+    locations.style.display = 'none';
+     if (window.innerWidth <= 768) {
+    document.getElementById('locationButton').scrollIntoView({ behavior: 'smooth' });
+     }
+    });
+  });
+   })
+  locationButton.addEventListener('click', function (e) {
+    e.preventDefault();
+    servicePage.style.display = 'none';
+    locations.style.display = 'block';
+     if (window.innerWidth <= 768) {
+    locations.scrollIntoView({ behavior: 'smooth' });
+     }
+  });
+
 
 
 </script>

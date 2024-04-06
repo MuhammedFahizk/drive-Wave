@@ -815,6 +815,20 @@ async function allCarHelper() {
     throw error; // Rethrow the error to be handled by the caller
   }
 }
+async function deleteUserByIdHelper(deleteId) {
+  try {
+    const result = await User.deleteOne({ _id: deleteId });
+
+    if (result.deletedCount === 1) {
+      // User was successfully deleted
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error deleting user by ID:', error);
+    throw error; // Propagate the error to the calling function
+  }
+}
 module.exports = {
   homePageHelper,
   userLoginHelper,
@@ -842,4 +856,5 @@ module.exports = {
   saveRecoveryMessage,
   addReview,
   allCarHelper,
+  deleteUserByIdHelper,
 };
