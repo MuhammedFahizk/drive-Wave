@@ -148,7 +148,7 @@
 
 
 		<div class="row  justify-content-center">
-      		<div class="col-md d-flex align-self-stretch ftco-animate justify-content-center">
+      		<div class="col-md d-flex align-self-stretch ftco-animate justify-content-md-center justify-content-left">
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
@@ -203,12 +203,12 @@
 
 </div>
 {{else}}
-        <div style="border: solid 1px;" class="col-12 row d-flex justify-content-around  rounded p-5">
-			<input type="text" style="border: solid 1px;"  id="pickDate" type="text" placeholder="Pick-Up-Time" class="col-3   rounded">
-			<input type="text" style="border: solid 1px;" id="dropDate" type="text" placeholder="Drop-off-Time" class="col-3 rounded">
-			<p id='error' class="text-danger"></p>
+       <div style="border: solid 1px; padding: 5px;" class="col-12 row d-flex justify-content-between rounded p-md-4 px-3 ml-1">
+    <input type="text" style="border: solid 1px;" id="pickDate" placeholder="Pick-Up-Time" class="col-md-3 col-5 my-2 rounded">
+    <input type="text" style="border: solid 1px;" id="dropDate" placeholder="Drop-off-Time" class="col-md-3 col-5 my-2 rounded">
+	<p id='error' class="text-danger"></p>
 			<input type="hidden" id="carId" value="{{car._id}}">
-			<input type="button" class="col-2 btn btn-success " id="bookCar" value="Book Now">
+			<input type="button" class="col-md-2 col-11 my-2 btn btn-success " id="bookCar" value="Book Now">
 
 		</div>
     {{/if}}
