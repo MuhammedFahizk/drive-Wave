@@ -213,11 +213,13 @@ async function generateOtpEmail(req, res) {
     const { email } = req.body;
 
     const generatedEmail = await helper.generateOtpEmailHelper(email);
-
-    res.status(201).json(generatedEmail);
+    if (generatedEmail === false) {
+      return res.status(401).json('Unauthorized Email Address');
+    }
+    return res.status(201).json(generatedEmail);
   } catch (error) {
     console.error('Error generating OTP email:', error);
-    res.status(500).json('Internal Server Error');
+    return res.status(500).json('Internal Server Error');
   }
 }
 

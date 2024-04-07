@@ -284,6 +284,10 @@ async function bookingDate(id) {
 const emailOtp = {};
 
 async function generateOtpEmailHelper(email) {
+  const user = await User.findOne({ email });
+  if (!user) {
+    return false;
+  }
   const otp = generateOtp();
   console.error(otp, email);
 

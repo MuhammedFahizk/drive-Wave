@@ -225,10 +225,13 @@
 	<!-- Inside the secondPage section -->
 
 	<form id="SignInFormData">
-		<input type="text" name="email" class="email" id="email" placeholder="Email Address" required>
+		<input type="text" name="email" class="email" id="emailOtpLogin" placeholder="Email Address" required>
 		<!-- Add input field for OTP -->
-		<input type="text" name="otp" class="otp" id="OTP" placeholder="Enter OTP" required>
-		<button type="submit" title="Sign In">Sign In</button>
+		<input type="text" style="display: none;" name="otp" class="otp " id="OTPField" placeholder="Enter OTP" >
+		<button type="submit" id="otpGenerateEmail" title="Sign In">Generate Otp</button>
+        <p id="otpLoginError" class="text-danger"></p>
+		<button type="button" style="display: none;" id="OTPLogin"  title="Sign In">Sign In</button>
+		
 	</form>
 
 	<form id="SignUpFormData" class="form-container" method="post">
@@ -257,57 +260,7 @@
 
 
 
-<section id="thirdPage" style="display: none;">
-	<a href="" id="previousPage">
-		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-			style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;">
-			<path d="M12.707 17.293 8.414 13H18v-2H8.414l4.293-4.293-1.414-1.414L4.586 12l6.707 6.707z"></path>
-		</svg></a>
-	<div id="logo">
-		{{!-- <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png"
-			alt="Spotify-Logo" width="50"> --}}
-		<h1>Drive<span style="color: #1ed760;">Wave</span> </h1>
-	</div>
 
-	<nav>
-		<label for="SignIn">Sign In</label>
-		<label for="SignUp">Sign Up</label>
-	</nav>
-
-	<form id="SignInFormData" class="emailAndOtp">
-
-		<input type="text" name="email" class="email" id="email2" placeholder="Email Address" required>
-		<!-- Add input field for OTP -->
-		<input type="text" name="otp" class="otp" id="OTP2" placeholder="Enter OTP" required>
-		<p id="error"></p>
-
-		<input type="text" name="password1" class="input-text" placeholder="Password">
-		<input type="text" name="password" class="input-text" placeholder="Conform Password">
-		<p id="error"></p>
-
-		<button type="submit" title="Sign In">Sign In</button>
-	</form>
-
-
-
-	<form id="SignUpFormData" class="form-container" method="post">
-		<input type="text" name="name" id="name" class="input-text" placeholder="Name">
-		<input type="text" name="email" class="input-text" placeholder="E-mail">
-		<input type="number" name="age" class="age" placeholder="Age">
-		<input type="phone" name="phone" class="phone" placeholder="Phone Number">
-		<input type="text" name="licenseNumber" class="license" placeholder="License Number">
-		<input type="text" name="password1" class="input-text" placeholder="Password">
-		<input type="text" name="password" class="input-text" placeholder="Conform Password">
-
-		<span>
-			{{!-- <label for="staySingedUp">stay Signed In</label> --}}
-		</span>
-		<p style="padding: 0;" id="error"></p>
-		<input type="checkbox" id="staySingedIn" name="checkbox" checked>
-
-		<button type="submit" name="register" class="register">Sing Up</button>
-	</form>
-</section>
 <div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-dialog-centered modal-md">
 		<div class="modal-content">
@@ -344,6 +297,7 @@
 							</path>
 						</svg>
 					</a>
+					<p id="forgotPasswordError" class="text-danger m-0 p-0 ml-2"></p>
 					<a style="display: none;" href="#" id="validateOtp" class="  mt-1">
 						<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 14 24"
 							style="fill: rgba(30, 215, 96, 1);transform: ;msFilter:;">
@@ -393,7 +347,6 @@
 					const error2 = document.getElementById('error2')
 
 
-			const thirdPage = document.getElementById('thirdPage')
 
 			document.addEventListener('DOMContentLoaded', function () {
 				const forgotPasswordLink = document.getElementById('forgotPassword');
@@ -413,6 +366,8 @@
 
 				getOtp.addEventListener('click', function (event) {
 					event.preventDefault();
+						document.getElementById('forgotPasswordError').innerHTML = ''
+
 					const email = document.getElementById('forEmail').value;
 					if (email === '' || !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(email)) {
 						// Your code if email is empty or doesn't match the regex
@@ -424,6 +379,7 @@
 
 				axios.post('/generateOtp', { email })
 					.then(response => {
+
 						// Handle response here, for example, display the ForgotOTP element
 						ForgotOTP.style.display = 'block';
 						getOtp.style.display = 'none'
@@ -432,7 +388,7 @@
 					})
 					.catch(error => {
 						// Handle errors here
-
+						document.getElementById('forgotPasswordError').innerHTML = error.response.data
 						console.error('Error generating OTP:', error);
 					});
 			});
@@ -507,68 +463,39 @@
 
 
 
-			const emailInput = document.getElementById('email');
-			const otpInput = document.getElementById('OTP');
+			const emailInput = document.getElementById('otpGenerateEmail');
+			const otpInput = document.getElementById('OTPLogin');
 
-			const emailInput2 = document.getElementById('email2');
-			const otpInput2 = document.getElementById('OTP2');
 			const error = document.getElementById('error');
 
 			let Email = ''; // Changed Email variable to a string
-			emailInput2.addEventListener('keydown', function (event) {
-				console.log('hsddijf')
-				if (event.key === 'Enter') {
-					const email = event.target.value.trim(); // Trim whitespace from email input
+
+			emailInput.addEventListener('click', function (event) {
+				event.preventDefault()
+												document.getElementById('otpLoginError').innerHTML = ''
+
+					const email = document.getElementById('emailOtpLogin').value.trim(); // Trim whitespace from email input
 					Email = email; // Store email in the Email variable
 					if (email !== '') {
 						axios.post('/generateOtp', { email })
 							.then(response => {
+
 								console.log(response.data);
+								document.getElementById('otpGenerateEmail').style.display = 'none'
+								document.getElementById('OTPLogin').style.display = 'block'
+								document.getElementById('OTPField').style.display = 'block'
+
 							})
 							.catch(error => {
 								console.error(error); // Handle error
+								document.getElementById('otpLoginError').innerHTML = error.response.data
 							});
 					}
-				}
+				
 			});
-
-			otpInput2.addEventListener('keydown', function (event) {
-
-				const otp = event.target.value;
-				if (otp.length === 6) {
-					axios.post('/OtpUser', { otp, Email })
-						.then(response => {
-							console.log('hai')
-
-						})
-						.catch(error => {
-							error.innerHTML = 'Not Match Otp'
-							console.error(error);
-						});
-				} else {
-					error.textContent = 'Enter a valid OTP'; // Changed innerHTML to textContent
-				}
-			});
-
-			emailInput.addEventListener('keydown', function (event) {
-				console.log('hsddijf')
-				if (event.key === 'Enter') {
-					const email = event.target.value.trim(); // Trim whitespace from email input
-					Email = email; // Store email in the Email variable
-					if (email !== '') {
-						axios.post('/generateOtp', { email })
-							.then(response => {
-								console.log(response.data);
-							})
-							.catch(error => {
-								console.error(error); // Handle error
-							});
-					}
-				}
-			});
-
-			otpInput.addEventListener('keydown', function (event) {
-				const otp = event.target.value;
+			if (OTPLogin) {
+			otpInput.addEventListener('click', function (event) {
+				const otp = document.getElementById('OTPField').value.trim();
 				if (otp.length === 6) {
 					axios.post('/checkOtpUser', { otp, Email })
 						.then(response => {
@@ -582,6 +509,7 @@
 					error.textContent = 'Enter a valid OTP';
 				}
 			});
+			}
 
 
 
@@ -589,7 +517,6 @@
 				console.log('aisa')
 
 				firstPage.style.display = 'none';
-				thirdPage.style.display = 'none';
 				secondPage.style.display = 'block';
 			});
 
