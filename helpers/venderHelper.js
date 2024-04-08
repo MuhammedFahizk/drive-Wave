@@ -72,7 +72,6 @@ async function getDataForAdminDashboard(ownerId) {
     const confirmAmount = await vendorService.confirmAmount(ownerId);
     const pendingAmount = await vendorService.pendingAmount(ownerId);
     const VenderPromise = admin.findById(ownerId);
-
     const [
       customers,
       dailyRents,
@@ -86,9 +85,7 @@ async function getDataForAdminDashboard(ownerId) {
       dailyRentalPendingPromise,
       VenderPromise,
     ]);
-
     const locations = vendor.locations.map((locationParts) => locationParts.replace(/\s+/g, '-'));
-
     return {
       dailyRents,
       dailyRentalAmount,
@@ -455,7 +452,7 @@ async function editServiceData(serviceName, charge, description, id, file, owner
 }
 async function deleteServiceData(id, ownerId) {
   try {
-    const foundVendor = await admin.findOne({ _id: ownerId, 'service._id': id });
+    const foundVendor = await admin.findOne({ _id: ownerId });
 
     if (!foundVendor) {
       throw new Error('Vendor or service not found');

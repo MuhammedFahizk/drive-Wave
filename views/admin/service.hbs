@@ -148,7 +148,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="/admin/service" method="post" enctype="multipart/form-data">
+                            <form action="/admin/addService" method="post" enctype="multipart/form-data">
                                 <div class="input-group flex-nowrap mt-3">
                                     <span class="input-group-text" id="addon-wrapping"></i></span>
                                     <input type="text" class="form-control" id="serviceName" name="serviceName"
@@ -170,7 +170,7 @@
                                     <span class="input-group-text" id="addon-wrapping"><i
                                             class='bx bxs-image-add'></i></span>
                                     <input type="file" class="form-control" id="serviceImage" name="serviceImage"
-                                        id="imageUpload" aria-describedby="addon-wrapping">
+                                        id="imageUpload" aria-describedby="addon-wrapping" required>
 
                                 </div>
                                 <div class="input-group mt-3">
@@ -290,7 +290,7 @@
                                                                     class='bx bxs-image-add'></i></span>
                                                             <input type="file" class="form-control" id="serviceImage"
                                                                 value="{{this.image}}" name="serviceImage"
-                                                                id="imageUpload" aria-describedby="addon-wrapping">
+                                                                id="imageUpload" aria-describedby="addon-wrapping" required>
 
                                                         </div>
                                                         <div class="input-group mt-3">
@@ -378,6 +378,7 @@ document.querySelectorAll('.deleteService').forEach(button => {
     button.addEventListener('click', () => {
         const serviceId = button.dataset.serviceId;
 
+      if (confirm("Are you sure you want to delete this service?")) {
         axios.delete(`/admin/service/${serviceId}`)
             .then(response => {
                 console.log(response);
@@ -388,6 +389,7 @@ document.querySelectorAll('.deleteService').forEach(button => {
                 console.error(error);
                 // Optionally, handle errors if deletion fails
             });
+        }
     });
 });
 

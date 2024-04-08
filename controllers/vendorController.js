@@ -64,7 +64,7 @@ async function loginOtp(req, res) {
     const { email } = req.session;
     const vendor = await helper.validateOtp(otp, email);
     req.session.vendorId = uuidv4();
-    req.session.ownerId = vendor._id;
+    req.session.ownerId = vendor[0]._id;
     res.status(200).redirect('/vendor/dashboardPage');
   } catch (error) {
     res.status(404).redirect('admin/login');

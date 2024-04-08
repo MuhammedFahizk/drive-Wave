@@ -247,48 +247,40 @@ async function carDetails(id) {
 }
 
 async function updateCarHelper(editCarId, updateValues, req) {
-  try {
-    if (!editCarId) {
-      throw new Error('Could not get car Id');
-    }
+  if (!editCarId) {
+    throw new Error('Could not get car Id');
+  }
 
-    if (updateValues.location !== undefined) {
-      // eslint-disable-next-line no-param-reassign
-      updateValues.location = updateValues.location.replace(/-/g, ' ');
-    }
+  if (updateValues.location !== undefined) {
+    // eslint-disable-next-line no-param-reassign
+    updateValues.location = updateValues.location.replace(/-/g, ' ');
+  }
 
-    let updatedCar = await Car.findByIdAndUpdate(
-      editCarId,
-      { $set: updateValues },
-      { new: true },
-    );
+  let updatedCar = await Car.findByIdAndUpdate(
+    editCarId,
+    { $set: updateValues },
+    { new: true },
+  );
 
-    if (!updatedCar) {
+  if (req.newPath) {
+    const car = await Car.findById(editCarId);
+
+    if (!car) {
       throw new Error('Car not found');
     }
 
-    if (req.file) {
-      const car = await Car.findById(editCarId);
+    const publicIdToDelete = car.imageId;
 
-      if (!car) {
-        throw new Error('Car not found');
-      }
-
-      const publicIdToDelete = car.imageId;
-
-      if (publicIdToDelete) {
-        await cloudinary.deleteImage(publicIdToDelete);
-      }
-
-      updatedCar.carImage = req.newPath.url;
-      updatedCar.imageId = req.newPath.id;
-      updatedCar = await updatedCar.save(); // Save the updated car
+    if (publicIdToDelete) {
+      await cloudinary.deleteImage(publicIdToDelete);
     }
 
-    return updatedCar;
-  } catch (error) {
-    throw new Error(error.message);
+    updatedCar.carImage = req.newPath.url;
+    updatedCar.imageId = req.newPath.id;
+    updatedCar = await updatedCar.save(); // Save the updated car
   }
+  updatedCar.save();
+  return updatedCar;
 }
 
 async function findCarCategoriesHelper(category) {
@@ -569,12 +561,12 @@ function servicePageHelper() {
 
 function addServiceHelper(bodyData, image, imageId) {
   return new Promise((resolve, reject) => {
-    const { ServiceName, charge, description } = bodyData;
+    const { serviceName, charge, description } = bodyData;
     admin.findOne({ role: 'Admin' })
       .then((Admin) => {
         if (imageId) {
           const newService = {
-            ServiceName,
+            serviceName,
             charge,
             image,
             imageId,
@@ -593,7 +585,7 @@ function addServiceHelper(bodyData, image, imageId) {
 async function editServiceHelper(req) {
   try {
     const {
-      ServiceName, charge, description, id,
+      serviceName, charge, description, id,
     } = req.body;
 
     // Fetch the admin document and find the index of the service to update
@@ -610,7 +602,7 @@ async function editServiceHelper(req) {
     // Construct the update object
     const updateObject = {
       $set: {
-        [`service.${serviceIndex}.ServiceName`]: ServiceName,
+        [`service.${serviceIndex}.serviceName`]: serviceName,
         [`service.${serviceIndex}.charge`]: charge,
         [`service.${serviceIndex}.description`]: description,
       },
@@ -659,7 +651,7 @@ function deleteServiceHelper(id) {
         // Update the admin document with the filtered services
         return admin.findOneAndUpdate(
           { _id: foundAdmin._id },
-          { service: updatedServices },
+          { $set: { service: updatedServices } }, // Use $set to update the service array
           { new: true }, // To return the updated document
         );
       })

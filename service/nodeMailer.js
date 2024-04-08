@@ -193,7 +193,7 @@ function sendMailUser(email, subject, data, booking, car, service) {
                             </tr>
                             ${service.map((item) => `
                                 <tr>
-                                    <td>${item.ServiceName}</td>
+                                    <td>${item.serviceName}</td>
                                     <td>1</td>
                                     <td>${item.charge}</td>
                                     <td>${item.charge}</td>
