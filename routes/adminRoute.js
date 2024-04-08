@@ -28,7 +28,7 @@ router.get('/Booking', login.requireAuth, adminController.BookingPage);
 router.get('/Payment', login.requireAuth, adminController.payment);
 router.post('/changCarStatus', login.requireAuth, adminController.changCarStatus);
 router.get('/service', login.requireAuth, adminController.servicePage);
-router.post('/addService', login.requireAuth, upload.single('serviceImage'), login.addImage, adminController.addService);
+router.post('/servicePage', login.requireAuth, upload.single('serviceImage'), login.addImage, adminController.addService);
 router.post('/editService', login.requireAuth, upload.single('serviceImage'), login.addImage, adminController.editService);
 router.delete('/service/:id', login.requireAuth, adminController.deleteService);
 router.post('/banner', login.requireAuth, upload.single('bannerImage'), login.addImage, adminController.addBanner);

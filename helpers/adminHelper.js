@@ -632,13 +632,14 @@ async function editServiceHelper(req) {
     const updatedAdmin = await admin.findOne({ role: 'Admin' });
     return updatedAdmin;
   } catch (error) {
+    console.log(error);
     throw new Error(`Error updating service: ${error.message}`);
   }
 }
 
 function deleteServiceHelper(id) {
   return new Promise((resolve, reject) => {
-    admin.findOne({ role: 'Admin', 'service._id': id })
+    admin.findOne({ role: 'Admin' })
       .then((foundAdmin) => {
         if (!foundAdmin) {
           throw new Error('Admin or service not found');
