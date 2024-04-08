@@ -178,7 +178,7 @@
 
 		</span>
 		{{#if error}}
-		<p class="m-0 ml-4" style="color:red">{{error }}</p>
+		<p class="m-0 ml-4 col-8" style="color:red">{{error }}</p>
 
 		{{/if}} <button type="submit" title="Sign In">Sign In</button>
 
@@ -200,7 +200,7 @@
 		<span>
 			{{!-- <label for="staySingedUp">stay Signed In</label> --}}
 		</span>
-		<p style="padding: 0;" id="error"></p>
+<p style="padding: 0; text-align: center;width:225px" class="text-danger"  id="errorSignUp"></p>
 		<input type="checkbox" id="staySingedIn" name="checkbox" checked>
 
 		<button type="submit" name="register" class="register">Sign Up</button>
@@ -219,8 +219,6 @@
 		<h1>Drive<span style="color: #1ed760;">Wave</span> </h1>
 	</div>
 	<nav>
-		<label for="SignIn">OTP</label>
-		<label for="SignUp">Sign Up</label>
 	</nav>
 	<!-- Inside the secondPage section -->
 
@@ -234,27 +232,7 @@
 		
 	</form>
 
-	<form id="SignUpFormData" class="form-container" method="post">
-		<input type="text" name="name" id="name" class="input-text" placeholder="Name">
-		<input type="text" name="email" id="email" class="input-text" placeholder="E-mail">
-		<input type="number" name="age" class="age" id="age" placeholder="Age">
 
-		<input type="phone" name="phone" class="phone" id="phone" placeholder="Phone Number">
-
-
-		<input type="text" name="licenseNumber" class="license" id="license" placeholder="License Number">
-
-		<input type="text" name="password1" id="password1" class="input-text" placeholder="Password">
-		<input type="text" name="password" id="password" class="input-text" placeholder="Conform Password">
-
-		<span>
-			{{!-- <label for="staySingedUp">stay Signed In</label> --}}
-		</span>
-		<p style="padding: 0;" id="error"></p>
-		<input type="checkbox" id="staySingedIn" name="checkbox" checked>
-
-		<button type="submit" name="register" class="register">Sign Up</button>
-	</form>
 
 </section>
 
@@ -553,15 +531,20 @@
 					errors.push('Password must contain at least 8 characters, including one uppercase letter and one special character');
 				}
 
-				if (licenseNumber) {
-					if (!licenseRegex.test(licenseNumber.trim(' '))) {
-						errors.push('Enter a valid license number');
-					}
-					const checkbox = formData.get('checkbox');
+if (licenseNumber) {
+    const trimmedLicenseNumber = licenseNumber.replace(/\s/g, ''); // Remove white spaces
+    if (!licenseRegex.test(trimmedLicenseNumber)) {
+        errors.push(`Enter a valid license number in the format XX99YYYY1234567`);
+    }
+    // Additional logic if needed...
+} else {
+    errors.push('License number is required');
+}
+
+				const checkbox = formData.get('checkbox');
 					if (!checkbox) {
 						errors.push('You must accept the Terms and Conditions');
 					}
-				}
 
 				// If there are errors, display them and prevent form submission
 				if (errors.length > 0) {
@@ -582,16 +565,12 @@
 				}
 			});
 			function displayErrors(errors) {
-				const errorElement = document.getElementById('error');
+				const errorElement = document.getElementById('errorSignUp');
 				errorElement.innerHTML = ''; // Clear previous error messages
 
 				if (errors.length > 0) {
 
-					const errorMessage = document.createElement('p');
-					errorMessage.textContent = errors[0];
-					errorMessage.style.color = 'red';
-					errorMessage.style.fontSize = '13px';
-					errorElement.appendChild(errorMessage);
+				errorElement.innerHTML = errors[0]; // Clear previous error messages
 
 				}
 			}
