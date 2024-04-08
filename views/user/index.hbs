@@ -557,39 +557,13 @@ At Drive Wave, we believe that convenience, reliability, and affordability shoul
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-   window.onload = function () {
-            if (window.history && window.history.pushState) {
-                window.history.pushState('/', null, './');
-                window.onpopstate = function () {
-                  console.log(window.location)
-                    if (window.location.hash === '/login' ||window.location.hash === '') {
-                        // User pressed back button, reload the page to ensure it's not cached
-                        window.location.reload();
-                       console.log(window.location)
-                    }
-                };
-            }
-        }
-  $(document).ready(function() {
-  $('#locationSearch').on('keyup', function() {
-    var searchTerm = $(this).val().toLowerCase();
-    $('.locationLink').each(function() {
-      var text = $(this).text().toLowerCase();
-      if (text.includes(searchTerm)) {
-        $(this).parent().show();
-      } else {
-        $(this).parent().hide();
-      }
-    });
-  });
-});
-
-  flatpickr("#pick-up", {
+   flatpickr("#pick-up", {
     enableTime: true,
     dateFormat: "Y-m-d H:i",
     minTime: "08:00",
     maxTime: "22:00",
     minDate: "today",
+    disableMobile: "true",
 onChange: function(selectedDates, dateStr, instance) {
     // Get the selected pick-up date
     var pickupDate = selectedDates[0];
@@ -617,9 +591,40 @@ onChange: function(selectedDates, dateStr, instance) {
     dateFormat: "Y-m-d H:i",
     minTime: "08:00",
     maxTime: "22:00",
-    minDate: "today"
+    minDate: "today",
+    
+    disableMobile: "true"
+
   });
 
+   window.onload = function () {
+            if (window.history && window.history.pushState) {
+                window.history.pushState('/', null, './');
+                window.onpopstate = function () {
+                  console.log(window.location)
+                    if (window.location.hash === '/login' ||window.location.hash === '') {
+                        // User pressed back button, reload the page to ensure it's not cached
+                        window.location.reload();
+                       console.log(window.location)
+                    }
+                };
+            }
+        }
+  $(document).ready(function() {
+  $('#locationSearch').on('keyup', function() {
+    var searchTerm = $(this).val().toLowerCase();
+    $('.locationLink').each(function() {
+      var text = $(this).text().toLowerCase();
+      if (text.includes(searchTerm)) {
+        $(this).parent().show();
+      } else {
+        $(this).parent().hide();
+      }
+    });
+  });
+});
+
+ 
   const locations = document.getElementById('locations')
   const servicePage = document.getElementById('servicePage')
   const locationButton = document.getElementById('locationButton')

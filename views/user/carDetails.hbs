@@ -373,6 +373,7 @@ var pickDate = flatpickr("#pickDate", {
     minTime: "08:00",
     maxTime: "22:00",
     minDate: "today",
+    disableMobile: "true",
     disable: getDisableDates(),
      onChange: function(selectedDates, dateStr, instance) {
         // Your existing onChange logic
@@ -413,11 +414,10 @@ var dropDate = flatpickr("#dropDate", {
     minTime: "08:00",
     maxTime: "22:00",
     minDate: "today",
+    disableMobile: "true",
     disable: getDisableDates()
 });
 
-// Function to get disable dates based on selected pick-up date
-// Function to get disable dates based on selected pick-up date
 function getDisableDates(selectedDates) {
     var disableDates = [];
     {{#each this.bookings}}

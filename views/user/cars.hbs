@@ -139,8 +139,42 @@
     background-color: #fff;
     /* Color of the corner */
   }
+  /* CSS for mobile sidebar */
+.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Initially off-screen */
+    width: 80%; /* Adjust width as needed */
+    height: 100%;
+    background-color: #fff;
+    z-index: 1000; /* Ensure it's above other content */
+    transition: left 0.3s ease;
+}
+
+.mobile-sidebar.open {
+    left: 0; /* Slide in from the left */
+}
+
+.mobile-sidebar-toggle {
+    display: none; /* Hide toggle button on larger screens */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 767px) {
+    .sidebar {
+        display: none; /* Hide sidebar on smaller screens */
+    }
+
+    .mobile-sidebar-toggle {
+        display: block; /* Show toggle button */
+    }
+}
+.fa-bars.mobile-sidebar-toggle {
+    height: 60px; 
+    font-size: 25px;/* Increase the height as needed */
+}
+
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ionicons@5.3.0/dist/ionicons.min.css">
 {{!--
 <link href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.css' rel='stylesheet'> --}}
 <link href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/all.css' rel='stylesheet'>
@@ -265,32 +299,32 @@
 
 
 <section class="ftco-section bg-light col-12 row   mt-1 py-md-5 m-0 p-3  row d-flex justify-content-md-end justify-content-center ">
- 
 
+<i class="fa fa-bars mobile-sidebar-toggle mt-4 ml-1 ml-auto"></i>
  <div class="col-md-1 mt-md-5 col-3   d-flex justify-content-md-end ">
  <div class="col-md-8 col-12 d-none  d-md-block border-0 pl-md-3 m-0  p-md-3 p-3 mb-5 ftco-animate rounded car-wrap">
   <i class="icomoon icon-search"></i>
 
   </div>
  </div>
-    <input type="text"  id="carSearch" class="col-md-4  ml-0 col-7 border-0 pl-3 mr-md-0 pr-0  p-2 my-md-5  ftco-animate rounded car-wrap" placeholder="Search Cars ...">
+    <input type="text"  id="carSearch" class="col-md-4  ml-0 col-7 border-0 pl-3 mr-md-0 pr-0  p-md-2 mb-5 my-md-5  ftco-animate rounded car-wrap" placeholder="Search Cars ...">
  <div class="col-1 mt-md-5  m-0   d-flex justify-content-left">
  <div class="col-md-8 col-12    border-0  m-0  p-md-3 p-3 mb-5 ftco-animate rounded car-wrap dropup"  data-toggle="dropdown" aria-expanded="false" data-offset="10,20">
 <i class="icomoon icon-filter"  ></i>
 
   </div>
-   <div class="dropdown-menu mr-4" >
-    <a class="dropdown-item " id="sortBtn" href="#">Price Low to High</a>
+  <div class="dropdown-menu mr-4">
+    <a class="dropdown-item" id="sortBtn" href="#">Price Low to High</a>
     <a class="dropdown-item" href="#" id="sortBtnDescending">Price High to Low</a>
     <a class="dropdown-item" href="/car">Clear</a>
-  </div>
+</div>
  </div>
   </div>
   <aside class="col-md-12">
 
 
   </aside>
-  <aside class="col-md-2">
+  <aside class="col-md-2 d-none d-md-block  sidebar">
     <!-- Sidebar Content -->
     <div id="transmission" class="align-items-left car-wrap rounded ftco-animate my-0 p-2 ml-2">
 
@@ -344,8 +378,67 @@
       <input type="checkbox" id="All" name="All" class="m-1" value="All">
       <label for="All">All</label><br>
     </div>
+
+    
+
   </aside>
 
+<!-- Mobile Sidebar -->
+<div class="mobile-sidebar content">
+    <!-- Content from the aside element -->
+     <div id="transmission" class="align-items-left car-wrap rounded ftco-animate my-0 p-2 ml-2">
+
+      <div class="text p-1">
+
+        <h2 class="mb-0"> Transmission</h2>
+      </div>
+      <input type="checkbox" id="mannual" name="Manual" class="m-1" value="Manual">
+      <label for="mannual">Manual</label><br>
+
+      <input type="checkbox" id="automatic" name="Automatic" class="m-1" value="Automatic">
+      <label for="automatic">Automatic</label><br>
+    </div>
+    <div id="engine" class="align-items-left car-wrap rounded ftco-animate my-2 p-2 ml-2">
+
+      <div class="text p-1">
+
+        <h2 class="mb-0"> Engine Type</h2>
+      </div>
+      <input type="checkbox" id="Petrol" name="Petrol" class="m-1" value="Petrol">
+      <label for="Petrol">Petrol</label><br>
+
+      <input type="checkbox" id="Diesel" name="Diesel" class="m-1 " value="Diesel">
+      <label for="Diesel">Diesel</label><br>
+
+    </div>
+    
+    <div id="category" class="align-items-left car-wrap rounded my-2 ftco-animate p-2 ml-2">
+      <div class="text p-1">
+
+        <h2 class="mb-0">Category</h2>
+      </div>
+      <input type="checkbox" id="MUVs" name="MUVs" class="m-1" value="MUVs">
+      <label for="MUVs">MUVs</label><br>
+
+      <input type="checkbox" id="SUVs" name="SUVs" class="m-1 " value="SUVs">
+      <label for="SUVs">SUVs</label><br>
+
+      <input type="checkbox" id="Sedan" name="Sedan" class="m-1" value="Sedan">
+      <label for="Sedan">Sedan</label><br>
+
+      <input type="checkbox" id="Sports Car" name="Sports Car" class="m-1" value="Sports Car">
+      <label for="Sports Car">Sports Car</label><br>
+
+      <input type="checkbox" id="Hatchbacks" name="Hatchbacks" class="m-1" value="Hatchbacks">
+      <label for="Hatchbacks">Hatchbacks</label><br>
+
+      <input type="checkbox" id="Electric" name="Electric" class="m-1" value="Electric">
+      <label for="Electric">Electric</label><br>
+
+      <input type="checkbox" id="All" name="All" class="m-1" value="All">
+      <label for="All">All</label><br>
+    </div>
+</div>
 
   <div class="container col-md-10 align-item-center">
 
@@ -454,6 +547,30 @@
 
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButton = document.querySelector('.mobile-sidebar-toggle');
+    const mobileSidebar = document.querySelector('.mobile-sidebar');
+
+    // Toggle mobile sidebar on button click
+    toggleButton.addEventListener('click', function() {
+        mobileSidebar.classList.toggle('open');
+    });
+
+    // Prevent closing when interacting with checkboxes
+    mobileSidebar.addEventListener('click', function(event) {
+        if (event.target.tagName === 'INPUT') {
+            event.stopPropagation(); // Prevents the click event from bubbling up to the document
+        }
+    });
+
+    // Close the sidebar when user clicks outside the sidebar
+    document.addEventListener('click', function(event) {
+        if (!mobileSidebar.contains(event.target) && !toggleButton.contains(event.target)) {
+            mobileSidebar.classList.remove('open');
+        }
+    });
+});
+
   let sortOrder = 0
   $(document).ready(function() {
     // Function to sort cars by price
@@ -475,6 +592,8 @@
         carsContainer.append(car);
       });
     }
+
+
 
     function sortCarsByPriceDescending() {
       sortOrder = -1
@@ -822,6 +941,7 @@ function getStarRating(rating) {
     minTime: "08:00",
     maxTime: "22:00",
     minDate: "today",
+    disableMobile: "true",
     onChange: function (selectedDates, dateStr, instance) {
       document.getElementById("drop-off")._flatpickr.set("minDate", dateStr);
     }
@@ -832,7 +952,8 @@ function getStarRating(rating) {
     dateFormat: "Y-m-d H:i",
     minTime: "08:00",
     maxTime: "22:00",
-    minDate: "today"
+    minDate: "today",
+    disableMobile: "true",
   });
 
 
