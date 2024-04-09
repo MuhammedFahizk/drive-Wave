@@ -734,6 +734,8 @@ $(document).ready(function(){
                 
                 // Append the generated div to the container
                 $('#serviceDetails').append(divContent);
+                service.push($(this).val());
+
             }
         });
     });
@@ -756,6 +758,8 @@ $(document).ready(function(){
         e.preventDefault();
         var serviceId = $(this).data('service-id');
         $('#serviceDetails').find('[data-service-id="' + serviceId + '"]').remove();
+       service.pull($(this).val());
+
     });
 });
 
@@ -916,6 +920,7 @@ console.log('sds')
 
             e.preventDefault();
             console.log(formDatas)
+            console.log(service)
             axios.post('/bookedCar', { formDatas, service })
                 .then((response) => {
 
