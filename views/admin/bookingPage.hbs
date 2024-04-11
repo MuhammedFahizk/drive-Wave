@@ -11,6 +11,8 @@
 	<!-- My CSS -->
 
 	<!-- My CSS -->
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 	<link rel="stylesheet" href="/css/dashboard.css">
 
 	<title>AdminHub</title>
@@ -98,13 +100,7 @@
 		<!-- NAVBAR -->
 		<nav>
 			<i class='bx bx-menu'></i>
-			<a href="#" class="nav-link">Categories</a>
-			<form action="#">
-				<div class="form-input">
-					<input type="search" placeholder="Search...">
-					<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
-				</div>
-			</form>
+
 			<input type="checkbox" id="switch-mode" hidden>
 			<label for="switch-mode" class="switch-mode"></label>
 			<a href="/admin/Notification" class="notification">
@@ -130,8 +126,42 @@
 						</li>
 					</ul>
 				</div>
-				
+				<!-- Your HTML code with the link and modal -->
+<a  class=" btn btn-download"  data-bs-toggle="modal"
+										data-bs-target="#myModal">
+    <i class='bx bxs-cloud-download'></i>
+    <span class="text">Download PDF</span>
+</a>
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Enter Pick and Drop Dates</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="dateForm" action="/admin/downloadBooking" method="post" >
+                    <div class="form-group">
+                        <label for="pickDate">Pick Date:</label>
+                        <input type="text" class="form-control"id="pick-up" name="pickDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="dropDate">Drop Date:</label>
+                        <input type="text" class="form-control" id="drop-off" name="dropDate">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 			</div>
+
+
 
 			<ul class="box-info">
 				<li>
@@ -271,10 +301,30 @@
 </body>
 
 </html>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
 	
+   flatpickr("#pick-up", {
+    enableTime: true,
+    dateFormat: "Y-m-d",
+
+    disableMobile: "true",
+ onChange: function(selectedDates, dateStr, instance) {
+    // Update the minDate of the drop-off date picker
+    flatpickr("#drop-off").set("minDate", dateStr);
+  }
+  });
+
+  flatpickr("#drop-off", {
+    enableTime: true,
+    dateFormat: "Y-m-d",
+    minTime: "08:00",
+    maxTime: "22:00",
+    disableMobile: "true"
+
+  });
 
 	document.querySelectorAll('.car-status').forEach(carStatus => {
     carStatus.addEventListener('click', (e) => {

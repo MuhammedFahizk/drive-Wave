@@ -33,5 +33,6 @@ router.post('/editService', middleware.requireAuth, upload.single('serviceImage'
 router.delete('/service/:id', middleware.requireAuth, vendorController.deleteService);
 router.post('/locations', middleware.requireAuth, vendorController.addLocations);
 router.post('/removeLocation', middleware.requireAuth, vendorController.removeLocation);
+router.post('/downloadBooking', middleware.requireAuth, vendorController.downloadBooking);
 
 module.exports = router;

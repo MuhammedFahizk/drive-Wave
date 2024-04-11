@@ -1,4 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const ExcelJS = require('exceljs');
 const helper = require('../helpers/venderHelper');
 const cloudinary = require('../service/cloudnery');
 
@@ -332,6 +334,63 @@ const removeLocation = async (req, res) => {
       res.status(200).json('ok');
     });
 };
+
+const downloadBooking = (req, res) => {
+  try {
+    const { pickDate, dropDate } = req.body;
+    const { ownerId } = req.session;
+
+    const workbook = new ExcelJS.Workbook();
+    const workSheet = workbook.addWorksheet('Car Booking ');
+    workSheet.columns = [
+      { header: 'S no.', key: 's_no' },
+      { header: 'Name', key: 'name' },
+      { header: 'Email', key: 'email' },
+      { header: 'Pick Up Date', key: 'pickup_date' },
+      { header: 'Drop Date', key: 'drop_date' },
+      { header: 'Car Name', key: 'car_name' },
+      { header: 'Booking Status', key: 'booking_status' },
+    ];
+    let counter = 1;
+    helper.findUsersByBookingDates(ownerId, pickDate, dropDate)
+      .then((bookings) => { // Change 'users' to 'bookings'
+        bookings.forEach((booking) => {
+          workSheet.addRow({
+            s_no: counter,
+            name: booking.userName,
+            email: booking.email, // Access 'userName' directly from the projection
+            pickup_date: booking.bookingDetails.pickupDate,
+            drop_date: booking.bookingDetails.returnDate,
+            car_name: booking.car.carName,
+            booking_status: booking.bookingDetails.status,
+          });
+          counter += 1;
+        });
+
+        // Set response headers for file download
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename=Car Booking${pickDate} to ${dropDate}`);
+
+        // Pipe workbook data to response
+        workbook.xlsx.write(res)
+          .then(() => {
+            res.end();
+          })
+          .catch((error) => {
+            console.error('Error writing Excel file:', error);
+            res.status(500).send('Error generating Excel file');
+          });
+      })
+
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  } catch (error) {
+    console.error('Internal server error:', error);
+    res.status(500).send('Internal server error');
+  }
+};
+
 module.exports = {
   loginPage,
   showVendorDashboard,
@@ -359,4 +418,5 @@ module.exports = {
   payment,
   addLocations,
   removeLocation,
+  downloadBooking,
 };

@@ -457,6 +457,60 @@ async function getBookingsData() {
   }
 }
 
+async function findUsersByBookingDates(firstDate, secondDate) {
+  const startDate = new Date(firstDate);
+  const endDate = new Date(secondDate);
+  try {
+    const bookings = await User.aggregate([
+      {
+        $unwind: '$bookedCar',
+      },
+      {
+        $match: {
+          $and: [
+            { 'bookedCar.pickupDate': { $gte: startDate, $lte: endDate } },
+            { 'bookedCar.returnDate': { $gte: startDate, $lte: endDate } },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'cars', // Collection name where cars are stored
+          localField: 'bookedCar.car',
+          foreignField: '_id',
+          as: 'carDetails',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          userId: '$_id',
+          userName: '$name',
+          email: '$email',
+          bookingDetails: {
+            bookingDate: '$bookedCar.bookingDate',
+            pickupDate: '$bookedCar.pickupDate',
+            returnDate: '$bookedCar.returnDate',
+            totalDays: { $ceil: { $divide: [{ $subtract: ['$bookedCar.returnDate', '$bookedCar.pickupDate'] }, 1000 * 60 * 60 * 24] } },
+            totalPrice: '$bookedCar.totalPrice',
+            status: '$bookedCar.status',
+            carStatus: '$bookedCar.carStatus',
+            _id: '$bookedCar._id',
+          },
+          car: { $arrayElemAt: ['$carDetails', 0] }, // Retrieve car details from the array
+        },
+      },
+    ]);
+
+    // Filtering bookings where the car owner is not defined
+    const filteredBookings = bookings.filter((booking) => !booking.car.ownerId);
+
+    return filteredBookings;
+  } catch (error) {
+    console.error('Error finding users by booking dates:', error);
+    throw error;
+  }
+}
 function countConfirmedBookings(bookings) {
   return bookings.filter((booking) => booking.bookingDetails.status === 'Confirmed').length;
 }
@@ -1011,4 +1065,5 @@ module.exports = {
   deleteUserDataHelper,
   addLocationsHelper,
   removeLocationHelper,
+  findUsersByBookingDates,
 };

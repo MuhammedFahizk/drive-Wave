@@ -303,9 +303,12 @@ async function getBookingPageData(ownerId) {
         },
       },
       {
+        $unwind: '$carDetails', // Deconstruct carDetails array
+      },
+      {
         $match: {
           $or: [
-            { 'carDetails.ownerId': ownerId },
+            { 'carDetails.ownerId': new ObjectId(ownerId) },
             { 'bookedCar.car': null }, // Add condition to handle null car references
           ],
         },
@@ -341,7 +344,6 @@ async function getBookingPageData(ownerId) {
     const bookingsCount = allBookings.length;
     const confirmedBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'Confirmed').length;
     const pendingBookingsCount = allBookings.filter((booking) => booking.bookingDetails.status === 'Pending').length;
-
     return {
       allBookings,
       bookingsCount,
@@ -352,6 +354,67 @@ async function getBookingPageData(ownerId) {
     console.error('Error fetching booking page data:', error);
     throw new Error('Internal server error');
   }
+}
+
+async function findUsersByBookingDates(ownerId, firstDate, secondDate) {
+  const startDate = new Date(firstDate);
+  const endDate = new Date(secondDate);
+  const pipeline = [
+    {
+      $unwind: '$bookedCar', // Flatten the bookedCar array
+    },
+    {
+      $lookup: {
+        from: 'cars', // Name of the Car collection
+        localField: 'bookedCar.car',
+        foreignField: '_id',
+        as: 'carDetails',
+      },
+    },
+    {
+      $match: {
+        $or: [
+          { 'carDetails.ownerId': new ObjectId(ownerId) },
+          { 'bookedCar.car': null }, // Add condition to handle null car references
+        ],
+      },
+    },
+    {
+      $match: {
+        $and: [
+          { 'bookedCar.pickupDate': { $gte: startDate, $lte: endDate } },
+          { 'bookedCar.returnDate': { $gte: startDate, $lte: endDate } },
+        ],
+      },
+    },
+    {
+      $project: {
+        userId: '$_id',
+        userName: '$name',
+        bookingDetails: {
+          bookingDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.bookingDate', timezone: 'UTC' } },
+          pickupDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.pickupDate', timezone: 'UTC' } },
+          returnDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.returnDate', timezone: 'UTC' } },
+          totalDays: {
+            $ceil: {
+              $divide: [
+                { $subtract: ['$bookedCar.returnDate', '$bookedCar.pickupDate'] },
+                1000 * 60 * 60 * 24,
+              ],
+            },
+          },
+          totalPrice: '$bookedCar.totalPrice',
+          status: '$bookedCar.status',
+          _id: '$bookedCar._id',
+          carStatus: '$bookedCar.carStatus',
+        },
+        car: '$bookedCar.car',
+      },
+    },
+  ];
+
+  const allBookings = await User.aggregate(pipeline);
+  return allBookings;
 }
 async function updateCarStatus(bookingId) {
   const users = await User.find({}).populate('bookedCar.car');
@@ -521,7 +584,6 @@ async function renderPaymentPage(ownerId) {
     const { dailyRentalAmount } = await getTotalRentalAmount(ownerId);
     const { pendingAmount } = await getTotalPendingAmount(ownerId);
     const { dailyRentalPending } = await getTotalPendingAmount(ownerId);
-
     const customersCount = customers.length;
 
     return {
@@ -584,4 +646,5 @@ module.exports = {
   renderPaymentPage,
   addLocationsHelper,
   removeLocationHelper,
+  findUsersByBookingDates,
 };
