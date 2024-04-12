@@ -302,7 +302,7 @@ const UserPage = async (req, res) => {
   try {
     const { ownerId } = req.session;
     const data = await helper.getUserData(ownerId);
-    return res.status(200).render('vendor/User', { data });
+    return res.status(200).render('vendor/user', { data });
   } catch (error) {
     console.error('Controller Error:', error.message);
     return res.status(500).json({ error: error.message });
