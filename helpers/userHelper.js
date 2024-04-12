@@ -74,7 +74,9 @@ async function userLoginHelper(req) {
     }
 
     const user = await authenticateUser(email, password);
-
+    if (user.isBlocked) {
+      return '';
+    }
     const hashPassword = await bcrypt.hash(password, 10);
 
     req.session.password = hashPassword;
@@ -297,6 +299,15 @@ async function generateOtpEmailHelper(email) {
 
   return email;
 }
+async function isBlocked(email) {
+  const user = await User.findOne({ email });
+
+  if (user.isBlocked) {
+    return true;
+  }
+  return false;
+}
+
 async function userOtpCheckHelper(otp, email) {
   if (emailOtp[email] && emailOtp[email] === otp) {
     const user = await User.findOne({ role: 'user', email });
@@ -616,6 +627,7 @@ async function fetchBookedCars(_id) {
             { 'bookedCar.status': 'Completed' },
             { 'bookedCar.status': 'Overdue' },
             { 'bookedCar.status': 'In Progress' },
+            { 'bookedCar.status': 'Cancel' },
 
           ],
         },
@@ -844,6 +856,7 @@ module.exports = {
   carDetailsUserHelper,
   bookingDate,
   generateOtpEmailHelper,
+  isBlocked,
   userOtpCheckHelper,
   forgotPasswordHelper,
   otpCheckHelper,

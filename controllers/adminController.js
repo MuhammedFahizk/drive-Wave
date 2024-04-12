@@ -362,6 +362,17 @@ const downloadBooking = (req, res) => {
   }
 };
 
+const changeStatus = (req, res) => {
+  const { bookingId, newStatus } = req.body;
+  helper.changCarStatusHelper(bookingId, newStatus)
+    .then(() => {
+      res.status(200).json('ok');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    });
+};
 // // vendor page
 async function vendorPage(req, res) {
   helper.vendorPageHelper()
@@ -432,6 +443,16 @@ async function deleteUser(req, res) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+async function blockUser(req, res) {
+  const { blockUserId } = req.query;
+  try {
+    const result = await helper.blockUserHelper(blockUserId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
 const deleteUserData = async (req, res) => {
   try {
     const { id } = req.query;
@@ -490,6 +511,7 @@ module.exports = {
   deleteBanner,
   addLocations,
   removeLocation,
+  changeStatus,
   // vendor
   vendorPage,
   vendorDetails,
@@ -501,4 +523,5 @@ module.exports = {
   deleteUserData,
   deleteCancelUser,
   downloadBooking,
+  blockUser,
 };

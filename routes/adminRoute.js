@@ -37,6 +37,7 @@ router.post('/bannerDelete/:bannerId', login.requireAuth, adminController.delete
 router.post('/locations', login.requireAuth, adminController.addLocations);
 router.post('/removeLocation', login.requireAuth, adminController.removeLocation);
 router.post('/downloadBooking', login.requireAuth, adminController.downloadBooking);
+router.put('/changeStatus', login.requireAuth, adminController.changeStatus);
 // // adminVendor routs
 router.get('/Vendor', login.requireAuth, adminController.vendorPage);
 router.get('/getVendorDetails', login.requireAuth, adminController.vendorDetails);
@@ -45,7 +46,10 @@ router.get('/deleteVender', login.requireAuth, adminController.deleteVendor);
 router.get('/users', login.requireAuth, adminController.userPage);
 router.get('/getUserDetails', login.requireAuth, adminController.userDetails);
 router.get('/deleteUser', login.requireAuth, adminController.deleteUser);
+router.get('/blockUser', login.requireAuth, adminController.blockUser);
+
 router.get('/deleteUserData', login.requireAuth, adminController.deleteUserData);
+
 router.get('/deleteCancelUser', login.requireAuth, adminController.deleteCancelUser);
 
 module.exports = router;

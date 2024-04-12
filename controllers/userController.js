@@ -38,9 +38,12 @@ const loginPage = (req, res) => {
 async function userLogin(req, res) {
   try {
     const redirectUrl = await helper.userLoginHelper(req);
-    res.redirect(redirectUrl);
+    if (redirectUrl === '') {
+      return res.render('user/login', { error: 'Your Account Is Blocked' });
+    }
+    return res.redirect(redirectUrl);
   } catch (error) {
-    res.render('user/login', { error: 'Mismatch Password Or Email' });
+    return res.render('user/login', { error: 'Mismatch Password Or Email' });
   }
 }
 
@@ -215,6 +218,9 @@ async function generateOtpEmail(req, res) {
     const generatedEmail = await helper.generateOtpEmailHelper(email);
     if (generatedEmail === false) {
       return res.status(401).json('Unauthorized Email Address');
+    }
+    if (await helper.isBlocked(email)) {
+      return res.status(401).json('Your Account is Blocked');
     }
     return res.status(201).json(generatedEmail);
   } catch (error) {

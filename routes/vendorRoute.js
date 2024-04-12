@@ -34,5 +34,6 @@ router.delete('/service/:id', middleware.requireAuth, vendorController.deleteSer
 router.post('/locations', middleware.requireAuth, vendorController.addLocations);
 router.post('/removeLocation', middleware.requireAuth, vendorController.removeLocation);
 router.post('/downloadBooking', middleware.requireAuth, vendorController.downloadBooking);
+router.put('/changeStatus', middleware.requireAuth, vendorController.changeStatus);
 
 module.exports = router;

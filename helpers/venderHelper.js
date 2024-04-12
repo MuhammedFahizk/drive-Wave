@@ -317,6 +317,7 @@ async function getBookingPageData(ownerId) {
         $project: {
           userId: '$_id',
           userName: '$name',
+          email: '$email',
           bookingDetails: {
             bookingDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.bookingDate', timezone: 'UTC' } },
             pickupDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.pickupDate', timezone: 'UTC' } },
@@ -334,7 +335,7 @@ async function getBookingPageData(ownerId) {
             _id: '$bookedCar._id',
             carStatus: '$bookedCar.carStatus',
           },
-          car: '$bookedCar.car',
+          carName: '$carDetails.carName', // Retrieve only the car name
         },
       },
     ];
@@ -391,6 +392,7 @@ async function findUsersByBookingDates(ownerId, firstDate, secondDate) {
       $project: {
         userId: '$_id',
         userName: '$name',
+        email: '$email',
         bookingDetails: {
           bookingDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.bookingDate', timezone: 'UTC' } },
           pickupDate: { $dateToString: { format: '%Y-%m-%d', date: '$bookedCar.pickupDate', timezone: 'UTC' } },
@@ -408,7 +410,7 @@ async function findUsersByBookingDates(ownerId, firstDate, secondDate) {
           _id: '$bookedCar._id',
           carStatus: '$bookedCar.carStatus',
         },
-        car: '$bookedCar.car',
+        car: { $arrayElemAt: ['$carDetails', 0] }, // Retrieve car details from the array
       },
     },
   ];
@@ -623,6 +625,28 @@ async function removeLocationHelper(location, ownerId) {
     throw new Error(`Error Removing location to owner: ${error.message}`);
   }
 }
+async function updateUserBooking(user, bookingId, newStatus) {
+  try {
+    const bookingToUpdate = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
+    if (bookingToUpdate) {
+      bookingToUpdate.status = newStatus;
+      await user.save();
+    }
+  } catch (error) {
+    throw new Error('Error changing car status: ', error.message);
+  }
+}
+async function changCarStatusHelper(reqBodyId, newStatus) {
+  try {
+    const users = await User.find({}).populate('bookedCar.car');
+    users.forEach(async (user) => {
+      await updateUserBooking(user, reqBodyId, newStatus);
+    });
+    return 'ok';
+  } catch (error) {
+    throw new Error('Error changing car status: ', error.message);
+  }
+}
 module.exports = {
   authenticateVendor,
   getDataForAdminDashboard,
@@ -647,4 +671,5 @@ module.exports = {
   addLocationsHelper,
   removeLocationHelper,
   findUsersByBookingDates,
+  changCarStatusHelper,
 };

@@ -391,6 +391,17 @@ const downloadBooking = (req, res) => {
   }
 };
 
+const changeStatus = (req, res) => {
+  const { bookingId, newStatus } = req.body;
+  helper.changCarStatusHelper(bookingId, newStatus)
+    .then(() => {
+      res.status(200).json('ok');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    });
+};
 module.exports = {
   loginPage,
   showVendorDashboard,
@@ -419,4 +430,5 @@ module.exports = {
   addLocations,
   removeLocation,
   downloadBooking,
+  changeStatus,
 };

@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   email: {
     require: true,
     type: String,
+    unique: true,
   },
   phone: {
     require: true,
@@ -33,6 +34,10 @@ const userSchema = new mongoose.Schema({
   deletedAt: {
     require: false,
     type: Date,
+  },
+  isBlocked: {
+    type: Boolean,
+    default: false,
   },
   address: {
     place: {
@@ -81,7 +86,7 @@ const userSchema = new mongoose.Schema({
     },
     status: {
       type: String,
-      enum: ['Pending', 'Confirmed', 'In Progress', 'Completed', 'Overdue', 'Not Picked'],
+      enum: ['Pending', 'Confirmed', 'In Progress', 'Completed', 'Overdue', 'Not Picked', 'Cancel'],
       default: 'Pending',
     },
     carRent: {

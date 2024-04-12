@@ -565,25 +565,25 @@ At Drive Wave, we believe that convenience, reliability, and affordability shoul
     minDate: "today",
     disableMobile: "true",
 onChange: function(selectedDates, dateStr, instance) {
-    // Get the selected pick-up date
-    var pickupDate = selectedDates[0];
-    
-    // Calculate the max date allowed for drop-off (pick-up date + one year)
-    var maxDropoffDate = new Date(pickupDate);
-    maxDropoffDate.setFullYear(maxDropoffDate.getFullYear() + 1);
-    
-    // Get the Flatpickr instance for the drop-off field
-    var dropoffInstance = document.getElementById("drop-off")._flatpickr;
-    
-    // Set the maxDate for drop-off
-    dropoffInstance.set("maxDate", maxDropoffDate);
-    
-    // Update the minDate for drop-off if necessary
-    if (dropoffInstance.selectedDates.length > 0 && dropoffInstance.selectedDates[0] < pickupDate) {
-        dropoffInstance.setDate(dateStr);
+        // Get the selected pick-up date
+        var pickupDate = selectedDates[0];
+        
+        // Set the minDate for drop-off to the selected pick-up date
+        var dropoffInstance = document.getElementById("drop-off")._flatpickr;
+        dropoffInstance.set("minDate", pickupDate);
+        
+        // Calculate the max date allowed for drop-off (pick-up date + one year)
+        var maxDropoffDate = new Date(pickupDate);
+        maxDropoffDate.setFullYear(maxDropoffDate.getFullYear() + 1);
+        
+        // Set the maxDate for drop-off
+        dropoffInstance.set("maxDate", maxDropoffDate);
+        
+        // Update the selected drop-off date if necessary
+        if (dropoffInstance.selectedDates.length > 0 && dropoffInstance.selectedDates[0] < pickupDate) {
+            dropoffInstance.setDate(dateStr);
+        }
     }
-}
-
   });
 
   flatpickr("#drop-off", {

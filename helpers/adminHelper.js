@@ -571,17 +571,11 @@ async function paymentHelper() {
   }
 }
 
-async function updateUserBooking(user, bookingId) {
+async function updateUserBooking(user, bookingId, newStatus) {
   try {
     const bookingToUpdate = user.bookedCar.find((booking) => booking._id.toString() === bookingId);
     if (bookingToUpdate) {
-      const { status } = bookingToUpdate;
-      if (status === 'Not Picked') {
-        bookingToUpdate.status = 'In Progress';
-      }
-      if (status === 'Overdue') {
-        bookingToUpdate.status = 'Completed';
-      }
+      bookingToUpdate.status = newStatus;
       await user.save();
     }
   } catch (error) {
@@ -589,11 +583,11 @@ async function updateUserBooking(user, bookingId) {
   }
 }
 
-async function changCarStatusHelper(reqBodyId) {
+async function changCarStatusHelper(reqBodyId, newStatus) {
   try {
     const users = await User.find({}).populate('bookedCar.car');
     users.forEach(async (user) => {
-      await updateUserBooking(user, reqBodyId);
+      await updateUserBooking(user, reqBodyId, newStatus);
     });
     return 'ok';
   } catch (error) {
@@ -686,7 +680,6 @@ async function editServiceHelper(req) {
     const updatedAdmin = await admin.findOne({ role: 'Admin' });
     return updatedAdmin;
   } catch (error) {
-    console.log(error);
     throw new Error(`Error updating service: ${error.message}`);
   }
 }
@@ -893,6 +886,18 @@ function deleteUserHelper(deleteUserId) {
     });
 }
 
+function blockUserHelper(blockUserId) {
+  return User.findByIdAndUpdate(blockUserId, { isBlocked: true })
+    .then((user) => {
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return 'status : ok';
+    })
+    .catch((error) => {
+      throw new Error(`Error deleting user: ${error.message}`);
+    });
+}
 async function checkPickUp() {
   try {
     const users = await User.find({}).populate('bookedCar.car');
@@ -1059,6 +1064,7 @@ module.exports = {
   getUserData,
   getUserDetails,
   deleteUserHelper,
+  blockUserHelper,
   checkPickUp,
   cleanupSoftDeletedData,
   deleteCancelUserHelper,

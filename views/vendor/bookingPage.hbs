@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -14,7 +14,7 @@
 	<!-- My CSS -->
 	<link rel="stylesheet" href="/css/dashboard.css">
 
-	<title>AdminHub</title>
+	<title></title>
 </head>
 
 <body>
@@ -24,49 +24,49 @@
 	<section id="sidebar">
 		<a href="" class="brand">
 			<i class='bx bxs-smile'></i>
-			<span class="text">AdminHub</span>
+			<span class="text"></span>
 		</a>
 		<ul style="padding: 0;" class="side-menu top">
-			<li >
+			<li>
 				<a href="/vendor/DashboardPage">
-					<i class='bx bxs-dashboard' ></i>
+					<i class='bx bxs-dashboard'></i>
 					<span class="text">Dashboard</span>
 				</a>
 			</li>
-			<li >
+			<li>
 				<a href="/vendor/CarPage">
-                    <i class='bx bxs-car' ></i>
+					<i class='bx bxs-car'></i>
 					<span class="text">Cars</span>
 				</a>
 			</li>
 
-     <li >
+			<li>
 				<a href="/vendor/users">
-                    <i class='bx bxs-user-account'></i>
+					<i class='bx bxs-user-account'></i>
 					<span class="text">Users</span>
 				</a>
 			</li>
-			<li  class="active">
+			<li class="active">
 				<a href="/vendor/Booking">
-                    <i class='bx bxs-book-bookmark'></i>
+					<i class='bx bxs-book-bookmark'></i>
 					<span class="text">Booking</span>
 				</a>
 			</li>
 			<li>
 				<a href="/vendor/Payment">
-					<i class='bx bxs-group' ></i>
+					<i class='bx bxs-group'></i>
 					<span class="text">Payment</span>
 				</a>
 			</li>
 			<li>
-                <a href="/vendor/service">
-                    <i class='bx bxl-kubernetes'></i>
-                    <span class="text">Service</span>
-                </a>
-            </li>
-            <li>
+				<a href="/vendor/service">
+					<i class='bx bxl-kubernetes'></i>
+					<span class="text">Service</span>
+				</a>
+			</li>
+			<li>
 				<a href="/vendor/Notification">
-				<i class='bx bxs-bell' ></i>
+					<i class='bx bxs-bell'></i>
 					<span class="text">Notification</span>
 				</a>
 			</li>
@@ -74,18 +74,18 @@
 		<ul style="padding: 0;" class="side-menu">
 			<li>
 				<a href="#">
-					<i class='bx bxs-cog' ></i>
+					<i class='bx bxs-cog'></i>
 					<span class="text">Settings</span>
 				</a>
 			</li>
 			<li>
 				<a href="/vendor/vendorLogout" class="logout">
-					<i class='bx bxs-log-out-circle' ></i>
+					<i class='bx bxs-log-out-circle'></i>
 					<span class="text">Logout</span>
 				</a>
 			</li>
 		</ul>
-	</section> 
+	</section>
 
 
 
@@ -94,20 +94,7 @@
 		<!-- NAVBAR -->
 		<nav>
 			<i class='bx bx-menu'></i>
-			<a href="#" class="nav-link">Categories</a>
-			<form action="#">
-				<div class="form-input">
-					<input type="search" placeholder="Search...">
-					<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
-				</div>
-			</form>
-			<input type="checkbox" id="switch-mode" hidden>
-			<label for="switch-mode" class="switch-mode"></label>
-			<a href="/vendor/Notification" class="notification">
-				<i class='bx bxs-bell'></i>
-				<span class="num">{{NotificationCount}}</span>
-			</a>
-			
+		
 		</nav>
 		<!-- NAVBAR -->
 
@@ -126,36 +113,36 @@
 						</li>
 					</ul>
 				</div>
-<a  class=" btn btn-download"  data-bs-toggle="modal"
-										data-bs-target="#myModal">
-    <i class='bx bxs-cloud-download'></i>
-    <span class="text">Download PDF</span>
-</a>
-			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Enter Pick and Drop Dates</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="dateForm" action="/vendor/downloadBooking" method="post" >
-                    <div class="form-group">
-                        <label for="pickDate">Pick Date:</label>
-                        <input type="text" class="form-control"id="pick-up" name="pickDate">
-                    </div>
-                    <div class="form-group">
-                        <label for="dropDate">Drop Date:</label>
-                        <input type="text" class="form-control" id="drop-off" name="dropDate">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+				<a class=" btn btn-download" data-bs-toggle="modal" data-bs-target="#myModal">
+					<i class='bx bxs-cloud-download'></i>
+					<span class="text">Download PDF</span>
+				</a>
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Enter Pick and Drop Dates</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form id="dateForm" action="/vendor/downloadBooking" method="post">
+									<div class="form-group">
+										<label for="pickDate">Pick Date:</label>
+										<input type="text" class="form-control" id="pick-up" name="pickDate">
+									</div>
+									<div class="form-group">
+										<label for="dropDate">Drop Date:</label>
+										<input type="text" class="form-control" id="drop-off" name="dropDate">
+									</div>
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<ul class="box-info">
@@ -183,13 +170,12 @@
 			</ul>
 
 
-			
+
 			<div class="table-data">
 				<div class="order">
 					<div class="head">
-						<h3>Recent Orders</h3>
-						<i class='bx bx-search'></i>
-						<i class='bx bx-filter'></i>
+						<h3>Bookings</h3>
+						
 					</div>
 					<table>
 						<thead>
@@ -214,13 +200,17 @@
 								</td> <!-- Call a helper function to format the date -->
 								<td>{{bookingDetails.totalDays}}</td>
 								<td>{{bookingDetails.totalPrice}}</td>
-<td>
-								<input type="hidden" class="booking-id" value="{{this.bookingDetails._id}}">
-    <a class="car-status btn btn-outline-primary">
-        {{bookingDetails.status}} 
-    </a>
+								<td>
+									<input type="hidden" class="booking-id" value="{{this.bookingDetails._id}}">
+									{{!-- <a class="car-status btn btn-outline-primary">
+										{{bookingDetails.status}}
+									</a> --}}
+									<select class="form-control status-select" data-status="{{bookingDetails.status}}">
+										<option value=""></option>
+										<!-- Add more options as needed -->
+									</select>
 								</td>
-								<td>{{car.carName}}</td>
+								<td>{{this.carName}}</td>
 								<td><button type="button" class="btn btn-warning" data-bs-toggle="modal"
 										data-bs-target="#exampleModal{{@index}}">
 										Details
@@ -234,18 +224,19 @@
 										<div class="modal-content">
 
 											<div class="modal-body d-flex flex-column col-12">
-												<p><strong>User Name:</strong> <span
-														class="">{{this.userName}}</span></p>
+												<p><strong>User Name:</strong> <span class="">{{this.userName}}</span>
+												</p>
+												<p><strong> Email:</strong> {{this.email}}</p>
+
 												<p><strong>Date:</strong> {{this.bookingDetails.bookingDate}} To
-												
+
 													{{this.bookingDetails.returnDate}}</p>
-												<p><strong>Email:</strong> {{this.user.email}}</p>
 
 												<p><strong>Total Days:</strong> {{this.bookingDetails.totalDays}}</p>
 												<p><strong>Total Price:</strong> {{this.bookingDetails.totalPrice}}</p>
 												<p><strong> Status:</strong> {{this.bookingDetails.status}}</p>
+												<p><strong> Car Name:</strong> {{this.carName}}</p>
 
-												<p><strong>Car:</strong> {{this.car.carName}}</p>
 												<!-- Add more details as needed -->
 											</div>
 
@@ -287,46 +278,102 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"
 		integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 	<script src="/script/script.js"></script>
 </body>
 
 </html>
 <script>
-	   flatpickr("#pick-up", {
-    enableTime: true,
-    dateFormat: "Y-m-d",
+	document.querySelectorAll('.status-select').forEach(function (select) {
+		updateStatusOptions(select);
 
-    disableMobile: "true",
- onChange: function(selectedDates, dateStr, instance) {
-    // Update the minDate of the drop-off date picker
-    flatpickr("#drop-off").set("minDate", dateStr);
-  }
-  });
+		select.addEventListener('change', function (event) {
+			const bookingId = select.previousElementSibling.value; // Get booking ID from hidden input
+			const newStatus = event.target.value;
 
-  flatpickr("#drop-off", {
-    enableTime: true,
-    dateFormat: "Y-m-d",
-    minTime: "08:00",
-    maxTime: "22:00",
-    disableMobile: "true"
+			// Make Axios request to update status
+			axios.put('/vendor/changeStatus', {
+				bookingId: bookingId,
+				newStatus: newStatus
+			})
+				.then(function (response) {
+					// Handle success
+					console.log('Status updated successfully:', response.data);
 
-  });
+				})
+				.catch(function (error) {
+					// Handle error
+					console.error('Error updating status:', error);
+				});
+		});
 
-		document.querySelectorAll('.car-status').forEach(carStatus => {
-    carStatus.addEventListener('click', (e) => {
-        e.preventDefault();
-        const id = carStatus.parentElement.querySelector('.booking-id').value;
-        axios.post('/vendor/changCarStatus', {
-            id
-        }).then(res => {
-			window.location.reload()
-            // Handle success if needed
-        }).catch(error => {
-            console.log(error)
-			
-        });
-    });
-});
+	});
+
+	// Function to update the options of the dropdown select based on status
+	function updateStatusOptions(select) {
+		var bookingStatus = select.dataset.status;
+		select.innerHTML = ""; // Clear existing options
+
+		if (bookingStatus === "Confirmed") {
+			select.add(new Option("Confirmed", "Confirmed"));
+			select.add(new Option("Cancel", "Cancel"));
+		} else if (bookingStatus === "Not Picked") {
+			select.add(new Option("Not Picked", "Not Picked"));
+			select.add(new Option("In Progress", "In Progress"));
+			select.add(new Option("Cancel", "Cancel"));
+		} else if (bookingStatus === "In Progress") {
+			select.add(new Option("In Progress", "In Progress"));
+			select.add(new Option("Not Picked", "Not Picked"));
+		} else if (bookingStatus === 'Pending') {
+			select.add(new Option("Pending", "Pending"));
+			select.add(new Option("Cancel", "Cancel"));
+		} else if (bookingStatus === 'Overdue') {
+			select.add(new Option("Overdue", "Overdue"));
+			select.add(new Option("Completed", "Completed"));
+		} else if (bookingStatus === 'Completed') {
+			select.add(new Option("Completed", "Completed"));
+			select.add(new Option("Overdue", "Overdue"));
+		}
+		else if (bookingStatus === 'Cancel') {
+			select.add(new Option("Cancel", "Cancel"));
+		}
+	}
+
+
+	flatpickr("#pick-up", {
+		enableTime: true,
+		dateFormat: "Y-m-d",
+
+		disableMobile: "true",
+		onChange: function (selectedDates, dateStr, instance) {
+			// Update the minDate of the drop-off date picker
+			flatpickr("#drop-off").set("minDate", dateStr);
+		}
+	});
+
+	flatpickr("#drop-off", {
+		enableTime: true,
+		dateFormat: "Y-m-d",
+		minTime: "08:00",
+		maxTime: "22:00",
+		disableMobile: "true"
+
+	});
+
+	document.querySelectorAll('.car-status').forEach(carStatus => {
+		carStatus.addEventListener('click', (e) => {
+			e.preventDefault();
+			const id = carStatus.parentElement.querySelector('.booking-id').value;
+			axios.post('/vendor/changCarStatus', {
+				id
+			}).then(res => {
+				window.location.reload()
+				// Handle success if needed
+			}).catch(error => {
+				console.log(error)
+
+			});
+		});
+	});
 </script>
