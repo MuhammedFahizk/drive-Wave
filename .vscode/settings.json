@@ -34,5 +34,6 @@
     ],
     
         "typescript.suggestionActions.enabled": false,
-        "javascript.suggestionActions.enabled": false
+        "javascript.suggestionActions.enabled": false,
+        "editor.guides.bracketPairs": true
 }

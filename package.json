@@ -8,7 +8,7 @@
     "start": "node dist/server.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "ISC", 
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",
     "and": "^0.0.3",
